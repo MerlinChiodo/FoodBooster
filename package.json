@@ -2,7 +2,7 @@
   "name": "foodbooster",
   "version": "1.0.0",
   "description": "Hier wird für SoftwareProjektmanagement in der größeren Gruppe unsere Website FoodBooster erstellt.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
