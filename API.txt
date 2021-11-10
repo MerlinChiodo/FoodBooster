@@ -1,0 +1,43 @@
+API
+
+GET Daten bekommen
+POST Daten hinzufuegen
+PUT Daten aendern
+DELTE Daten loeschen
+
+POST /api/account/ (username, email, password) -> Erfolg/400/error
+DELETE /api/account/ (accountemail) -> Erfolg/400/error
+PUT /api/account/password/ (accountemail) -> Erfolg/400/error
+PUT /api/account/ (accountemail, username, password) -> Erfolg/400/error
+POST /api/account/favorite/ (rezeptID) -> Erfolg/400/error
+GET /api/account/favorite/ () -> Liste der Favoriten
+GET /api/account/rezept/ () -> Liste der eigenen Rezepte
+
+POST /api/rezept/ (name, erstelleraccount, beschreibung, zutaten{}, fotos[url], kategorie[], portionen) -> Erfolg/400/error
+PUT /api/rezept/ (rezeptID, name, beschreibung, zutaten[], fotos[url], portionen, kategorie[]) -> Erfolg/400/error
+GET /api/rezept/ (rezeptID) -> Rezept mit der ID
+GET /api/rezept/featured/ () -> Liste der featured Rezepte
+GET /api/rezept/search/ (suchkriterien{kategorie[], name, zutaten[], erstelleraccount, tags[]} -> Liste der gefilterten Rezepte
+POST /api/rezept/bewertung/ (rezeptID, bewertung(1-5)) -> Erfolg/400/error
+POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar, verfasseremail) -> Erfolg/400/error
+
+POST /api/ernaehrungsplan/ (name)
+PUT /api/ernaehrungsplan/ (id, {rezeptID: [Tag, Uhrzeit]})
+GET /api/ernaehrungsplanListe/ () -> Liste aller Ernaehrungsplaene
+GET /api/ernaehrungsplan/ (id) -> Konkreter Plan
+
+POST /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
+DELETE /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
+GET /api/einkaufsliste/ () -> Liste der Zutaten
+
+POST /api/forum/ (threadname, erstelleraccount, kommentar) -> Erfolg/400/error
+GET /api/forumListe/ () -> Liste  aller Threads
+GET /api/forum/ (threadID) -> Einzelner Thread
+PUT /api/forum/kommentar/ (threadID, verfasseremail, kommentar, kommentarID) -> Erfolg/400/error
+DELETE /api/forum/ (threadID) -> Erfolg/400/error
+DELETE api/forum/kommentar/ (threadID, kommentarID) -> Erfolg/400/error
+
+POST /api/meldung/ (accountemail, grund) -> Erfolg/400/error
+GET /api/meldungListe/ () -> Alle Meldungen (Admin)
+GET /api/meldung/ (meldungsID) -> Einzelne Meldungen (Admin)
+DELETE /api/meldung/ (meldungsID) -> Erfolg/400/error (Admin)
