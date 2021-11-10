@@ -1,0 +1,9 @@
+Format:
+
+IssueID
+IssueTitel
+Finder, Datum+Uhrzeit
+Ort
+Beschreibung
+Reproduktionsschritte
+Adressat

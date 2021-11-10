@@ -1,0 +1,15 @@
+Format:
+
+Anfang der Arbeit
+(
+Name, Datum+Uhrzeit
+Vorhaben
+)
+
+Ende der Arbeit
+(
+Name, Datum+Uhrzeit
+Geschaffte (z.B. User Story ID),
+Probleme/Hinweise
+Branch, Anfangscommit, Endcommit
+)
