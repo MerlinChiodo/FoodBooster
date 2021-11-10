@@ -1,0 +1,19 @@
+{
+  "name": "foodbooster",
+  "version": "1.0.0",
+  "description": "Hier wird für SoftwareProjektmanagement in der größeren Gruppe unsere Website FoodBooster erstellt.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerlinChiodo/FoodBooster.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MerlinChiodo/FoodBooster/issues"
+  },
+  "homepage": "https://github.com/MerlinChiodo/FoodBooster#readme"
+}
