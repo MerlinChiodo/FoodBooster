@@ -21,3 +21,5 @@ router.use(express.json())
 router.get('/', (req, res) => {
 
 })
+
+module.exports = router
