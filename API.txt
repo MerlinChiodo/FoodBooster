@@ -5,6 +5,8 @@ POST Daten hinzufuegen
 PUT Daten aendern
 DELTE Daten loeschen
 
+POST /login/ (email, password) -> Redirect zu Home page oder login page bei falschen Logindaten
+
 POST /api/account/ (username, email, password) -> Erfolg/400/error
 DELETE /api/account/ (accountemail) -> Erfolg/400/error
 PUT /api/account/password/ (accountemail) -> Erfolg/400/error
