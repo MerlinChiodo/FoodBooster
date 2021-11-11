@@ -96,3 +96,5 @@ async function searchUserByEmail (email) {
   }
   return user
 }
+
+module.exports = initialize
