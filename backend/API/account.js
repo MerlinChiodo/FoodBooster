@@ -45,3 +45,5 @@ router.get('/favorite', (req, res) => {
 router.get('/rezept', (req, res) => {
 
 })
+
+module.exports = router
