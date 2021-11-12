@@ -30,4 +30,8 @@ router.get('/', (req, res) => {
 
 })
 
+router.get('/liste', (req, res) => {
+
+})
+
 module.exports = router
