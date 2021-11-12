@@ -29,7 +29,7 @@ GET /api/picture/ (URL) -> Foto
 
 POST /api/ernaehrungsplan/ (name)
 PUT /api/ernaehrungsplan/ (id, {rezeptID: [Tag, Uhrzeit]})
-GET /api/ernaehrungsplanListe/ () -> Liste aller Ernaehrungsplaene
+GET /api/ernaehrungsplan/liste/ () -> Liste aller Ernaehrungsplaene
 GET /api/ernaehrungsplan/ (id) -> Konkreter Plan
 
 POST /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
@@ -37,13 +37,13 @@ DELETE /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
 GET /api/einkaufsliste/ () -> Liste der Zutaten
 
 POST /api/forum/ (threadname, erstelleraccount, kommentar) -> Erfolg/400/error
-GET /api/forumListe/ () -> Liste  aller Threads
+GET /api/forum/liste/ () -> Liste  aller Threads
 GET /api/forum/ (threadID) -> Einzelner Thread
 PUT /api/forum/kommentar/ (threadID, verfasseremail, kommentar, kommentarID) -> Erfolg/400/error
 DELETE /api/forum/ (threadID) -> Erfolg/400/error
 DELETE api/forum/kommentar/ (threadID, kommentarID) -> Erfolg/400/error
 
 POST /api/meldung/ (accountemail, grund) -> Erfolg/400/error
-GET /api/meldungListe/ () -> Alle Meldungen (Admin)
+GET /api/meldung/liste/ () -> Alle Meldungen (Admin)
 GET /api/meldung/ (meldungsID) -> Einzelne Meldungen (Admin)
 DELETE /api/meldung/ (meldungsID) -> Erfolg/400/error (Admin)
