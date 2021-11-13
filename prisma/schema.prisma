@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     name String @db.VarChar(50)
     email String @db.VarChar(50)
     passwordHash BigInt
@@ -23,116 +23,137 @@ model User {
     reports Report[]
     threads Thread[]
     comments Comment[]
+    favors UserFavorsRecipe[]
 }
 
 model GroceryList{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     user User @relation(fields: [userID], references:[id])
-    userId int
+    userID Int
+    includes GroceryListIncludesIngredient[]
 }
 
 model Recipe{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     name String @db.VarChar(50)
     description String @db.VarChar(1000)
-    servings int
+    servings Int
     created DateTime @db.DateTime
-    bewertung byte?
+    bewertung Int?
     featured Boolean @default(false)
     creator User @relation(fields: [creatorID], references:[id]) //creates Relation
-    creatorID int
+    creatorID Int
     pictures Picture[]
     comments Comment[]
+    favored UserFavorsRecipe[]
+    used NutritionplanIncludesRecipe[]
+    ingredients RecipeIncludesIngredient[]
+    category RecipeInCategory[]
 }
 
 //Favors Relation
 model UserFavorsRecipe{
     user User @relation(fields: [userID], references:[id])
-    userID int
-    recipe Recipe @relation(fields: [userID], references:[id])
-    recipeID int
+    userID Int
+    recipe Recipe @relation(fields: [recipeID], references:[id])
+    recipeID Int
+    @@id([userID, recipeID])
 }
 
 model Nutritionplan{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     name String @db.VarChar(50)
     user User @relation(fields: [userID], references: [id]) //belongsto User Relation
-    userID int
+    userID Int
+    recipies NutritionplanIncludesRecipe[]
 }
 
 //Nutritionplan and Recipe Relation
 model NutritionplanIncludesRecipe{
     nutritionplan Nutritionplan @relation(fields: [nutritionplanID], references: [id])
-    nutritionplanID int
+    nutritionplanID Int
     recipe Recipe @relation(fields: [recipeID], references: [id])
-    recipeID int
+    recipeID Int
+    @@id([nutritionplanID, recipeID])
 }
 
 model Ingredient{
     name String @id @db.VarChar(50)
-    calories int
+    calories Int
     vegan Boolean
     nutritionalValues String @db.VarChar(100) //VLLT ALS JSON?
     type String @db.VarChar(20)
-    nutriScore int
+    nutriScore Int
+    included GroceryListIncludesIngredient[]
+    recepies RecipeIncludesIngredient[]
 }
 
 model GroceryListIncludesIngredient{
     ingredient Ingredient @relation(fields: [ingredientName], references: [name])
-    ingredientName String
+    ingredientName String @db.VarChar(50)
     groceryList GroceryList @relation(fields: [groceryListID], references: [id])
-    groceryListID int
+    groceryListID Int
+    @@id([ingredientName, groceryListID])
 }
 
 model RecipeIncludesIngredient{
     ingredient Ingredient @relation(fields: [ingredientName], references: [name])
-    ingredientName String
+    ingredientName String @db.VarChar(50)
     recipe Recipe @relation(fields: [recipeID], references: [id])
-    recipeID int
+    recipeID Int
+    @@id([ingredientName, recipeID])
 }
 
 model Report{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     reason String @db.VarChar(50)
     handled Boolean @default(false)
     created DateTime @db.DateTime
     user User @relation(fields: [offender], references: [id])
-    offender int
+    offender Int
 }
 
 model Picture{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     url String @db.VarChar(50)
     recipe Recipe @relation(fields: [recipeID], references: [id])
-    recipeID int
+    recipeID Int
 }
 
 model Thread{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     title String @db.VarChar(50)
     threadText String? @db.VarChar(500)
     created DateTime @db.DateTime
     user User @relation(fields: [author], references: [id])
-    author int
+    author Int
     comments Comment[]
 }
 
 model Category{
     name String @id @db.VarChar(50)
+    recipe RecipeInCategory[]
 }
 
 model RecipeInCategory{
     recipe Recipe @relation(fields: [recipeID], references: [id])
-    recipeID int
+    recipeID Int
     category Category @relation(fields: [categoryName], references: [name])
     categoryName String @db.VarChar(50)
+    @@id([recipeID, categoryName])
 }
 
 model Comment{
-    id int @id @default(autoincrement())
+    id Int @id @default(autoincrement())
     text String @db.VarChar(200)
     created DateTime @db.DateTime
     user User @relation(fields: [userID], references: [id])
-    userID int
-    comments Comment[]
+    userID Int
+    recipe Recipe? @relation(fields: [recipeID], references: [id])
+    recipeID Int?
+    thread Thread? @relation(fields: [threadID], references: [id])
+    threadID Int?
+    topCommentID Int?
+    topComment Comment? @relation("CommentComment", fields:[topCommentID], references: [id])
+    comments Comment[] @relation("CommentComment")
 }
