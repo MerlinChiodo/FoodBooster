@@ -9,3 +9,130 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+    id int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    email String @db.VarChar(50)
+    passwordHash BigInt
+    created DateTime @db.DateTime
+    isAdmin Boolean
+    groceryList GroceryList?
+    recipies Recipe[]
+    nutritionsplans Nutritionplan[]
+    reports Report[]
+    threads Thread[]
+    comments Comment[]
+}
+
+model GroceryList{
+    id int @id @default(autoincrement())
+    user User @relation(fields: [userID], references:[id])
+    userId int
+}
+
+model Recipe{
+    id int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    description String @db.VarChar(1000)
+    servings int
+    created DateTime @db.DateTime
+    bewertung byte?
+    featured Boolean @default(false)
+    creator User @relation(fields: [creatorID], references:[id]) //creates Relation
+    creatorID int
+    pictures Picture[]
+    comments Comment[]
+}
+
+//Favors Relation
+model UserFavorsRecipe{
+    user User @relation(fields: [userID], references:[id])
+    userID int
+    recipe Recipe @relation(fields: [userID], references:[id])
+    recipeID int
+}
+
+model Nutritionplan{
+    id int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    user User @relation(fields: [userID], references: [id]) //belongsto User Relation
+    userID int
+}
+
+//Nutritionplan and Recipe Relation
+model NutritionplanIncludesRecipe{
+    nutritionplan Nutritionplan @relation(fields: [nutritionplanID], references: [id])
+    nutritionplanID int
+    recipe Recipe @relation(fields: [recipeID], references: [id])
+    recipeID int
+}
+
+model Ingredient{
+    name String @id @db.VarChar(50)
+    calories int
+    vegan Boolean
+    nutritionalValues String @db.VarChar(100) //VLLT ALS JSON?
+    type String @db.VarChar(20)
+    nutriScore int
+}
+
+model GroceryListIncludesIngredient{
+    ingredient Ingredient @relation(fields: [ingredientName], references: [name])
+    ingredientName String
+    groceryList GroceryList @relation(fields: [groceryListID], references: [id])
+    groceryListID int
+}
+
+model RecipeIncludesIngredient{
+    ingredient Ingredient @relation(fields: [ingredientName], references: [name])
+    ingredientName String
+    recipe Recipe @relation(fields: [recipeID], references: [id])
+    recipeID int
+}
+
+model Report{
+    id int @id @default(autoincrement())
+    reason String @db.VarChar(50)
+    handled Boolean @default(false)
+    created DateTime @db.DateTime
+    user User @relation(fields: [offender], references: [id])
+    offender int
+}
+
+model Picture{
+    id int @id @default(autoincrement())
+    url String @db.VarChar(50)
+    recipe Recipe @relation(fields: [recipeID], references: [id])
+    recipeID int
+}
+
+model Thread{
+    id int @id @default(autoincrement())
+    title String @db.VarChar(50)
+    threadText String? @db.VarChar(500)
+    created DateTime @db.DateTime
+    user User @relation(fields: [author], references: [id])
+    author int
+    comments Comment[]
+}
+
+model Category{
+    name String @id @db.VarChar(50)
+}
+
+model RecipeInCategory{
+    recipe Recipe @relation(fields: [recipeID], references: [id])
+    recipeID int
+    category Category @relation(fields: [categoryName], references: [name])
+    categoryName String @db.VarChar(50)
+}
+
+model Comment{
+    id int @id @default(autoincrement())
+    text String @db.VarChar(200)
+    created DateTime @db.DateTime
+    user User @relation(fields: [userID], references: [id])
+    userID int
+    comments Comment[]
+}
