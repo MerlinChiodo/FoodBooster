@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    email String @db.VarChar(50)
+    passwordHash BigInt
+    created DateTime @db.DateTime
+    isAdmin Boolean
+    groceryList GroceryList?            //User kann eine GroceryList haben
+    recipies Recipe[]                   //User kann mehere Rezepte haben
+    nutritionsplans Nutritionplan[]     //User kann mehere Nutritionpläne haben
+    reports Report[]                    //User kann mehrfach reported werden
+    threads Thread[]                    //User kann mehere Threads öffnen
+    comments Comment[]                  //User kann mehere Comments verfassen
+    favors UserFavorsRecipe[]           //User kann mehere Rezepte favorisieren
+}
+
+model GroceryList{
+    id Int @id @default(autoincrement())
+    user User @relation(fields: [userID], references:[id])
+    userID Int
+    includes GroceryListIncludesIngredient[]    //Einkaufsliste kann mehrere Ingredients enthalten
+}
+
+model Recipe{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    description String @db.VarChar(1000)
+    servings Int
+    created DateTime @db.DateTime
+    bewertung Int?
+    featured Boolean @default(false)
+    creator User @relation(fields: [creatorID], references:[id]) //Ein Rezept muss von einem Nutzer erstellt worden sein
+    creatorID Int
+    pictures Picture[]              //Ein Rezept kann mehrere Bilder enthalten
+    comments Comment[]              //Ein Rezept kann mehrere Kommentare beinhalten
+    favored UserFavorsRecipe[]      //Ein Rezept kann von mehreren Usern favorisiert sein
+    used NutritionplanIncludesRecipe[]  //Ein Rezept kann in mehreren Nutritionplans enthalten sein
+    ingredients RecipeIncludesIngredient[]  //Ein Rezept kann mehrere Ingredients haben
+    category RecipeInCategory[]     // Ein Rezept kann einer Categorie angehören
+}
+
+//Favors Relation
+model UserFavorsRecipe{
+    user User @relation(fields: [userID], references:[id])  //Ein Nutzer favorisiert ein Rezept
+    userID Int
+    recipe Recipe @relation(fields: [recipeID], references:[id])    //Ein Rezept wird von einem Nutzer favorisiert
+    recipeID Int
+    @@id([userID, recipeID])
+}
+
+model Nutritionplan{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    user User @relation(fields: [userID], references: [id]) //Ein Nutritionplan gehört zu einem Nutzer
+    userID Int
+    recipies NutritionplanIncludesRecipe[]  //Ein Nutritionplan kann mehrere Rezepte enthalten
+}
+
+//Nutritionplan and Recipe Relation
+model NutritionplanIncludesRecipe{
+    nutritionplan Nutritionplan @relation(fields: [nutritionplanID], references: [id])  //Ein Nutritionplan enthält ein Rezept
+    nutritionplanID Int
+    recipe Recipe @relation(fields: [recipeID], references: [id])   //Ein Rezept ist in einem Nutritionplan enthalten
+    recipeID Int
+    @@id([nutritionplanID, recipeID])
+}
+
+model Ingredient{
+    name String @id @db.VarChar(50)
+    calories Int
+    vegan Boolean
+    nutritionalValues String @db.VarChar(100) //VLLT ALS JSON?
+    type String @db.VarChar(20)
+    nutriScore Int
+    included GroceryListIncludesIngredient[] //Ingredient ist in GroceryListen enthalten
+    recepies RecipeIncludesIngredient[]     //Ingredient ist in Rezepten enthalten
+}
+
+model GroceryListIncludesIngredient{
+    ingredient Ingredient @relation(fields: [ingredientName], references: [name])   //Ein Ingredient ist in einer GroceryList enthalten
+    ingredientName String @db.VarChar(50)
+    groceryList GroceryList @relation(fields: [groceryListID], references: [id])    //Eine GroceryList enthält ein Ingredient
+    groceryListID Int
+    @@id([ingredientName, groceryListID])
+}
+
+model RecipeIncludesIngredient{
+    ingredient Ingredient @relation(fields: [ingredientName], references: [name])   //Ein Ingredient ist in einem Recipe enthalten
+    ingredientName String @db.VarChar(50)
+    recipe Recipe @relation(fields: [recipeID], references: [id])                   //Ein Recipe enthält ein Ingredient
+    recipeID Int
+    @@id([ingredientName, recipeID])
+}
+
+model Report{
+    id Int @id @default(autoincrement())
+    reason String @db.VarChar(50)
+    handled Boolean @default(false)
+    created DateTime @db.DateTime
+    user User @relation(fields: [offender], references: [id])   // Ein Report muss einen Nutzer betreffen
+    offender Int
+}
+
+model Picture{
+    id Int @id @default(autoincrement())
+    url String @db.VarChar(50)
+    recipe Recipe @relation(fields: [recipeID], references: [id]) //Ein Bild muss zu einem Rezept gehören
+    recipeID Int
+}
+
+model Thread{
+    id Int @id @default(autoincrement())
+    title String @db.VarChar(50)
+    threadText String? @db.VarChar(500)
+    created DateTime @db.DateTime
+    user User @relation(fields: [author], references: [id]) //Ein Thread muss von einem Nutzer erstellt worden sein
+    author Int
+    comments Comment[]      //Ein Thread enthält mehrere Comments
+}
+
+model Category{
+    name String @id @db.VarChar(50)
+    recipe RecipeInCategory[]   //Eine Category beschreibt mehrere Rezepte
+}
+
+model RecipeInCategory{
+    recipe Recipe @relation(fields: [recipeID], references: [id])   //Ein Rezept wird einer Categorie zugeordnet
+    recipeID Int
+    category Category @relation(fields: [categoryName], references: [name]) //Eine Categorie enthält ein Rezept
+    categoryName String @db.VarChar(50)
+    @@id([recipeID, categoryName])
+}
+
+model Comment{
+    id Int @id @default(autoincrement())
+    text String @db.VarChar(200)
+    created DateTime @db.DateTime
+    user User @relation(fields: [userID], references: [id]) //Ein Comment muss von einem User verfasst sein
+    userID Int
+    recipe Recipe? @relation(fields: [recipeID], references: [id])  //Ein Comment kann unter einem Rezept stehen
+    recipeID Int?
+    thread Thread? @relation(fields: [threadID], references: [id])  //Ein Comment kann unter einem Thread stehen
+    threadID Int?
+    topCommentID Int?
+    topComment Comment? @relation("CommentComment", fields:[topCommentID], references: [id])    //Ein Comment kann von anderen Comments kommentiert werden
+    comments Comment[] @relation("CommentComment")  //Mehrere Comments können einen Commentar kommentieren
+}
