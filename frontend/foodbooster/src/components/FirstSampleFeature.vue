@@ -2,10 +2,6 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h3>Sample Header</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-    </ul>
   </div>
 </template>
 
