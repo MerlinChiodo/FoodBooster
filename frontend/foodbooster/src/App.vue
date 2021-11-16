@@ -7,25 +7,22 @@
         </div>
       </ui-grid-cell>
       <ui-grid-cell columns="10">
-        <NavigationTabs />
+        <NavigationTabs/>
       </ui-grid-cell>
     </ui-grid>
   </div>
 
 
-  <HelloWorld msg="THE FOODBOOSTER PROJECT "/>
-
 </template>
 
 <script>
-import HelloWorld from './components/FirstSampleFeature.vue'
+
 import NavigationTabs from "@/components/NavigationTabs";
 
 export default {
   name: 'App',
   components: {
     NavigationTabs,
-    HelloWorld
   }
 }
 </script>
@@ -39,8 +36,10 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-.navigationarea{
+
+.navigationarea {
   background-color: #d7e0d5;
+
   .logoarea {
     .logo {
       //width: 200px;
