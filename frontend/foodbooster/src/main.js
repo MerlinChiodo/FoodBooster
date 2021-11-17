@@ -1,11 +1,13 @@
-import { createApp } from 'vue';
+import {createApp} from 'vue';
 import App from './App.vue';
 
-import BalmUI from 'balm-ui'; // Official Google Material Components
+import router from './router';
+
+import BalmUI, {UiForm, UiFormField} from 'balm-ui'; // Official Google Material Components
 import BalmUIPlus from 'balm-ui-plus'; // BalmJS Team Material Components
 import 'balm-ui-css';
 
-const app = createApp(App);
+const app = createApp(App).use(router);
 
 app.use(BalmUI, {
     $theme: {
@@ -16,13 +18,12 @@ app.use(BalmUI, {
         //setTextcolor: "" | "#444445"
     },
 
-    UiTabs:{
-
-    }
-
+    UiTabs: {}
 
 
 });
 app.use(BalmUIPlus);
-
+app.use(UiForm);
+app.use(UiFormField);
+app.use(router);
 app.mount('#app');
