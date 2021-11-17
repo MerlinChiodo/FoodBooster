@@ -11,6 +11,35 @@
       </ui-grid-cell>
     </ui-grid>
   </div>
+
+  <ui-tabs v-model="active">
+    <router-link to="/Home">
+      <ui-tab>Home</ui-tab>
+    </router-link>
+    <router-link to="/Rezepte">
+      <ui-tab>Tab Two</ui-tab>
+    </router-link>
+    <ui-tab>Tab Three</ui-tab>
+  </ui-tabs>
+  <p></p>
+  <ui-panels v-model="active">
+    <ui-panel>Panel One</ui-panel>
+    <ui-panel>Panel Two</ui-panel>
+    <ui-panel>Panel Three</ui-panel>
+    <ui-panel>Panel Three</ui-panel>
+    <ui-panel>Panel Three</ui-panel>
+    <ui-panel>Panel Three</ui-panel>
+    <ui-panel>Panel Three</ui-panel>
+    <ui-panel>Panel Three</ui-panel>
+  </ui-panels>
+  <div class="test">
+    <router-link to="/Home">home</router-link>
+    <router-link to="/Rezept">rezept</router-link>
+  </div>
+
+  //Here the Routed Page should pe shown.
+  <router-view></router-view>
+
 </template>
 
 <script>
