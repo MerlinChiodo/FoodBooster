@@ -37,7 +37,7 @@
     <router-link to="/Rezept">rezept</router-link>
   </div>
 
-  //Here the Routed Page should pe shown.
+  <!-- //Here the Routed Page should pe shown. -->
   <router-view></router-view>
 
 </template>
