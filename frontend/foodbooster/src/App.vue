@@ -11,12 +11,9 @@
       </ui-grid-cell>
     </ui-grid>
   </div>
-
-
 </template>
 
 <script>
-
 import NavigationTabs from "@/components/NavigationTabs";
 
 export default {
