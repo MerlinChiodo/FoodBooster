@@ -81,7 +81,7 @@ model Ingredient{
     name String @id @db.VarChar(50)
     calories Int
     vegan Boolean
-    nutritionalValues String @db.VarChar(100) //VLLT ALS JSON?
+    nutritionalValues Json //VLLT ALS JSON?
     type String @db.VarChar(20)
     nutriScore Int
     included GroceryListIncludesIngredient[] //Ingredient ist in GroceryListen enthalten
