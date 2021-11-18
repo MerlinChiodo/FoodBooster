@@ -27,7 +27,7 @@
             <router-link to="/ernährungsplan">
               <ui-tab>Ernährungsplan</ui-tab>
             </router-link>
-            <router-link to="/account">
+            <router-link to="/accountregister">
               <ui-tab>Account</ui-tab>
             </router-link>
           </ui-tabs>

@@ -5,7 +5,7 @@ import Featured_Rezepte from '../views/Featured_Rezepte.vue'
 import Forum from '../views/Forum.vue'
 import Einkaufsliste from '../views/Einkaufsliste.vue'
 import Ernährungsplan from '../views/Ernährungsplan.vue'
-import Account from '../views/Account.vue'
+import AccountRegister from '../views/AccountRegister.vue'
 
 // Defines the routes
 // Each route should map to a component.
@@ -16,7 +16,7 @@ const routes = [
     {path: '/forum', name: 'Forum', component: Forum},
     {path: '/einkaufsliste', name: 'Einkaufsliste', component: Einkaufsliste},
     {path: '/ernährungsplan', name: 'Ernährungsplan', component: Ernährungsplan},
-    {path: '/account', name: 'Account', component: Account},
+    {path: '/accountregister', name: 'AccountRegister', component: AccountRegister},
 ]
 
 // Creates the router instance and passes the `routes` option
