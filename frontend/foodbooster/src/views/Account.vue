@@ -3,8 +3,16 @@
     <ui-form nowrap item-margin-bottom="16" label-width="80">
       <template #default="{ subitemClass, actionClass }">
         <ui-form-field>
-          <label class="required">Input:</label>
-          <ui-textfield></ui-textfield>
+          <label class="required">E-Mail Adresse:</label>
+          <ui-textfield>E-Mail Adresse</ui-textfield>
+        </ui-form-field>
+        <ui-form-field>
+          <label class="required">Password:</label>
+          <ui-textfield>Password</ui-textfield>
+        </ui-form-field>
+        <ui-form-field>
+          <label class="required">Confirm Password:</label>
+          <ui-textfield>Confirm Password</ui-textfield>
         </ui-form-field>
         <ui-form-field>
           <label>Checkbox:</label>

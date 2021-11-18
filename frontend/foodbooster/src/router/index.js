@@ -1,15 +1,11 @@
 import {createRouter, createWebHistory,} from "vue-router";
-
-
-// Defines route components.
-// These can be imported from other files
-const Home = {template: '<div>Home</div>'}
-const Rezepte = {template: '<div>Rezepte</div>'}
-const Featured_Rezepte = {template: '<div>Featured_Rezepte</div>'}
-const Forum = {template: '<div>Forum</div>'}
-const Einkaufsliste = {template: '<div>Einkaufsliste</div>'}
-const Ernährungsplan = {template: '<div>Ernährungsplan</div>'}
-const Account = {template: '<div>Account</div>'}
+import Home from '../views/Home.vue'
+import Rezepte from '../views/Rezepte.vue'
+import Featured_Rezepte from '../views/Featured_Rezepte.vue'
+import Forum from '../views/Forum.vue'
+import Einkaufsliste from '../views/Einkaufsliste.vue'
+import Ernährungsplan from '../views/Ernährungsplan.vue'
+import Account from '../views/Account.vue'
 
 // Defines the routes
 // Each route should map to a component.
