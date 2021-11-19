@@ -97,4 +97,60 @@ async function searchUserByEmail (email) {
   return user
 }
 
-module.exports = initialize
+/**
+ * Middleware to check if the user accessing this content is authenticated.
+ * If not the user is sent an error message with a 401
+ */
+function checkAuthenticated (req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.status(401).send({ err: 'You must be logged in to access this content.' })
+}
+
+/**
+ * Middleware to check if the user accessing this content is authenticated.
+ * If so the user is sent an error message with a 401.
+ * This is primarily used to prevent users from logging in twice
+ */
+function checkUnauthenticated (req, res, next) {
+  if (req.isUnauthenticated()) {
+    return next()
+  }
+  res.status(401).
+    send({ err: 'You must be logged out to access this content.' })
+}
+
+/**
+ * Checks if the logged in user is the same as the user given in the request.
+ * Primarily used to check that a user can only temper with their own account.
+ * Should always be used in tandem with the checkAuthenticated
+ */
+function checkIfUser (req, res, next) {
+  if (!req.user || req.user.EMAIL !== req.body.email) {
+    return res.status(403).
+      send({ err: 'You can only make changes to your own property' })
+  }
+  next()
+}
+
+/**
+ * Checks if the logged in user is an admin.
+ * Should always be used in tandem with the checkAuthenticated
+ */
+function checkIfAdmin (req, res, next) {
+  if (!req.user.ISTADMIN) {
+    return res.status(403).
+      send({ err: 'Only administrators can access this resource.' })
+  }
+  next()
+}
+
+module.exports = {
+  initialize,
+  searchUserByEmail,
+  checkAuthenticated,
+  checkUnauthenticated,
+  checkIfUser,
+  checkIfAdmin,
+}

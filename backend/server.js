@@ -82,39 +82,6 @@ app.delete('/logout', (req, res) => {
 })
 
 /*******************************************************************************
- * Middleware to check if users are authenticated or not and act accordingly
- ******************************************************************************/
-/**
- * Middleware to check if the user accessing this content is authenticated.
- * If not the user is redirected to the login page
- * @param req the request body
- * @param res the response
- * @param next the next middleware function
- */
-function checkAuthenticated (req, res, next) {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/login')
-}
-
-/**
- * Middleware to check if the user accessing this content is authenticated.
- * If so the user is redirected to the home page.
- * This function is used to disallow access to mainly the login page for logged
- * in users, so that they can't log in twice
- * @param req the request body
- * @param res the response
- * @param next the next middleware function
- */
-function checkUnauthenticated (req, res, next) {
-  if (req.isUnauthenticated()) {
-    return next()
-  }
-  res.redirect('/')
-}
-
-/*******************************************************************************
  * Starting the server
  * Always has to be the last statement
  ******************************************************************************/
