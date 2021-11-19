@@ -4,7 +4,7 @@
   "description": "Hier wird für SoftwareProjektmanagement in der größeren Gruppe unsere Website FoodBooster erstellt.",
   "main": "server.js",
   "scripts": {
-    "test": "mocha || true",
+    "test": "mocha",
     "devstart": "nodemon backend/server.js"
   },
   "repository": {

@@ -4,7 +4,7 @@
 /**
  * Prisma is used to interact with the websites database
  */
-const prisma = require('./database')
+const prisma = require('./prismaClient')
 /**
  * Bcrypt is used for password hashing and comparing
  */
@@ -23,24 +23,24 @@ const LocalStrategy = require('passport-local').Strategy
 function initialize (passport) {
   /**
    * This function decides if the login credentials are valid or not
-   * @param email the email of the user
+   * @param id the id of the user
    * @param passwort the password of the user
    * @param done called every time the function is done with its checking
    * @returns {Promise<*>} the error, if one occurred, the user, and a failure
    * message, if the validation process has a problem
    */
-  const authenticateUser = async (email, passwort, done) => {
+  const authenticateUser = async (id, passwort, done) => {
     // search for the user
     let user
 
     try {
-      user = searchUserByEmail(email)
+      user = searchUserByID(id)
     } catch (err) {
       return done(err)
     }
     // reject login if no user has been found
     if (user == null) {
-      return done(null, false, { message: 'There is no user with that email' })
+      return done(null, false, { message: 'There is no user with that id' })
     }
 
     // validate the password the user entered, if an error occurs return that
@@ -59,14 +59,14 @@ function initialize (passport) {
 
   // give the strategy and the authentication function to passport
   passport.use(
-    new LocalStrategy({ usernameField: 'email' },
+    new LocalStrategy({ usernameField: 'id' },
       authenticateUser))
-  passport.serializeUser((user, done) => done(null, user.email))
-  passport.deserializeUser(async (email, done) => {
+  passport.serializeUser((user, done) => done(null, user.id))
+  passport.deserializeUser(async (id, done) => {
     // try to find the user, if an error occurs return that
     let user
     try {
-      user = searchUserByEmail(email)
+      user = searchUserByID(id)
     } catch (err) {
       return done(err)
     }
@@ -78,17 +78,17 @@ function initialize (passport) {
 }
 
 /**
- * Searches for a user with the specified email
+ * Searches for a user with the specified id
  * Throws all errors
- * @param email the email of the searched user
+ * @param id the id of the searched user
  * @returns {Promise<void>} the user if there is one, null if there is none
- * @todo test later if this actually works
  */
-async function searchUserByEmail (email) {
+async function searchUserByID (id) {
+  let user
   try {
-    user = await prisma.User.findUnique({
+    user = await prisma.user.findUnique({
       where: {
-        email: email,
+        id: id,
       },
     })
   } catch (err) {
@@ -127,7 +127,7 @@ function checkUnauthenticated (req, res, next) {
  * Should always be used in tandem with the checkAuthenticated
  */
 function checkIfUser (req, res, next) {
-  if (!req.user || req.user.EMAIL !== req.body.email) {
+  if (!req.user || req.user.id !== req.body.id) {
     return res.status(403).
       send({ err: 'You can only make changes to your own property' })
   }
@@ -139,7 +139,7 @@ function checkIfUser (req, res, next) {
  * Should always be used in tandem with the checkAuthenticated
  */
 function checkIfAdmin (req, res, next) {
-  if (!req.user.ISTADMIN) {
+  if (!req.user.isAdmin) {
     return res.status(403).
       send({ err: 'Only administrators can access this resource.' })
   }
@@ -148,7 +148,7 @@ function checkIfAdmin (req, res, next) {
 
 module.exports = {
   initialize,
-  searchUserByEmail,
+  searchUserByID,
   checkAuthenticated,
   checkUnauthenticated,
   checkIfUser,
