@@ -26,6 +26,14 @@ const flash = require('express-flash')
 const initializePassport = require('./passport-config')
 
 initializePassport(passport)
+
+const account = require('./API/account')
+const einkaufsliste = require('./API/einkaufsliste')
+const ernaehrungsplan = require('./API/ernaehrungsplan')
+const forum = require('./API/forum')
+const meldung = require('./API/meldung')
+const picture = require('./API/picture')
+const rezept = require('./API/rezept')
 /*******************************************************************************
  * Middleware for the server to use
  ******************************************************************************/
@@ -41,6 +49,17 @@ app.use(express.urlencoded({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+
+/*******************************************************************************
+ * Router integration for the API
+ ******************************************************************************/
+app.use('/api/account', account)
+app.use('/api/einkaufsliste', einkaufsliste)
+app.use('/api/ernaehrungsplan', ernaehrungsplan)
+app.use('/api/forum', forum)
+app.use('/api/meldung', meldung)
+app.use('/api/picture', picture)
+app.use('/api/rezept', rezept)
 
 /*******************************************************************************
  * Request Handling
