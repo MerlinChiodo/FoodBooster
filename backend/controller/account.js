@@ -17,7 +17,7 @@ const createUser = async (req, res) => {
 
     //Check if all Values are given
     if(!email || !username || !password){
-        return res.status(400).json({success: false, msg: `Please provide all required Information!`})
+        return res.status(400).json({success: false, err: `Please provide all required Information!`})
     }
 
     //Check if User with email already exists
