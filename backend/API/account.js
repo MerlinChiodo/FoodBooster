@@ -7,7 +7,7 @@ const express = require('express')
  */
 const router = express.Router()
 
-const {account} = require('../controller/account.js')
+const {createUser} = require('../controller/account.js')
 
 /*******************************************************************************
  * Middleware for the server to use
@@ -21,7 +21,7 @@ router.use(express.json())
  * The request implementation
  ******************************************************************************/
 
-router.route('/').post(account)
+router.route('/').post(createUser)
 
 router.delete('/', (req, res) => {
 

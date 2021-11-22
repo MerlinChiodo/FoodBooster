@@ -2,12 +2,13 @@
  * Module imports for all required modules
  ****************************************/
 const prisma = require(`../prismaClient.js`)
+const bcrypt= require(`bcrypt`)
 
 /**
  * Function to create new User with checks and everything
- * Used in ../API/account for the POST Method of the /API/accout/ route
+ * Used in ../API/account for the POST Method of the /API/account/ route
  **/
-const account = async (req, res) => {
+const createUser = async (req, res) => {
 
     //Get parameters of body
     const {email} = req.body;
@@ -31,24 +32,26 @@ const account = async (req, res) => {
         //Set time of Creation
         let created = new Date()
 
+        //Hash given password
+        let passwordHash = await bcrypt.hash(password,10)
+
         //create User with given parameters
-        const newUser = await prisma.user.create(
-            {
-                data:{
-                    email: email,
-                    name: username,
-                    passwordHash: Number(password),
-                    created: created,
-                    isAdmin: false,
-                },
-            }
-        )
-
-        if(!newUser){
-            res.status(400).json({success: false, err: "Ups, something went wrong!"})
+        try {
+                const newUser = await prisma.user.create(
+                {
+                    data: {
+                        email: email,
+                        name: username,
+                        passwordHash: passwordHash,
+                        created: created,
+                        isAdmin: false,
+                    },
+                }
+            )
+            return res.status(201).json({success: true, msg: newUser})
+        }catch (error){
+            res.status(500).json({success: false, err: "Ups, something went wrong!"})
         }
-
-        return res.status(200).json({success: true, msg: `User ${email} ${username} ${password} created`})
 
     }else{
 
@@ -59,4 +62,4 @@ const account = async (req, res) => {
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { account }
+module.exports = { createUser }

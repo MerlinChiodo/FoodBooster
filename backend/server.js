@@ -23,9 +23,9 @@ const flash = require('express-flash')
 /*******************************************************************************
  * Imports of other files from this project
  ******************************************************************************/
-const initializePassport = require('./passport-config')
+//const initializePassport = require('./passport-config')
 
-initializePassport(passport)
+//initializePassport(passport)
 
 const account = require('./API/account')
 const einkaufsliste = require('./API/einkaufsliste')
@@ -47,8 +47,8 @@ app.use(express.json())
 app.use(express.urlencoded({
   extended: false,
 }))
-app.use(passport.initialize())
-app.use(passport.session())
+/*app.use(passport.initialize())
+app.use(passport.session())*/
 
 /*******************************************************************************
  * Router integration for the API
@@ -138,3 +138,5 @@ function checkUnauthenticated (req, res, next) {
  * Always has to be the last statement
  ******************************************************************************/
 app.listen(80)
+
+module.exports = app
