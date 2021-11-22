@@ -7,6 +7,8 @@ const express = require('express')
  */
 const router = express.Router()
 
+const {account} = require('../controller/account.js')
+
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -18,9 +20,8 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
-router.post('/', (req, res) => {
 
-})
+router.route('/').post(account)
 
 router.delete('/', (req, res) => {
 
