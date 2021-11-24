@@ -37,6 +37,9 @@ const createUser = async (req, res) => {
         //Hash given password
         let passwordHash = await bcrypt.hash(password,10)
 
+        //Hash given answer
+        let answerHash = await bcrypt.hash(answer, 10)
+
         //create User with given parameters
         try {
                 const newUser = await prisma.user.create(
@@ -47,7 +50,7 @@ const createUser = async (req, res) => {
                         passwordHash: passwordHash,
                         created: created,
                         isAdmin: false,
-                        answer: answer,
+                        answer: answerHash,
                     },
                 }
             )

@@ -14,7 +14,7 @@ model User {
   passwordHash    String
   created         DateTime?          @db.DateTime(0)
   isAdmin         Boolean?           @default(false)
-  answer          String             @db.VarChar(50) @default("NULL")
+  answer          String             @default("NULL")
   comments        Comment[]
   groceryList     GroceryList?
   nutritionsplans Nutritionplan[]
