@@ -15,6 +15,7 @@ async function prepare () {
         id: 1000,
         name: user.name,
         email: user.email,
+        answer: "Hund",
         passwordHash: await bcrypt.hash('1234', 10),
       },
     })
