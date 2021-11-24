@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `answer` VARCHAR(50) NOT NULL DEFAULT 'NULL';

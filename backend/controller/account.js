@@ -7,6 +7,7 @@ const bcrypt= require(`bcrypt`)
 /**
  * Function to create new User with checks and everything
  * Used in ../API/account for the POST Method of the /API/account/ route
+ * If User is created, Response gives back User Object
  **/
 const createUser = async (req, res) => {
 
@@ -14,9 +15,10 @@ const createUser = async (req, res) => {
     const {email} = req.body;
     const {username} = req.body;
     const {password} = req.body;
+    const {answer} = req.body;
 
     //Check if all Values are given
-    if(!email || !username || !password){
+    if(!email || !username || !password || !answer){
         return res.status(400).json({success: false, err: `Please provide all required Information!`})
     }
 
@@ -45,6 +47,7 @@ const createUser = async (req, res) => {
                         passwordHash: passwordHash,
                         created: created,
                         isAdmin: false,
+                        answer: answer,
                     },
                 }
             )
