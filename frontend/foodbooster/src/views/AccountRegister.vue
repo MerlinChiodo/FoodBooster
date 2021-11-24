@@ -12,19 +12,26 @@
 
             <!-- USERNAME -->
             <ui-form-field>
-              <label class="required" pattern=".{,20}">Username:</label>
-              <ui-textfield type="text" required>Username</ui-textfield>
+              <label class="required" pattern=".{,20}">Nutzername:</label>
+              <ui-textfield type="text" required>Nutzername</ui-textfield>
             </ui-form-field>
 
             <!-- EMAIL -->
             <ui-form-field>
               <label class="required">E-Mail:</label>
-              <ui-textfield type="text" required>E-Mail Adresse</ui-textfield>
+              <ui-textfield type="text" pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>E-Mail Adresse
+              </ui-textfield>
+            </ui-form-field>
+
+            <!-- Sicherheitsfrage -->
+            <ui-form-field>
+              <label class="required">Sicherheitsfrage</label>
+              <ui-textfield type="text" required>Wo bist du geboren?</ui-textfield>
             </ui-form-field>
 
             <!-- PASSWORD -->
             <ui-form-field>
-              <label class="required">Password:</label>
+              <label class="required">Passwort:</label>
               <ui-textfield
                   input-type="password"
                   required
@@ -32,16 +39,16 @@
                   helper-text-id="pw-validation-msg"
                   :attrs="{autocomplete: 'current-password'}"
               >
-                Choose password
+                Passwort auswählen
               </ui-textfield>
               <ui-textfield-helper id="pw-validation-msg" visible validMsg>
-                Must be at least 8 characters long
+                Sollte mindestens 8 Zeichen lang sein.
               </ui-textfield-helper>
             </ui-form-field>
 
             <!-- PASSWORD CONFIRM -->
             <ui-form-field>
-              <label class="required">Password:</label>
+              <label class="required">Passwort:</label>
               <ui-textfield
                   input-type="password"
                   required
@@ -49,10 +56,10 @@
                   helper-text-id="pw-validation-msg"
                   :attrs="{autocomplete: 'current-password'}"
               >
-                Conform password
+                Passwort bestätigen
               </ui-textfield>
               <ui-textfield-helper id="pw-validation-msg" visible validMsg>
-                Please confirm the password.
+                Bitte bestätigen Sie das Passwort.
               </ui-textfield-helper>
             </ui-form-field>
 
@@ -60,14 +67,13 @@
             <ui-form-field>
               <ui-checkbox helper-text-id="newsletter-validation-msg"></ui-checkbox>
               <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>
-                Yes i want to subscribe to the newsletter.
+                Ja, ich will den Newsletter abonieren.
               </ui-textfield-helper>
             </ui-form-field>
 
             <!-- SUBMIT -->
             <ui-form-field :class="actionClass">
-              <ui-button raised>Submit</ui-button>
-              <ui-button outlined>Cancel</ui-button>
+              <ui-button raised>Registrieren</ui-button>
             </ui-form-field>
           </template>
         </ui-form>

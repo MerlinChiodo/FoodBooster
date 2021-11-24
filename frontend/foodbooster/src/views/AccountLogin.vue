@@ -17,7 +17,7 @@
 
             <!-- PASSWORD -->
             <ui-form-field>
-              <label class="required">Password:</label>
+              <label class="required">Passwort:</label>
               <ui-textfield
                   input-type="password"
                   required
@@ -30,18 +30,20 @@
 
             <!-- Sign in -->
             <ui-form-field :class="actionClass">
-              <ui-button raised>Sign in</ui-button>
+              <ui-button raised>Einloggen</ui-button>
             </ui-form-field>
 
             <!-- Register and forgot password reroutes -->
             <ui-form-field>
               <router-link to="/forgotpassword">
-                forgot password
+                Passwort vergessen?
               </router-link>
             </ui-form-field>
-            <router-link to="/accountregister">
-                Sign up
+            <ui-form-field>
+              <router-link to="/accountregister">
+                Registrieren
               </router-link>
+            </ui-form-field>
           </template>
         </ui-form>
       </div>
