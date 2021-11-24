@@ -44,6 +44,7 @@ describe(`/POST user`,async () => {
         email: "mustermail@muster.com",
         username: "musterName",
         password: "muster",
+        answer: "Hund",
     }
 
     //Testdata with missing Parts
