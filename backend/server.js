@@ -23,9 +23,9 @@ const flash = require('express-flash')
 /*******************************************************************************
  * Imports of other files from this project
  ******************************************************************************/
-//const initializePassport = require('./passport-config')
+const { initialize, checkUnauthenticated } = require('./passport-config')
 
-//initializePassport(passport)
+initialize(passport)
 
 const account = require('./API/account')
 const einkaufsliste = require('./API/einkaufsliste')
@@ -47,8 +47,8 @@ app.use(express.json())
 app.use(express.urlencoded({
   extended: false,
 }))
-/*app.use(passport.initialize())
-app.use(passport.session())*/
+app.use(passport.initialize())
+app.use(passport.session())
 
 /*******************************************************************************
  * Router integration for the API
@@ -99,39 +99,6 @@ app.delete('/logout', (req, res) => {
   req.logOut()
   res.redirect('/login')
 })
-
-/*******************************************************************************
- * Middleware to check if users are authenticated or not and act accordingly
- ******************************************************************************/
-/**
- * Middleware to check if the user accessing this content is authenticated.
- * If not the user is redirected to the login page
- * @param req the request body
- * @param res the response
- * @param next the next middleware function
- */
-function checkAuthenticated (req, res, next) {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/login')
-}
-
-/**
- * Middleware to check if the user accessing this content is authenticated.
- * If so the user is redirected to the home page.
- * This function is used to disallow access to mainly the login page for logged
- * in users, so that they can't log in twice
- * @param req the request body
- * @param res the response
- * @param next the next middleware function
- */
-function checkUnauthenticated (req, res, next) {
-  if (req.isUnauthenticated()) {
-    return next()
-  }
-  res.redirect('/')
-}
 
 /*******************************************************************************
  * Starting the server
