@@ -23,9 +23,9 @@ const flash = require('express-flash')
 /*******************************************************************************
  * Imports of other files from this project
  ******************************************************************************/
-const initializePassport = require('./passport-config')
+const { initialize, checkUnauthenticated } = require('./passport-config')
 
-initializePassport(passport)
+initialize(passport)
 
 const account = require('./API/account')
 const einkaufsliste = require('./API/einkaufsliste')
