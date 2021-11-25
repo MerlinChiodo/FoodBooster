@@ -13,9 +13,9 @@ chai.use(chaiHTTP)
 
 //Test data to create User
 let newDataCorrect = {
-  email: 'test@muster.com',
-  username: 'testName',
-  password: 'test',
+  email: 'editUser@muster.com',
+  username: 'editUser',
+  password: 'userEdit',
   answer: 'Hund',
 }
 
@@ -64,10 +64,10 @@ describe('/PUT user', async () => {
 
         // request the account change
         const result = await agent.post('/api/account').
-          send({ username: 'nameTest' })
+          send({ username: 'userEdit' })
 
         expect(result.body.success).to.be.true
-        expect(result.body.user.name).to.be('nameTest')
+        expect(result.body.user.name).to.be('userEdit')
       })
   })
 
@@ -82,10 +82,10 @@ describe('/PUT user', async () => {
 
         // request the account change
         const result = await agent.post('/api/account').
-          send({ accountemail: 'test2@muster.com' })
+          send({ accountemail: 'editUserNew@muster.com' })
 
         expect(result.body.success).to.be.true
-        expect(result.body.user.email).to.be('test2@muster.com')
+        expect(result.body.user.email).to.be('editUserNew@muster.com')
       })
   })
 

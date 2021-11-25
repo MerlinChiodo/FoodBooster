@@ -18,8 +18,7 @@ const createUser = async (req, res) => {
   const { answer } = req.body
 
   //Check if all Values are given
-  if (!email || !username || !password || !answer
-  ) {
+  if (!email || !username || !password || !answer) {
     return res.status(400).
       json(
         { success: false, err: `Please provide all required Information!` })
@@ -127,11 +126,67 @@ const putUser = async (req, res) => {
   }
 }
 
-const forgotPassword = (req, res) => {
-  if ()
+/**
+ * Function to change the password of an existing user
+ * Used in ../API/account/password for the PUT Method of the /API/account/ route
+ * Returns an error if the answer to the security question is wrong, or if there
+ * is a database error
+ */
+const forgotPassword = async (req, res) => {
+  if (req.body.sicherheitsfrageAntwort == null || req.body.neuesPasswort ==
+    null) {
+    return res.status(400).json(
+      {
+        success: false,
+        err: `You must enter the answer to the security question and the new password`,
+      })
+  }
+
+  let answer
+  try {
+    answer = await prisma.user.findMany({
+      where: {
+        email: req.user.email,
+      },
+      select: {
+        answer: true,
+      },
+    })
+  } catch (error) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+
+  const givenAnswer = req.body.sicherheitsfrageAntwort.toLowerCase()
+  answer = answer.toLowerCase()
+
+  if (givenAnswer !== answer) {
+    return res.status(200).
+      send({
+        success: false,
+        err: 'The answer to the security question does not match',
+      })
+  } else {
+    const hashedPassword = await bcrypt.hash(req.body.neuesPasswort, 10)
+    try {
+      await prisma.user.update({
+        where: {
+          id: req.user.id,
+        },
+        data: {
+          passwordHash: hashedPassword,
+        },
+      })
+      return res.status(200).
+        send({ success: true, msg: 'The password has been reset' })
+    } catch (error) {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
     }
+  }
+}
 
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { createUser, putUser }
+module.exports = { createUser, putUser, forgotPassword }
