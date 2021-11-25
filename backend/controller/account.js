@@ -113,14 +113,14 @@ const putUser = async (req, res) => {
   }
 
   try {
-    await prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id: req.user.id,
       },
       data: data,
     })
     return res.status(200).
-      send({ success: true, msg: 'User successfully edited' })
+      send({ success: true, msg: 'User successfully edited', user })
   } catch (error) {
     return res.status(500).
       json({ success: false, err: 'Ups, something went wrong!', error })
