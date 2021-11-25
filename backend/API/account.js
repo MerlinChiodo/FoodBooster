@@ -7,7 +7,9 @@ const express = require('express')
  */
 const router = express.Router()
 
-const {createUser} = require('../controller/account.js')
+const { createUser } = require('../controller/account.js')
+const { checkIfUser } = require('../passport-config')
+const { putUser } = require('../controller/account')
 
 /*******************************************************************************
  * Middleware for the server to use
@@ -27,9 +29,7 @@ router.delete('/', (req, res) => {
 
 })
 
-router.put('/', (req, res) => {
-
-})
+router.put('/', checkIfUser, putUser)
 
 router.put('/password', (req, res) => {
 
