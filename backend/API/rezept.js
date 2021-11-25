@@ -2,6 +2,8 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
+const { getRecipes } = require("../controller/rezept.js")
+
 /**
  * The router allows us to receive requests in files that aren't the main file
  */
@@ -34,9 +36,7 @@ router.get('/featured', (req, res) => {
 
 })
 
-router.get('/search', (req, res) => {
-
-})
+router.get('/search', getRecipes)
 
 router.post('/bewertung', (req, res) => {
 
