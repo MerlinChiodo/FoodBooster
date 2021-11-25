@@ -11,7 +11,17 @@ const underscore = require('underscore');
  * If no special filtering is needed, u can leave the query body empty --> returns all recepies
  * getRecipes filters using an AND-Method --> name & servings, only returns recepies with given name AND servings
  * If a filtering field is not given, it is being ignored
- *
+ * Defined Arguments:
+ *      - name --> searches for recipe with exact name
+ *      - bewertung --> searches for recipes with exact rating
+ *      - author --> searches for recipes created by creatorID
+ *      - servings --> searches for recipes with exact servings
+ *      - featured --> searches for featured or non featured recipes
+ *      - description --> searches for recipes with given keywords in description
+ *      - ingredients --> searches for recipes with given ingredients
+ *      - categories --> searches for recipes with given categories
+ *          !ingredients and categories need ARRAYS. Arrays in querys are defined like this:!
+ *          api/rezept/search/?ingredients[]=Kartoffel&ingredients[]=Tomate&categories[]=Kuchen&ingredients[]=Salz
  * Responses:   201 - {success: true, msg: {ArrayOfRecepies}}
  *              201 - {success: true, msg: {ArrayOfFilteredRecepies}}
  *              500 - {success: false, msg: {Ups, something went wrong!}} --> Prisma error
@@ -59,10 +69,10 @@ const getRecipes = async (req,res) =>{
                 }
             } )
 
-            return res.status(201).json( { success: false, msg: recipesFiltered} )
+            return res.status(201).json( { success: true, msg: recipesFiltered} )
         } catch(err){
             console.log(err)
-            return res.status(500).json( { success: false, msg: "Ups, something went wrong!" } )
+            return res.status(500).json( { success: false, err: "Ups, something went wrong!" } )
         }
 }
 
