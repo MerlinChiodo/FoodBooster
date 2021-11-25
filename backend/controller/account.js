@@ -142,25 +142,7 @@ const forgotPassword = async (req, res) => {
       })
   }
 
-  let answer
-  try {
-    answer = await prisma.user.findMany({
-      where: {
-        email: req.user.email,
-      },
-      select: {
-        answer: true,
-      },
-    })
-  } catch (error) {
-    return res.status(500).
-      json({ success: false, err: 'Ups, something went wrong!', error })
-  }
-
-  const givenAnswer = req.body.sicherheitsfrageAntwort.toLowerCase()
-  answer = answer.toLowerCase()
-
-  if (givenAnswer !== answer) {
+  if (!await bcrypt.compare(req.body.sicherheitsfrageAntwort, user.answer)) {
     return res.status(200).
       send({
         success: false,
