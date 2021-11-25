@@ -127,6 +127,10 @@ const putUser = async (req, res) => {
   }
 }
 
+const forgotPassword = (req, res) => {
+  
+}
+
 /*****************************************
  * Export for use in other files
  ****************************************/
