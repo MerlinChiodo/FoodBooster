@@ -18,7 +18,8 @@ const createUser = async (req, res) => {
   const { answer } = req.body
 
   //Check if all Values are given
-  if (!email || !username || !password || !answer) {
+  if (!email || !username || !password || !answer
+  ) {
     return res.status(400).
       json(
         { success: false, err: `Please provide all required Information!` })
@@ -60,6 +61,7 @@ const createUser = async (req, res) => {
     } catch (error) {
       res.status(500).
         json({ success: false, err: 'Ups, something went wrong!' })
+
     }
 
   } else {
