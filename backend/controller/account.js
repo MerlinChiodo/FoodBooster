@@ -128,8 +128,8 @@ const putUser = async (req, res) => {
 }
 
 const forgotPassword = (req, res) => {
-  
-}
+  if ()
+    }
 
 /*****************************************
  * Export for use in other files
