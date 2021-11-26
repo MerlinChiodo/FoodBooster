@@ -35,7 +35,7 @@ const getRecipes = async (req,res) =>{
 
             const recipes = await prisma.recipe.findMany()
 
-            return res.status(201).json( { success: true, msg: recipes } )
+            return res.status(200).json( { success: true, msg: recipes } )
         }
 
         try {
@@ -69,7 +69,7 @@ const getRecipes = async (req,res) =>{
                 }
             } )
 
-            return res.status(201).json( { success: true, msg: recipesFiltered} )
+            return res.status(200).json( { success: true, msg: recipesFiltered} )
         } catch(err){
             console.log(err)
             return res.status(500).json( { success: false, err: "Ups, something went wrong!" } )
