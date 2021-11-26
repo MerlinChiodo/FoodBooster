@@ -28,7 +28,7 @@ describe("/GET rezept/search", async () => {
     it("should return all recipes when given no query", async () =>{
         let res = await chai.request(server).get("/api/rezept/search")
 
-        expect(res.status).to.equal(201)
+        expect(res.status).to.equal(200)
         expect(res.body).to.be.a(`object`)
         expect(res.body.msg).to.be.a(`array`)
         expect(res.body.success).to.be.true
@@ -37,7 +37,7 @@ describe("/GET rezept/search", async () => {
     it("should return at least one Recipe when using query /?name=TEST Spaghetti mit Soße", async () => {
         let res = await chai.request(server).get("/api/rezept/search/?name=TEST Spaghetti mit Soße")
 
-        expect(res.status).to.equal(201)
+        expect(res.status).to.equal(200)
         expect(res.body).to.be.a(`object`)
         expect(res.body.msg).to.be.a(`array`)
         expect(res.body.success).to.be.true
@@ -47,7 +47,7 @@ describe("/GET rezept/search", async () => {
 
         let res = await chai.request(server).get("/api/rezept/search/?anything=3132")
 
-        expect(res.status).to.equal(201)
+        expect(res.status).to.equal(200)
         expect(res.body).to.be.a(`object`)
         expect(res.body.msg).to.be.a(`array`)
         expect(res.body.success).to.be.true
@@ -57,7 +57,7 @@ describe("/GET rezept/search", async () => {
 
         let res = await chai.request(server).get("/api/rezept/search/?author=1033&bewertung=5")
 
-        expect(res.status).to.equal(201)
+        expect(res.status).to.equal(200)
         expect(res.body).to.be.a(`object`)
         expect(res.body.msg).to.be.a(`array`)
         expect(res.body.success).to.be.true
@@ -66,7 +66,7 @@ describe("/GET rezept/search", async () => {
     it("should return no recipes with given arguments", async () => {
         let res = await chai.request(server).get("/api/rezept/search/?author=0&bewertung=26")
 
-        expect(res.status).to.equal(201)
+        expect(res.status).to.equal(200)
         expect(res.body).to.be.a(`object`)
         expect(res.body.msg).to.be.a(`array`)
         expect(res.body.success).to.be.true
