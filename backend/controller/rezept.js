@@ -22,8 +22,8 @@ const underscore = require('underscore');
  *      - categories --> searches for recipes with given categories
  *          !ingredients and categories need ARRAYS. Arrays in querys are defined like this:!
  *          api/rezept/search/?ingredients[]=Kartoffel&ingredients[]=Tomate&categories[]=Kuchen&ingredients[]=Salz
- * Responses:   201 - {success: true, msg: {ArrayOfRecepies}}
- *              201 - {success: true, msg: {ArrayOfFilteredRecepies}}
+ * Responses:   200 - {success: true, msg: {ArrayOfRecepies}}
+ *              200 - {success: true, msg: {ArrayOfFilteredRecepies}}
  *              500 - {success: false, msg: {Ups, something went wrong!}} --> Prisma error
  *
  *  TODO : Database cleanup --> Attributes are mixed with english and german
