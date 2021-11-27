@@ -73,3 +73,55 @@ describe("/GET rezept/search", async () => {
         expect(res.body.msg).to.be.empty
     })
 })
+
+/**
+ *  Testsuite for the GET api/rezept/single/:recipeID route
+ *
+ *  Test:
+ *      - if correct Param is given, fitting recipe is found
+ *      - if false Param is given, error is returned
+ *      - if non existing ID is given, error is returned
+ **/
+describe("/GET rezept/single/:recipeID", async () => {
+
+    it("should return a recipe when given an existing ID", async () =>{
+
+        //Get an existing recipe and its ID
+        let recipes = await chai.request(server).get("/api/rezept/search")
+
+        let testRecipeID = recipes.body.msg[0].id
+
+        //Create URL with found recipeID
+        let url = `/api/rezept/single/`+ testRecipeID
+        let res = await chai.request(server).get(url)
+
+        expect(res.status).to.equal(200)
+        expect(res.body).to.be.a(`object`)
+        expect(res.body.msg).to.be.a(`object`)
+        expect(res.body.success).to.be.true
+        expect(res.body.msg.id).to.equal(testRecipeID)
+    })
+
+    it("should not return a recipe when given a Character instead of Number", async () =>{
+
+        //Query with Character instead of Number
+        let res = await chai.request(server).get(`/api/rezept/single/a`)
+
+        expect(res.status).to.equal(400)
+        expect(res.body).to.be.a(`object`)
+        expect(res.body.err).to.be.a(`string`)
+        expect(res.body.success).to.be.false
+    })
+
+    it("should not return a recipe when given a non existing ID", async () =>{
+
+        //Query with non existing ID
+        let res = await chai.request(server).get(`/api/rezept/single/0`)
+
+        expect(res.status).to.equal(404)
+        expect(res.body).to.be.a(`object`)
+        expect(res.body.err).to.be.a(`string`)
+        expect(res.body.success).to.be.false
+    })
+
+})
