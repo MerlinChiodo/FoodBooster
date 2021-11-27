@@ -24,7 +24,7 @@ const underscore = require('underscore');
  *          api/rezept/search/?ingredients[]=Kartoffel&ingredients[]=Tomate&categories[]=Kuchen&ingredients[]=Salz
  * Responses:   200 - {success: true, msg: {ArrayOfRecepies}}
  *              200 - {success: true, msg: {ArrayOfFilteredRecepies}}
- *              500 - {success: false, msg: {Ups, something went wrong!}} --> Prisma error
+ *              500 - {success: false, err: {Ups, something went wrong!}} --> Prisma error
  *
  *  TODO : Database cleanup --> Attributes are mixed with english and german
  * */
@@ -76,4 +76,42 @@ const getRecipes = async (req,res) =>{
         }
 }
 
-module.exports = { getRecipes }
+/**
+ *
+ * Returns a single Recipe.
+ * Searches by ID and will only return the unique Recipe
+ * If given non existing ID, or non numeric values it returns error code
+ * Responses:   200 - {success: true, msg: recipe}
+ *              404 - {success: false, err: {404 Not Found}} --> No Recipe found
+ *              400 - {success: false, err: {Please provide a Number}} --> Wrong Parameter given
+ *              500 - {success: false, err: {Ups, something went wrong!}} --> Prisma Error
+ *
+ *  TODO : Database cleanup --> Attributes are mixed with english and german
+ * */
+const getSingleRecipe = async (req,res) =>{
+
+    //get the recipeID out of the params
+    const {recipeID} = req.params
+
+    //Only allow Numbers, as the ID is stored as Number
+    if(isNaN(recipeID))  return res.status(400).json( { success: false, err: "Please provide a Number" } )
+
+    //read recipe from database
+    try{
+        const recipe = await prisma.recipe.findUnique({
+            where: {
+                id: Number(recipeID),
+            },
+        })
+        //Check if a recipe has been found, send response accordingly
+        if(recipe){
+            return res.status(200).json( { success: true, msg: recipe} )
+        }else{
+            return res.status(404).json( { success: false, err: "404 Not Found"} )
+        }
+    }catch (err){
+        return res.status(500).json( { success: false, err: "err" } )
+    }
+}
+
+module.exports = { getRecipes, getSingleRecipe }
