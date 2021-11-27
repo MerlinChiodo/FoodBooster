@@ -13,7 +13,7 @@ const underscore = require('underscore');
  * If a filtering field is not given, it is being ignored
  * Defined Arguments:
  *      - name --> searches for recipe with exact name
- *      - bewertung --> searches for recipes with exact rating
+ *      - rating --> searches for recipes with exact rating
  *      - author --> searches for recipes created by creatorID
  *      - servings --> searches for recipes with exact servings
  *      - featured --> searches for featured or non featured recipes
@@ -44,9 +44,9 @@ const getRecipes = async (req,res) =>{
                 where: {
                     //Filters using AND --> name & servings, only returns recepies with given name AND servings
                     AND: [
-                        {name: req.query.name},
+                        { name: req.query.name },
                         //Using ternary operator, to cast without error
-                        { bewertung: ( !req.query.bewertung ) ? undefined : Number( req.query.bewertung ) },
+                        { rating: ( !req.query.rating ) ? undefined : Number( req.query.rating ) },
                         { creatorID: ( !req.query.author ) ? undefined : Number( req.query.author ) },
                         { servings: ( !req.query.servings ) ? undefined : Number( req.query.servings ) },
                         { featured: ( !req.query.featured ) ? undefined : ( req.query.featured === "true" ) },

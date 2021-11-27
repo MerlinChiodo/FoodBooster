@@ -37,7 +37,7 @@ model Recipe {
   description String                        @db.VarChar(1000)
   servings    Int
   created     DateTime                      @db.DateTime(0)
-  bewertung   Int?
+  rating      Int?
   featured    Boolean                       @default(false)
   creatorID   Int
   creator     User                          @relation(fields: [creatorID], references: [id])
