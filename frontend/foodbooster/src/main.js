@@ -14,14 +14,14 @@ app.use(BalmUI, {
         // (Optional) New in 8.38.0, See ThemeColor type in APIs.
         primary: "#cad92b",
         secondary: "#444445",
-        //TextStyle: "#444445" | "#444445",
-        //setTextcolor: "" | "#444445"
+
     },
 
     UiTabs: {}
 
 
-});
+})
+;
 app.use(BalmUIPlus);
 app.use(UiForm);
 app.use(UiFormField);

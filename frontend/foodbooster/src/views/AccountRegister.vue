@@ -17,7 +17,7 @@
             </ui-form-field>
 
             <!-- EMAIL -->
-            <ui-form-field>
+            <ui-form-field id="email">
               <label class="required">E-Mail:</label>
               <ui-textfield type="text" pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>E-Mail Adresse
               </ui-textfield>
@@ -88,6 +88,8 @@
 <script>
 export default {
   name: "AccountRegister"
+
+  
 }
 </script>
 
