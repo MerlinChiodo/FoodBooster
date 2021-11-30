@@ -6,6 +6,7 @@ import Forum from '../views/Forum.vue'
 import Einkaufsliste from '../views/Einkaufsliste.vue'
 import Ernährungsplan from '../views/Ernährungsplan.vue'
 import AccountRegister from '../views/AccountRegister.vue'
+import rezeptDummy from '../views/rezeptDummy.vue'
 
 // Defines the routes
 // Each route should map to a component.
@@ -17,6 +18,7 @@ const routes = [
     {path: '/einkaufsliste', name: 'Einkaufsliste', component: Einkaufsliste},
     {path: '/ernährungsplan', name: 'Ernährungsplan', component: Ernährungsplan},
     {path: '/accountregister', name: 'AccountRegister', component: AccountRegister},
+    {path: '/rezept', name: 'Rezept', component: rezeptDummy},
 ]
 
 // Creates the router instance and passes the `routes` option
