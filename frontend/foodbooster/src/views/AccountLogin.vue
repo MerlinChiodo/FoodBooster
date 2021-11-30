@@ -12,13 +12,19 @@
             <!-- EMAIL -->
             <ui-form-field>
               <label class="required">E-Mail:</label>
-              <ui-textfield type="text" required>E-Mail Adresse</ui-textfield>
+              <ui-textfield
+                  v-model="vemail"
+                  pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
+                  required
+              >E-Mail Adresse
+              </ui-textfield>
             </ui-form-field>
 
             <!-- PASSWORD -->
             <ui-form-field>
               <label class="required">Passwort:</label>
               <ui-textfield
+                  v-model="vpassword"
                   input-type="password"
                   required
                   pattern=".{8,}"
@@ -30,8 +36,16 @@
 
             <!-- Sign in -->
             <ui-form-field :class="actionClass">
-              <ui-button raised>Einloggen</ui-button>
+              <ui-button @click="postData" raised>Einloggen</ui-button>
             </ui-form-field>
+
+            <!-- RESPONSE FAIL MESSAGE -->
+            <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
+            <!-- RESPONSE SUCCESS MESSAGE -->
+            <ui-alert v-if="postSuccessResult" state="success">Erfolgreich eingeloggt.
+              <p>
+                {{ postSuccessResult }}
+              </p></ui-alert>
 
             <!-- Register and forgot password reroutes -->
             <ui-form-field>
@@ -44,6 +58,7 @@
                 Registrieren
               </router-link>
             </ui-form-field>
+
           </template>
         </ui-form>
       </div>
@@ -54,8 +69,51 @@
 
 </template>
 <script>
+import http from "@/http-common";
+
 export default {
-  name: "AccountLogin"
+  name: "AccountLogin",
+  data() {
+    return {
+      postResult: null,
+      postSuccessResult: null,
+      vpassword: "",
+      vemail: "",
+    }
+  },
+  methods: {
+    fortmatResponse(res) {
+      return JSON.stringify(res, null, 2);
+    },
+
+    async postData() {
+      try {
+        const res = await http.post("account/", {
+          email: this.vemail,
+          password: this.vpassword,
+
+        }, {
+          headers: {
+            "x-access-token": "token-value",
+          },
+        });
+
+        const result = {
+          status: res.status + "-" + res.statusText,
+          headers: res.headers,
+          data: res.data,
+        };
+
+        this.postSuccessResult = this.fortmatResponse(result);
+      } catch (err) {
+        this.postResult = this.fortmatResponse(err.response?.data) || err;
+      }
+    },
+
+    clearPostOutput() {
+      this.postResult = null;
+    },
+  }
 }
 </script>
 

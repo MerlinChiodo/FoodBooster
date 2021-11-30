@@ -13,28 +13,32 @@
             <!-- USERNAME -->
             <ui-form-field>
               <label class="required" pattern=".{,20}">Nutzername:</label>
-              <ui-textfield type="text" ref="username" required>Nutzername</ui-textfield>
+              <ui-textfield v-model="vusername" required>
+                Nutzername
+              </ui-textfield>
             </ui-form-field>
 
             <!-- EMAIL -->
             <ui-form-field>
               <label class="required">E-Mail:</label>
-              <ui-textfield type="text" ref="email" pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>E-Mail
-                Adresse
+              <ui-textfield
+                  v-model="vemail"
+                  pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+"
+                  required
+              >E-Mail Adresse
               </ui-textfield>
             </ui-form-field>
-
             <!-- Sicherheitsfrage -->
             <ui-form-field>
               <label class="required">Sicherheitsfrage</label>
-              <ui-textfield type="text" ref="answer" required>Wo bist du geboren?</ui-textfield>
+              <ui-textfield v-model="vanswer" required>Wo bist du geboren?</ui-textfield>
             </ui-form-field>
 
             <!-- PASSWORD -->
             <ui-form-field>
               <label class="required">Passwort:</label>
               <ui-textfield
-                  ref="password"
+                  v-model="vpassword"
                   input-type="password"
                   required
                   pattern=".{8,}"
@@ -61,8 +65,12 @@
               <ui-button @click="postData" raised>Registrieren</ui-button>
             </ui-form-field>
 
-            <!-- RESPONSE MESSAGE -->
+            <!-- RESPONSE FAIL MESSAGE -->
             <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
+            <!-- RESPONSE SUCCESS MESSAGE -->
+            <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.
+              <p>
+                {{ postSuccessResult }}</p></ui-alert>
 
           </template>
         </ui-form>
@@ -81,7 +89,12 @@ export default {
   name: "AccountRegister",
   data() {
     return {
-      postResult: null
+      postResult: null,
+      postSuccessResult: null,
+      vusername: "",
+      vpassword: "",
+      vanswer: "",
+      vemail: "",
     }
   },
   methods: {
@@ -91,11 +104,11 @@ export default {
 
     async postData() {
       try {
-        const res = await http.post("/account", {
-          email: this.$refs.email.value,
-          username: this.$refs.username.value,
-          password: this.$refs.password.value,
-          answer: this.$refs.answer.value,
+        const res = await http.post("account/", {
+          email: this.vemail,
+          username: this.vusername,
+          password: this.vpassword,
+          answer: this.vanswer,
 
         }, {
           headers: {
@@ -109,8 +122,7 @@ export default {
           data: res.data,
         };
 
-        this.postResult = this.fortmatResponse(result);
-        this.clearPostOutput();
+        this.postSuccessResult = this.fortmatResponse(result);
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
       }

@@ -20,10 +20,13 @@ const session = require('express-session')
  * Flash enables passport to send messages within the response body
  */
 const flash = require('express-flash')
+
+
+const cors = require('cors')
 /*******************************************************************************
  * Imports of other files from this project
  ******************************************************************************/
-const { initialize, checkUnauthenticated } = require('./passport-config')
+const {initialize, checkUnauthenticated} = require('./passport-config')
 
 initialize(passport)
 
@@ -37,15 +40,16 @@ const rezept = require('./API/rezept')
 /*******************************************************************************
  * Middleware for the server to use
  ******************************************************************************/
+app.use(cors())
 app.use(flash())
 app.use(session({
-  secret: 'secret',
-  resave: false,
-  saveUninitialized: false,
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
 }))
 app.use(express.json())
 app.use(express.urlencoded({
-  extended: false,
+    extended: false,
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -68,14 +72,14 @@ app.use('/api/rezept', rezept)
  * Get Request for the homepage
  */
 app.get('/', (req, res) => {
-  res.send('Hallo')
+    res.send('Hallo')
 })
 /**
  * Get for the login page
  * Redirects to the home page if a logged in user tries to call this page
  */
 app.get('/login', checkUnauthenticated, (req, res) => {
-  res.send('Login Page')
+    res.send('Login Page')
 })
 
 /**
@@ -85,9 +89,9 @@ app.get('/login', checkUnauthenticated, (req, res) => {
  * Redirects to the home page if a logged in user tries to log in again
  */
 app.post('/login', checkUnauthenticated, passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true,
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true,
 }))
 
 /**
@@ -96,8 +100,8 @@ app.post('/login', checkUnauthenticated, passport.authenticate('local', {
  * If a logged out user calls this function, it only redirects.
  */
 app.delete('/logout', (req, res) => {
-  req.logOut()
-  res.redirect('/login')
+    req.logOut()
+    res.redirect('/login')
 })
 
 /*******************************************************************************
