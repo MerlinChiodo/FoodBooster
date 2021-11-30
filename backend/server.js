@@ -105,3 +105,5 @@ app.delete('/logout', (req, res) => {
  * Always has to be the last statement
  ******************************************************************************/
 app.listen(80)
+
+module.exports = app

@@ -7,6 +7,10 @@ const express = require('express')
  */
 const router = express.Router()
 
+const { createUser } = require('../controller/account.js')
+const { checkIfUser } = require('../passport-config')
+const { putUser } = require('../controller/account')
+
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -18,17 +22,14 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
-router.post('/', (req, res) => {
 
-})
+router.route('/').post(createUser)
 
 router.delete('/', (req, res) => {
 
 })
 
-router.put('/', (req, res) => {
-
-})
+router.put('/', checkIfUser, putUser)
 
 router.put('/password', (req, res) => {
 

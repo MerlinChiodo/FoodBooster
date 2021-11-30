@@ -11,16 +11,16 @@ DELETE /logout/ () -> Redirect zu Home page ausgeloggt
 POST /api/account/ (username, email, password) -> Erfolg/400/error
 DELETE /api/account/ (accountemail) -> Erfolg/400/error
 PUT /api/account/password/ (accountemail) -> Erfolg/400/error
-PUT /api/account/ (accountemail, username, password) -> Erfolg/400/error
+PUT /api/account/ (accountemail, username) -> Erfolg/400/error
 POST /api/account/favorite/ (rezeptID) -> Erfolg/400/error
 GET /api/account/favorite/ () -> Liste der Favoriten
 GET /api/account/rezept/ () -> Liste der eigenen Rezepte
 
 POST /api/rezept/ (name, erstelleraccount, beschreibung, zutaten{}, fotos[url], kategorie[], portionen) -> Erfolg/400/error
 PUT /api/rezept/ (rezeptID, name, beschreibung, zutaten[], fotos[url], portionen, kategorie[]) -> Erfolg/400/error
-GET /api/rezept/ (rezeptID) -> Rezept mit der ID
+GET /api/rezept/single/:rezeptID -> Rezept mit der ID
 GET /api/rezept/featured/ () -> Liste der featured Rezepte
-GET /api/rezept/search/ (suchkriterien{kategorie[], name, zutaten[], erstelleraccount, tags[]} -> Liste der gefilterten Rezepte
+GET /api/rezept/search/ (suchkriterien{kategorie[], name, zutaten[], erlstelleraccount, tags[]} -> Liste der gefilterten Rezepte
 POST /api/rezept/bewertung/ (rezeptID, bewertung(1-5)) -> Erfolg/400/error
 POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar, verfasseremail) -> Erfolg/400/error
 

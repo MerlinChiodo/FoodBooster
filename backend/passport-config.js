@@ -24,17 +24,17 @@ function initialize (passport) {
   /**
    * This function decides if the login credentials are valid or not
    * @param id the id of the user
-   * @param passwort the password of the user
+   * @param password the password of the user
    * @param done called every time the function is done with its checking
    * @returns {Promise<*>} the error, if one occurred, the user, and a failure
    * message, if the validation process has a problem
    */
-  const authenticateUser = async (id, passwort, done) => {
+  const authenticateUser = async (id, password, done) => {
     // search for the user
     let user
 
     try {
-      user = searchUserByID(id)
+      user = await searchUserByID(id)
     } catch (err) {
       return done(err)
     }
@@ -42,10 +42,10 @@ function initialize (passport) {
     if (user == null) {
       return done(null, false, { message: 'There is no user with that id' })
     }
-
+    
     // validate the password the user entered, if an error occurs return that
     try {
-      if (await bcrypt.compare(passwort, user.passwordHash)) {
+      if (await bcrypt.compare(password, user.passwordHash)) {
         // if the password is correct, the user is forwarded and logged in
         return done(null, user)
       } else {
