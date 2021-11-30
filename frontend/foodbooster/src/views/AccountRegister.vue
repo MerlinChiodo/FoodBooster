@@ -13,26 +13,28 @@
             <!-- USERNAME -->
             <ui-form-field>
               <label class="required" pattern=".{,20}">Nutzername:</label>
-              <ui-textfield type="text" required>Nutzername</ui-textfield>
+              <ui-textfield type="text" ref="username" required>Nutzername</ui-textfield>
             </ui-form-field>
 
             <!-- EMAIL -->
-            <ui-form-field id="email">
+            <ui-form-field>
               <label class="required">E-Mail:</label>
-              <ui-textfield type="text" pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>E-Mail Adresse
+              <ui-textfield type="text" ref="email" pattern="[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+" required>E-Mail
+                Adresse
               </ui-textfield>
             </ui-form-field>
 
             <!-- Sicherheitsfrage -->
             <ui-form-field>
               <label class="required">Sicherheitsfrage</label>
-              <ui-textfield type="text" required>Wo bist du geboren?</ui-textfield>
+              <ui-textfield type="text" ref="answer" required>Wo bist du geboren?</ui-textfield>
             </ui-form-field>
 
             <!-- PASSWORD -->
             <ui-form-field>
               <label class="required">Passwort:</label>
               <ui-textfield
+                  ref="password"
                   input-type="password"
                   required
                   pattern=".{8,}"
@@ -46,23 +48,6 @@
               </ui-textfield-helper>
             </ui-form-field>
 
-            <!-- PASSWORD CONFIRM -->
-            <ui-form-field>
-              <label class="required">Passwort:</label>
-              <ui-textfield
-                  input-type="password"
-                  required
-                  pattern=".{8,}"
-                  helper-text-id="pw-validation-msg"
-                  :attrs="{autocomplete: 'current-password'}"
-              >
-                Passwort bestätigen
-              </ui-textfield>
-              <ui-textfield-helper id="pw-validation-msg" visible validMsg>
-                Bitte bestätigen Sie das Passwort.
-              </ui-textfield-helper>
-            </ui-form-field>
-
             <!-- NEWSLETTER -->
             <ui-form-field>
               <ui-checkbox helper-text-id="newsletter-validation-msg"></ui-checkbox>
@@ -73,8 +58,12 @@
 
             <!-- SUBMIT -->
             <ui-form-field :class="actionClass">
-              <ui-button raised>Registrieren</ui-button>
+              <ui-button @click="postData" raised>Registrieren</ui-button>
             </ui-form-field>
+
+            <!-- RESPONSE MESSAGE -->
+            <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
+
           </template>
         </ui-form>
       </div>
@@ -86,10 +75,51 @@
 </template>
 
 <script>
-export default {
-  name: "AccountRegister"
+import http from "../http-common.js";
 
-  
+export default {
+  name: "AccountRegister",
+  data() {
+    return {
+      postResult: null
+    }
+  },
+  methods: {
+    fortmatResponse(res) {
+      return JSON.stringify(res, null, 2);
+    },
+
+    async postData() {
+      try {
+        const res = await http.post("/account", {
+          email: this.$refs.email.value,
+          username: this.$refs.username.value,
+          password: this.$refs.password.value,
+          answer: this.$refs.answer.value,
+
+        }, {
+          headers: {
+            "x-access-token": "token-value",
+          },
+        });
+
+        const result = {
+          status: res.status + "-" + res.statusText,
+          headers: res.headers,
+          data: res.data,
+        };
+
+        this.postResult = this.fortmatResponse(result);
+        this.clearPostOutput();
+      } catch (err) {
+        this.postResult = this.fortmatResponse(err.response?.data) || err;
+      }
+    },
+
+    clearPostOutput() {
+      this.postResult = null;
+    },
+  }
 }
 </script>
 
