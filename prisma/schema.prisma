@@ -14,7 +14,7 @@ model User {
   passwordHash    String
   created         DateTime?          @db.DateTime(0)
   isAdmin         Boolean?           @default(false)
-  answer          String             @default("NULL")
+  answer          String
   comments        Comment[]
   groceryList     GroceryList?
   nutritionsplans Nutritionplan[]
@@ -37,9 +37,9 @@ model Recipe {
   description String                        @db.VarChar(1000)
   servings    Int
   created     DateTime                      @db.DateTime(0)
-  bewertung   Int?
   featured    Boolean                       @default(false)
   creatorID   Int
+  rating      Int?
   creator     User                          @relation(fields: [creatorID], references: [id])
   comments    Comment[]
   used        NutritionplanIncludesRecipe[]

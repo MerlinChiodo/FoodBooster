@@ -45,7 +45,7 @@ function initialize (passport) {
 
     // validate the password the user entered, if an error occurs return that
     try {
-      if (await bcrypt.compare(password, users[0].passwordHash)) {
+      if (await bcrypt.compare(password, users.passwordHash)) {
         // if the password is correct, the user is forwarded and logged in
         return done(null, users)
       } else {
@@ -61,12 +61,12 @@ function initialize (passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'email' },
       authenticateUser))
-  passport.serializeUser((user, done) => done(null, user[0].email))
+  passport.serializeUser((user, done) => done(null, user.email))
   passport.deserializeUser(async (email, done) => {
     // try to find the user, if an error occurs return that
     let user
     try {
-      user = searchUserByEmail(email)
+      user = await searchUserByEmail(email)
     } catch (err) {
       return done(err)
     }
@@ -94,7 +94,7 @@ async function searchUserByEmail (email) {
   } catch (err) {
     throw err
   }
-  return user
+  return user[0]
 }
 
 /**
