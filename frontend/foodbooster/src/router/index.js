@@ -7,6 +7,7 @@ import Einkaufsliste from '../views/Einkaufsliste.vue'
 import Ernährungsplan from '../views/Ernährungsplan.vue'
 import AccountRegister from '../views/AccountRegister.vue'
 import AccountLogin from '../views/AccountLogin.vue'
+import AccountPWForgot from "@/views/AccountPWForgot";
 
 // Defines the routes
 // Each route should map to a component.
@@ -19,6 +20,7 @@ const routes = [
     {path: '/ernährungsplan', name: 'Ernährungsplan', component: Ernährungsplan},
     {path: '/accountregister', name: 'AccountRegister', component: AccountRegister},
     {path: '/accountlogin', name: 'AccountLogin', component: AccountLogin},
+    {path: '/AccountPWForgot', name: 'AccountPWForgot', component: AccountPWForgot},
 ]
 
 // Creates the router instance and passes the `routes` option

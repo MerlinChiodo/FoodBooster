@@ -49,7 +49,7 @@
 
             <!-- Register and forgot password reroutes -->
             <ui-form-field>
-              <router-link to="/forgotpassword">
+              <router-link to="/AccountPWForgot">
                 Passwort vergessen?
               </router-link>
             </ui-form-field>
@@ -88,7 +88,7 @@ export default {
 
     async postData() {
       try {
-        const res = await http.post("account/", {
+        const res = await http.post("login/", {
           email: this.vemail,
           password: this.vpassword,
 
