@@ -69,8 +69,10 @@
             <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
             <!-- RESPONSE SUCCESS MESSAGE -->
             <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.
-              <p>
-                {{ postSuccessResult }}</p></ui-alert>
+              <!--  <p>
+                  {{ postSuccessResult }}
+                </p> -->
+            </ui-alert>
 
           </template>
         </ui-form>
