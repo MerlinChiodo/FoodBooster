@@ -23,31 +23,31 @@ const LocalStrategy = require('passport-local').Strategy
 function initialize (passport) {
   /**
    * This function decides if the login credentials are valid or not
-   * @param id the id of the user
+   * @param email the email of the user
    * @param password the password of the user
    * @param done called every time the function is done with its checking
    * @returns {Promise<*>} the error, if one occurred, the user, and a failure
    * message, if the validation process has a problem
    */
-  const authenticateUser = async (id, password, done) => {
+  const authenticateUser = async (email, password, done) => {
     // search for the user
-    let user
+    let users
 
     try {
-      user = await searchUserByID(id)
+      users = await searchUserByEmail(email)
     } catch (err) {
       return done(err)
     }
     // reject login if no user has been found
-    if (user == null) {
-      return done(null, false, { message: 'There is no user with that id' })
+    if (users == null) {
+      return done(null, false, { message: 'There is no user with that email' })
     }
-    
+
     // validate the password the user entered, if an error occurs return that
     try {
-      if (await bcrypt.compare(password, user.passwordHash)) {
+      if (await bcrypt.compare(password, users[0].passwordHash)) {
         // if the password is correct, the user is forwarded and logged in
-        return done(null, user)
+        return done(null, users)
       } else {
         // if the password is incorrect, a corresponding error message is sent
         return done(null, false, { message: 'Wrong password' })
@@ -59,14 +59,14 @@ function initialize (passport) {
 
   // give the strategy and the authentication function to passport
   passport.use(
-    new LocalStrategy({ usernameField: 'id' },
+    new LocalStrategy({ usernameField: 'email' },
       authenticateUser))
-  passport.serializeUser((user, done) => done(null, user.id))
-  passport.deserializeUser(async (id, done) => {
+  passport.serializeUser((user, done) => done(null, user[0].email))
+  passport.deserializeUser(async (email, done) => {
     // try to find the user, if an error occurs return that
     let user
     try {
-      user = searchUserByID(id)
+      user = searchUserByEmail(email)
     } catch (err) {
       return done(err)
     }
@@ -78,17 +78,17 @@ function initialize (passport) {
 }
 
 /**
- * Searches for a user with the specified id
+ * Searches for a user with the specified email
  * Throws all errors
- * @param id the id of the searched user
+ * @param email the email of the searched user
  * @returns {Promise<void>} the user if there is one, null if there is none
  */
-async function searchUserByID (id) {
+async function searchUserByEmail (email) {
   let user
   try {
-    user = await prisma.user.findUnique({
+    user = await prisma.user.findMany({
       where: {
-        id: id,
+        email: email,
       },
     })
   } catch (err) {
@@ -127,7 +127,7 @@ function checkUnauthenticated (req, res, next) {
  * Should always be used in tandem with the checkAuthenticated
  */
 function checkIfUser (req, res, next) {
-  if (!req.user || req.user.id !== req.body.id) {
+  if (!req.user || req.user.email !== req.body.email) {
     return res.status(403).
       send({ err: 'You can only make changes to your own property' })
   }
@@ -148,7 +148,6 @@ function checkIfAdmin (req, res, next) {
 
 module.exports = {
   initialize,
-  searchUserByID,
   checkAuthenticated,
   checkUnauthenticated,
   checkIfUser,
