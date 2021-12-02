@@ -137,10 +137,9 @@ const createRecipe = async (req, res) => {
   }
 
   //Check if ingredients are given
-  /*if(ingredients.length === 0){
+  if(ingredients.length === 0){
     return res.status(400).send( { success: false, err: "Please provide ingredients for the recipe"})
   }
-  */
 
   //Set time of Creation
   let created = new Date()
@@ -157,9 +156,50 @@ const createRecipe = async (req, res) => {
             featured: false,
           },
         })
+
+    try {
+      //create a link for every ingredient given
+      for (let ingredient of ingredients) {
+        let linkRecipeIngredient = await prisma.recipeIncludesIngredient.create(
+            {
+              data: {
+                ingredientName: ingredient,
+                recipeID: recipe.id,
+              }
+            }
+        )
+      }
+
+      //Check if categories are given
+      if(categories && categories.length !== 0){
+        //create a link for every category given
+        for (let category of categories){
+          let linkRecipeCategory = await prisma.recipeInCategory.create(
+              {
+                data: {
+                  categoryName: category,
+                  recipeID: recipe.id,
+                },
+              })
+        }
+      }
+    }catch (error){
+
+      //Something went wrong while linking --> revert creation of recipe
+      await prisma.recipe.delete({
+        where : {
+          id: recipe.id
+        }
+      })
+
+      return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
+    }
+
+    //recipe after linking is done
     return res.status(201).send( {success: true, msg: recipe} )
   }catch (err){
-    return res.status(500).send( {success: false, err: err} )
+    console.log(err)
+    return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
   }
 }
 
