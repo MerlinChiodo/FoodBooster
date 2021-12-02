@@ -13,8 +13,8 @@ let expect = chai.expect
 chai.use(chaiHTTP)
 
 /**
- * Function wich gets called after running the tests
- * Makes sure all inserted Data is getting delete after tests
+ * Function which gets called after running the tests
+ * Makes sure all inserted data is getting delete after tests
  * @param id ID of the User to be deleted
  **/
 async function endTest(id){

@@ -21,7 +21,7 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
-router.post('/',createRecipe) //TODO: checkAuthenticated einfügen
+router.post('/', checkAuthenticated, createRecipe)
 
 router.put('/', (req, res) => {
 

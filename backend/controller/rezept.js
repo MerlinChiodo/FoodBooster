@@ -25,7 +25,6 @@ const underscore = require('underscore')
  *              200 - {success: true, msg: {ArrayOfFilteredRecepies}}
  *              500 - {success: false, msg: {Ups, something went wrong!}} --> Prisma error
  *
- *  TODO : Database cleanup --> Attributes are mixed with english and german
  * */
 const getRecipes = async (req, res) => {
 
@@ -119,21 +118,32 @@ const getFeatured = async (req, res) => {
 }
 /**
  * Function to create a Recipe
- * @param req
- * @param res
- * @returns {Promise<void>}
+ * Checks if every required field is given and creates a recipe after.
+ * Uses the authorID from session, so no author needs to be send.
+ * Arguments to create a recipe: (? --> Optional)
+ *    name: name of the recipe
+ *    description: description of the recipe
+ *    ingredients[]: ingredients used in recipe (using name)
+ *    categories[]: categories for recipe (using name)
+ *    servings: how many servings is the recipe for
+ *
+ * Possible responses:
+ *    400 - {success: false, err: Please provide all required information!} --> Some information is missing
+ *    400 - {success: false, err: Please provide ingredients for the recipe} --> no ingredients are given
+ *    500 - {success: false, err: Ups, something went wrong!} --> Database error
+ *    201 - {success: true, msg: {created recipe}} --> recipe was created and returned
  */
 const createRecipe = async (req, res) => {
 
   //Get all infos
-  const {name, description, ingredients, pictures, categories, servings} = req.body
+  const {name, description, ingredients, categories, servings} = req.body
 
   //Get creator
-  const creator = 5
+  const creator = req.user.id
 
   //Check if every required item is given
   if(!name || !description || !ingredients || !servings){
-    return res.status(400).send( {success: false, err: "Please provide all required Information!"} )
+    return res.status(400).send( {success: false, err: "Please provide all required information!"} )
   }
 
   //Check if ingredients are given
@@ -145,6 +155,7 @@ const createRecipe = async (req, res) => {
   let created = new Date()
 
   try {
+    //create recipe without links
     const recipe = await prisma.recipe.create(
         {
           data: {
@@ -183,21 +194,18 @@ const createRecipe = async (req, res) => {
         }
       }
     }catch (error){
-
       //Something went wrong while linking --> revert creation of recipe
       await prisma.recipe.delete({
         where : {
           id: recipe.id
         }
       })
-
       return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
     }
 
     //recipe after linking is done
     return res.status(201).send( {success: true, msg: recipe} )
   }catch (err){
-    console.log(err)
     return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
   }
 }
