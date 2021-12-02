@@ -138,7 +138,7 @@ const createRecipe = async (req, res) => {
 
   //Check if ingredients are given
   if(ingredients.length === 0){
-    return res.status(400).send( { success: false, err: "Please provide ingredients for the recipe"})
+    return res.status(400).send( {success: false, err: "Please provide ingredients for the recipe"} )
   }
 
   //Set time of Creation
@@ -166,8 +166,7 @@ const createRecipe = async (req, res) => {
                 ingredientName: ingredient,
                 recipeID: recipe.id,
               }
-            }
-        )
+            })
       }
 
       //Check if categories are given
