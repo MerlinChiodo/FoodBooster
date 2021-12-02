@@ -117,5 +117,50 @@ const getFeatured = async (req, res) => {
   }
 
 }
+/**
+ * Function to create a Recipe
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
+const createRecipe = async (req, res) => {
 
-module.exports = { getRecipes, getFeatured }
+  //Get all infos
+  const {name, description, ingredients, pictures, categories, servings} = req.body
+
+  //Get creator
+  const creator = 1105
+
+  //Check if every required item is given
+  if(!name || !description || !ingredients || !servings){
+    return res.status(400).send( {success: false, err: "Please provide all required Information!"} )
+  }
+
+  //Check if ingredients are given
+  /*if(ingredients.length === 0){
+    return res.status(400).send( { success: false, err: "Please provide ingredients for the recipe"})
+  }
+  */
+
+  //Set time of Creation
+  let created = new Date()
+
+  try {
+    const recipe = await prisma.recipe.create(
+        {
+          data: {
+            creatorID: creator,
+            name: name,
+            description: description,
+            servings: servings,
+            created: created,
+            featured: false,
+          },
+        })
+    return res.status(201).send( {success: true, msg: recipe} )
+  }catch (err){
+    return res.status(500).send( {success: false, err: err} )
+  }
+}
+
+module.exports = { getRecipes, getFeatured, createRecipe }

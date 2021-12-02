@@ -2,7 +2,8 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
-const { getRecipes, getFeatured } = require('../controller/rezept')
+const { getRecipes, getFeatured, createRecipe } = require('../controller/rezept')
+const {checkAuthenticated} = require("../passport-config");
 
 /**
  * The router allows us to receive requests in files that aren't the main file
@@ -20,9 +21,7 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
-router.post('/', (req, res) => {
-
-})
+router.post('/',createRecipe) //TODO: checkAuthenticated einfügen
 
 router.put('/', (req, res) => {
 
