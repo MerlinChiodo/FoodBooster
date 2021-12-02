@@ -129,7 +129,7 @@ const createRecipe = async (req, res) => {
   const {name, description, ingredients, pictures, categories, servings} = req.body
 
   //Get creator
-  const creator = 1105
+  const creator = 5
 
   //Check if every required item is given
   if(!name || !description || !ingredients || !servings){
