@@ -94,4 +94,29 @@ describe('Edit Recipe Testsuite', async () => {
       console.log(err)
     })
   })
+
+  it('should not let the user change the recipe, because it is not his',
+    async () => {
+      agent.post('/login').
+        send({ email: 'maria@mail.com', password: 'password' }).
+        then(async (res) => {
+          expect(res.status).to.not.equal(403)
+          expect(res.status).to.not.equal(401)
+          const recipeData = {
+            rezeptID: 1,
+            servings: 2,
+            name: 'TEST Spaghetti mit Sauce',
+            ingredients: ['TEST_Salz', 'TEST_Pfeffer', 'TEST_Spaghetti'],
+          }
+
+          // request the account change
+          const result = await agent.put('/api/rezept').
+            send(recipeData)
+
+          expect(result.status).to.equal(403)
+
+        }).catch((err) => {
+        console.log(err)
+      })
+    })
 })
