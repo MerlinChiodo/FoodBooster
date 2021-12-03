@@ -7,7 +7,7 @@ const underscore = require('underscore')
 
 /**
  *
- * Returns a filtered array of recepies.
+ * Returns a filtered array of recipes.
  * If no special filtering is needed, u can leave the query body empty --> returns all recepies
  * getRecipes filters using an AND-Method --> name & servings, only returns recepies with given name AND servings
  * If a filtering field is not given, it is being ignored
@@ -29,7 +29,7 @@ const underscore = require('underscore')
  * */
 const getRecipes = async (req, res) => {
 
-  //No special query defined --> return full list of recepies
+  //No special query defined --> return full list of recipes
   if (underscore.isEmpty(req.query)) {
 
     const recipes = await prisma.recipe.findMany()
@@ -234,4 +234,59 @@ const createRecipe = async (req, res) => {
   }
 }
 
-module.exports = { getRecipes, getFeatured, createRecipe }
+/**
+ * Function to rate a recipe
+ * The rating needs to be calculated by the frontend! recipe.rating/recipe.totalRatings
+ * Arguments:
+ *    - recipeID --> the recipe to be rated
+ *    - rating --> a rating from 1-5
+ * Responses:
+ *    400 - {success: false, err: Please provide all required information!} --> Some information is missing
+ *    200 - {success: true, msg: {updatedRecipe}} --> Recipe was rated
+ *    403 - {success: false, err: You cant vote for your own recipe!} --> U can only vote for recipes of other users
+ *    500 - {success: false, err: Ups, something went wrong!} --> Prisma Error
+ */
+const rateRecipe = async (req, res) => {
+
+  const {recipeID, rating} = req.body
+
+  //Check if every required argument is given
+  if(!recipeID || !rating){
+    return res.status(400).send( {success: false, err: "Please provide all required information!"} )
+  }
+
+  //Get recipe to calculate new rating
+  try {
+    const recipe = await prisma.recipe.findUnique({
+      where: {
+        id: recipeID
+      }
+    })
+    //the user cant rate his own recipe
+    if (recipe.creatorID !== req.user.id) {
+
+        await prisma.recipe.update({
+          where: {
+            id: recipe.id
+          },
+          data: {
+            rating: (recipe.rating + rating),
+            totalRatings: (recipe.totalRatings + 1)
+          }
+        })
+
+        //Update Info in returned recipe manually to decrease loading time
+        recipe.rating += rating
+        recipe.totalRatings++;
+      return res.status(200).send( {success: true, msg: recipe} )
+    }else{
+      //User tried to vote for his own recipe
+      return res.status(403).send( {success: false, err: "You cant vote for your own recipe!"} )
+    }
+  }catch(err){
+      //Prisma error
+      return res.status(500).send({success: false, err: "Ups, something went wrong!"})
+    }
+  }
+
+module.exports = { getRecipes, getFeatured, createRecipe, rateRecipe }
