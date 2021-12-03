@@ -4,6 +4,7 @@
 const prisma = require(`../prismaClient.js`)
 const underscore = require('underscore')
 
+
 /**
  *
  * Returns a filtered array of recepies.
@@ -25,7 +26,6 @@ const underscore = require('underscore')
  *              200 - {success: true, msg: {ArrayOfFilteredRecepies}}
  *              500 - {success: false, msg: {Ups, something went wrong!}} --> Prisma error
  *
- *  TODO : Database cleanup --> Attributes are mixed with english and german
  * */
 const getRecipes = async (req, res) => {
 
@@ -117,5 +117,121 @@ const getFeatured = async (req, res) => {
   }
 
 }
+/**
+ * Function to create a Recipe
+ * Checks if every required field is given and creates a recipe after.
+ * Uses the authorID from session, so no author needs to be send.
+ * !!!!!!! Function is not using JSON-Contenttype!!!!!!!!!!
+ * !!!!!!! Use multipart/form-data as Contenttype!!!!!!!!!!
+ * Arguments to create a recipe: (? --> Optional)
+ *    name: name of the recipe
+ *    description: description of the recipe
+ *    ingredients (comma seperated): ingredients used in recipe (using name)
+ *    categories (comma seperated): categories for recipe (using name)
+ *    servings: how many servings is the recipe for
+ *    pictures (same field name for every picture): pictures used by this recipe
+ *
+ * Possible responses:
+ *    400 - {success: false, err: Please provide all required information!} --> Some information is missing
+ *    400 - {success: false, err: Please provide ingredients for the recipe} --> no ingredients are given
+ *    500 - {success: false, err: Ups, something went wrong!} --> Database error
+ *    201 - {success: true, msg: {created recipe}} --> recipe was created and returned
+ */
+const createRecipe = async (req, res) => {
+  console.log(req.files)
+  console.log(req.body)
 
-module.exports = { getRecipes, getFeatured }
+  //Get all infos
+  const {name, description, ingredients, categories, servings} = req.body
+
+  //Get creator
+  const creator = req.user.id
+
+  //Check if every required item is given
+  if(!name || !description || !ingredients || !servings){
+    return res.status(400).send( {success: false, err: "Please provide all required information!"} )
+  }
+
+  //Check if ingredients are given
+  if(ingredients.length === 0){
+    return res.status(400).send( {success: false, err: "Please provide ingredients for the recipe"} )
+  }
+
+  //Split string of ingredients into array  of ingredients
+  const ingredientsArray = ingredients.split(",")
+
+  //Set time of Creation
+  let created = new Date()
+
+  try {
+    //create recipe without links
+    const recipe = await prisma.recipe.create(
+        {
+          data: {
+            creatorID: creator,
+            name: name,
+            description: description,
+            servings: Number(servings),
+            created: created,
+            featured: false,
+          },
+        })
+
+    try {
+      //create a link for every ingredient given
+      for (let ingredient of ingredientsArray) {
+        let linkRecipeIngredient = await prisma.recipeIncludesIngredient.create(
+            {
+              data: {
+                ingredientName: ingredient,
+                recipeID: recipe.id,
+              }
+            })
+      }
+
+      //Check if categories are given
+      if(categories && categories.length !== 0){
+        //split categories into array
+        const categoriesArray = categories.split(",")
+        //create a link for every category given
+        for (let category of categoriesArray){
+          let linkRecipeCategory = await prisma.recipeInCategory.create(
+              {
+                data: {
+                  categoryName: category,
+                  recipeID: recipe.id,
+                },
+              })
+        }
+      }
+    }catch (error){
+      //Something went wrong while linking --> revert creation of recipe
+      await prisma.recipe.delete({
+        where : {
+          id: recipe.id
+        }
+      })
+      return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
+    }
+
+    //Check if files are given
+    if(req.files.length !== 0 ){
+      //create a link for every file given
+      for(file of req.files){
+        await prisma.picture.create({
+          data: {
+            url: file.path,
+            recipeID: recipe.id
+          },
+        })
+      }
+    }
+
+    //recipe after linking is done
+    return res.status(201).send( {success: true, msg: recipe} )
+  }catch (err){
+    return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
+  }
+}
+
+module.exports = { getRecipes, getFeatured, createRecipe }
