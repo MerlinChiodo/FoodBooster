@@ -10,6 +10,7 @@ const path = require('path')
 /************************************
  * Multer Config
  ************************************/
+//destination to save picture to, how to handle the filename
 const storage = multer.diskStorage({
     destination: (req,file,cb) => {
         cb(null,'uploads')
@@ -19,6 +20,7 @@ const storage = multer.diskStorage({
     }
 })
 
+//which type of file to accept
 const fileFiler = (req,file,cb) => {
     //accept file
     if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
@@ -28,6 +30,8 @@ const fileFiler = (req,file,cb) => {
         cb(null,false);
     }
 }
+
+//Setup multer with defined config
 const upload = multer({
     storage: storage,
     fileFiler: fileFiler,
@@ -50,6 +54,7 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
+//using multer middleware to handle files in createRecipe
 router.post('/', checkAuthenticated, upload.array('productImage'), createRecipe)
 
 router.put('/', (req, res) => {

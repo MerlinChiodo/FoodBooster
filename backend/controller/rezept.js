@@ -121,12 +121,15 @@ const getFeatured = async (req, res) => {
  * Function to create a Recipe
  * Checks if every required field is given and creates a recipe after.
  * Uses the authorID from session, so no author needs to be send.
+ * !!!!!!! Function is not using JSON-Contenttype!!!!!!!!!!
+ * !!!!!!! Use multipart/form-data as Contenttype!!!!!!!!!!
  * Arguments to create a recipe: (? --> Optional)
  *    name: name of the recipe
  *    description: description of the recipe
- *    ingredients[]: ingredients used in recipe (using name)
- *    categories[]: categories for recipe (using name)
+ *    ingredients (comma seperated): ingredients used in recipe (using name)
+ *    categories (comma seperated): categories for recipe (using name)
  *    servings: how many servings is the recipe for
+ *    pictures (same field name for every picture): pictures used by this recipe
  *
  * Possible responses:
  *    400 - {success: false, err: Please provide all required information!} --> Some information is missing
@@ -154,8 +157,8 @@ const createRecipe = async (req, res) => {
     return res.status(400).send( {success: false, err: "Please provide ingredients for the recipe"} )
   }
 
+  //Split string of ingredients into array  of ingredients
   const ingredientsArray = ingredients.split(",")
-  console.log(ingredientsArray)
 
   //Set time of Creation
   let created = new Date()
@@ -188,8 +191,10 @@ const createRecipe = async (req, res) => {
 
       //Check if categories are given
       if(categories && categories.length !== 0){
+        //split categories into array
+        const categoriesArray = categories.split(",")
         //create a link for every category given
-        for (let category of categories){
+        for (let category of categoriesArray){
           let linkRecipeCategory = await prisma.recipeInCategory.create(
               {
                 data: {
