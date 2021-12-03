@@ -148,6 +148,7 @@ function checkIfAdmin (req, res, next) {
 
 module.exports = {
   initialize,
+  searchUserByEmail,
   checkAuthenticated,
   checkUnauthenticated,
   checkIfUser,
