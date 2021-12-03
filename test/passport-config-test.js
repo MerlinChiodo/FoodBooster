@@ -15,7 +15,7 @@ async function prepare () {
         id: 1000,
         name: user.name,
         email: user.email,
-        answer: "Hund",
+        answer: 'Hund',
         passwordHash: await bcrypt.hash('1234', 10),
       },
     })
@@ -37,17 +37,17 @@ async function endTest () {
 }
 
 describe('Passport-config', () => {
-  it('searchUserByID should find the prepared user', async () => {
+  it('searchUserByEmail should find the prepared user', async () => {
     await prepare()
-    const foundUser = await testSource.searchUserByID(1000)
+    const foundUser = await testSource.searchUserByEmail(user.email)
     assert.notEqual(foundUser, undefined)
     assert.equal(foundUser.name, user.name)
     assert.equal(foundUser.email, user.email)
     await endTest()
   })
 
-  it('searchUserByID should not find another user', async () => {
-    const foundUser = await testSource.searchUserByID(999)
+  it('searchUserByEmail should not find another user', async () => {
+    const foundUser = await testSource.searchUserByEmail('does@not.exist')
     assert.equal(foundUser, undefined)
   })
 
@@ -120,10 +120,10 @@ describe('Passport-config', () => {
       let wentThroughNext = false
       const req = {
         user: {
-          id: 1,
+          email: 'email1@test.com',
         },
         body: {
-          id: 1,
+          email: 'email1@test.com',
         },
       }
       const res = {
@@ -143,10 +143,10 @@ describe('Passport-config', () => {
     () => {
       const req = {
         user: {
-          id: 2,
+          email: 'email1@test.com',
         },
         body: {
-          id: 1,
+          email: 'email2@test.com',
         },
       }
       const res = {
