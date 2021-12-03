@@ -127,7 +127,7 @@ model Picture {
   id       Int    @id @default(autoincrement())
   url      String @db.VarChar(50)
   recipeID Int
-  recipe   Recipe @relation(fields: [recipeID], references: [id])
+  recipe   Recipe @relation(fields: [recipeID], references: [id], onDelete: Cascade)
 
   @@index([recipeID], map: "Picture_recipeID_fkey")
 }

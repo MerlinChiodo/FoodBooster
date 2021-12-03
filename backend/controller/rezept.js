@@ -4,6 +4,7 @@
 const prisma = require(`../prismaClient.js`)
 const underscore = require('underscore')
 
+
 /**
  *
  * Returns a filtered array of recepies.
@@ -134,6 +135,8 @@ const getFeatured = async (req, res) => {
  *    201 - {success: true, msg: {created recipe}} --> recipe was created and returned
  */
 const createRecipe = async (req, res) => {
+  console.log(req.files)
+  console.log(req.body)
 
   //Get all infos
   const {name, description, ingredients, categories, servings} = req.body
@@ -151,6 +154,9 @@ const createRecipe = async (req, res) => {
     return res.status(400).send( {success: false, err: "Please provide ingredients for the recipe"} )
   }
 
+  const ingredientsArray = ingredients.split(",")
+  console.log(ingredientsArray)
+
   //Set time of Creation
   let created = new Date()
 
@@ -162,7 +168,7 @@ const createRecipe = async (req, res) => {
             creatorID: creator,
             name: name,
             description: description,
-            servings: servings,
+            servings: Number(servings),
             created: created,
             featured: false,
           },
@@ -170,7 +176,7 @@ const createRecipe = async (req, res) => {
 
     try {
       //create a link for every ingredient given
-      for (let ingredient of ingredients) {
+      for (let ingredient of ingredientsArray) {
         let linkRecipeIngredient = await prisma.recipeIncludesIngredient.create(
             {
               data: {
@@ -201,6 +207,19 @@ const createRecipe = async (req, res) => {
         }
       })
       return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
+    }
+
+    //Check if files are given
+    if(req.files.length !== 0 ){
+      //create a link for every file given
+      for(file of req.files){
+        await prisma.picture.create({
+          data: {
+            url: file.path,
+            recipeID: recipe.id
+          },
+        })
+      }
     }
 
     //recipe after linking is done
