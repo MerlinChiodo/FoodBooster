@@ -9,7 +9,7 @@ const router = express.Router()
 
 const { createUser } = require('../controller/account.js')
 const { checkIfUser, checkAuthenticated } = require('../passport-config')
-const { putUser, seeOwnRecipe } = require('../controller/account')
+const { putUser, seeOwnRecipe, favRecipe } = require('../controller/account')
 
 /*******************************************************************************
  * Middleware for the server to use
@@ -35,9 +35,7 @@ router.put('/password', (req, res) => {
 
 })
 
-router.post('/favorite', (req, res) => {
-
-})
+router.post('/favorite/:recipeID',checkAuthenticated, favRecipe)
 
 router.get('/favorite', (req, res) => {
 

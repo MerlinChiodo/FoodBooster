@@ -148,7 +148,81 @@ const seeOwnRecipe = async (req, res) => {
   }
 }
 
+/**
+ * Function to favorite a recipe as logged in user
+ * Function gets the user from req.user and the ID via request parameter
+ * If the user is already favoring the recipe, calling this function unfavors it
+ * If the user is not already facvoring the recipe, call this function will favor it
+ *
+ * Paramter needs to be a number and a valid recipeID
+ *
+ * Responses:
+ *    200 - {success: true, msg: User now favors given recipe}
+ *    200 - {success: true, msg: User no longer favors given recipe}
+ *    500 - {success: false, err: Ups, something went wrong} --> Prisma error
+ * */
+const favRecipe = async (req, res) => {
+
+  const {recipeID} = req.params
+  const user = req.user.id
+
+  //only allow numbers to be passed as id
+  if(isNaN(recipeID)) return res.status(400).json({success: false, err: "Please provide a number!"})
+
+  //check if user already is favoring the recipe
+  let fav
+  try{
+    fav = await prisma.userFavorsRecipe.findMany({
+      where:{
+        AND: [
+            {
+            recipeID: Number(recipeID),
+          },
+          {
+            userID: user
+          }
+        ]
+      }
+    })
+  }catch (err){
+    return res.status(500).json({success: false, err: "Ups, something went wrong!"})
+  }
+
+  //User doesnt favor that recipe yet
+  if(fav.length === 0){
+    //try to link the recipe and the user
+    try {
+      await prisma.userFavorsRecipe.create({
+        data: {
+          recipeID: Number(recipeID),
+          userID: user
+        }
+      })
+      return res.status(200).json({success: true, msg: "User now favors given recipe"})
+    } catch (err) {
+      console.log(err)
+      return res.status(500).json({success: false, err: "Ups, something went wrong!"})
+    }
+  //User already favors that recipe
+  }else {
+    //try to delete the link between user and recipe
+    try{
+      await prisma.userFavorsRecipe.delete({
+        where: {
+          userID_recipeID: {
+            recipeID: Number(recipeID),
+            userID: user,
+          }
+        }
+      })
+      return res.status(200).json({success: true, msg: "User no longer favors given recipe"})
+    }catch (err){
+      return res.status(500).json({success: false, err: "Ups, something went wrong!"})
+    }
+  }
+}
+
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { createUser, putUser, seeOwnRecipe }
+module.exports = { createUser, putUser, seeOwnRecipe, favRecipe }
