@@ -16,12 +16,10 @@ app.use(BalmUI, {
         secondary: "#444445",
 
     },
-
     UiTabs: {}
 
+});
 
-})
-;
 app.use(BalmUIPlus);
 app.use(UiForm);
 app.use(UiFormField);

@@ -8,6 +8,7 @@ import Ernährungsplan from '../views/Ernährungsplan.vue'
 import AccountRegister from '../views/AccountRegister.vue'
 import AccountLogin from '../views/AccountLogin.vue'
 import AccountPWForgot from "@/views/AccountPWForgot";
+import Datenschutzeinstellungen from "@/views/Datenschutzeinstellungen";
 
 // Defines the routes
 // Each route should map to a component.
@@ -21,6 +22,7 @@ const routes = [
     {path: '/accountregister', name: 'AccountRegister', component: AccountRegister},
     {path: '/accountlogin', name: 'AccountLogin', component: AccountLogin},
     {path: '/AccountPWForgot', name: 'AccountPWForgot', component: AccountPWForgot},
+    {path: '/Datenschutzeinstellungen', name: 'Datenschutzeinstellungen', component: Datenschutzeinstellungen},
 ]
 
 // Creates the router instance and passes the `routes` option
