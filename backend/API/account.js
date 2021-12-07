@@ -8,8 +8,8 @@ const express = require('express')
 const router = express.Router()
 
 const { createUser } = require('../controller/account.js')
-const { checkIfUser } = require('../passport-config')
-const { putUser } = require('../controller/account')
+const { checkIfUser, checkAuthenticated } = require('../passport-config')
+const { putUser, seeOwnRecipe } = require('../controller/account')
 
 /*******************************************************************************
  * Middleware for the server to use
@@ -43,8 +43,6 @@ router.get('/favorite', (req, res) => {
 
 })
 
-router.get('/rezept', (req, res) => {
-
-})
+router.get('/rezept', checkAuthenticated, seeOwnRecipe)
 
 module.exports = router
