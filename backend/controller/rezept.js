@@ -4,7 +4,6 @@
 const prisma = require(`../prismaClient.js`)
 const underscore = require('underscore')
 
-
 /**
  *
  * Returns a filtered array of recipes.
@@ -142,23 +141,25 @@ const createRecipe = async (req, res) => {
   console.log(req.body)
 
   //Get all infos
-  const {name, description, ingredients, categories, servings} = req.body
+  const { name, description, ingredients, categories, servings } = req.body
 
   //Get creator
   const creator = req.user.id
 
   //Check if every required item is given
-  if(!name || !description || !ingredients || !servings){
-    return res.status(400).send( {success: false, err: "Please provide all required information!"} )
+  if (!name || !description || !ingredients || !servings) {
+    return res.status(400).
+      send({ success: false, err: 'Please provide all required information!' })
   }
 
   //Check if ingredients are given
-  if(ingredients.length === 0){
-    return res.status(400).send( {success: false, err: "Please provide ingredients for the recipe"} )
+  if (ingredients.length === 0) {
+    return res.status(400).
+      send({ success: false, err: 'Please provide ingredients for the recipe' })
   }
 
   //Split string of ingredients into array  of ingredients
-  const ingredientsArray = ingredients.split(",")
+  const ingredientsArray = ingredients.split(',')
 
   //Set time of Creation
   let created = new Date()
@@ -166,72 +167,266 @@ const createRecipe = async (req, res) => {
   try {
     //create recipe without links
     const recipe = await prisma.recipe.create(
-        {
-          data: {
-            creatorID: creator,
-            name: name,
-            description: description,
-            servings: Number(servings),
-            created: created,
-            featured: false,
-          },
-        })
+      {
+        data: {
+          creatorID: creator,
+          name: name,
+          description: description,
+          servings: Number(servings),
+          created: created,
+          featured: false,
+        },
+      })
 
     try {
       //create a link for every ingredient given
       for (let ingredient of ingredientsArray) {
         let linkRecipeIngredient = await prisma.recipeIncludesIngredient.create(
-            {
-              data: {
-                ingredientName: ingredient,
-                recipeID: recipe.id,
-              }
-            })
+          {
+            data: {
+              ingredientName: ingredient,
+              recipeID: recipe.id,
+            },
+          })
       }
 
       //Check if categories are given
-      if(categories && categories.length !== 0){
+      if (categories && categories.length !== 0) {
         //split categories into array
-        const categoriesArray = categories.split(",")
+        const categoriesArray = categories.split(',')
         //create a link for every category given
-        for (let category of categoriesArray){
+        for (let category of categoriesArray) {
           let linkRecipeCategory = await prisma.recipeInCategory.create(
-              {
-                data: {
-                  categoryName: category,
-                  recipeID: recipe.id,
-                },
-              })
+            {
+              data: {
+                categoryName: category,
+                recipeID: recipe.id,
+              },
+            })
         }
       }
-    }catch (error){
+    } catch (error) {
       //Something went wrong while linking --> revert creation of recipe
       await prisma.recipe.delete({
-        where : {
-          id: recipe.id
-        }
+        where: {
+          id: recipe.id,
+        },
       })
-      return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
+      return res.status(500).
+        send({ success: false, err: 'Ups, something went wrong!' })
     }
 
     //Check if files are given
-    if(req.files.length !== 0 ){
+    if (req.files.length !== 0) {
       //create a link for every file given
-      for(file of req.files){
+      for (file of req.files) {
         await prisma.picture.create({
           data: {
             url: file.path,
-            recipeID: recipe.id
+            recipeID: recipe.id,
           },
         })
       }
     }
 
     //recipe after linking is done
-    return res.status(201).send( {success: true, msg: recipe} )
-  }catch (err){
-    return res.status(500).send( {success: false, err: "Ups, something went wrong!"} )
+    return res.status(201).send({ success: true, msg: recipe })
+  } catch (err) {
+    return res.status(500).
+      send({ success: false, err: 'Ups, something went wrong!' })
   }
+}
+
+/**
+ * Edits recipes
+ * Needs to get rezeptID to identify the recipe that you want to change
+ * Note that you can only change your own recipes
+ * Defined Arguments:
+ *      - rezeptID --> needed to identify the recipe you want to change
+ *      - name --> changes the name of the recipe
+ *      - description --> changes the description of the recipe
+ *      - servings --> changes the servings of the recipe
+ *      - ingredients[] --> adds the ingredients to the recipe
+ *      - removeIngredients[] --> removes the ingredients from the recipe
+ *      - categories[] --> adds the categories to the recipe
+ *      - removeCategories[] --> removes the categories from the recipe
+ *      - removePictures[] --> removes the pictures from the recipe
+ * Responses:   200 - {success: true, recipe}
+ *              400 - {success: false, err: 'There must be a rezeptID identify the recipe you want to change. '}
+ *                --> There is no rezeptID
+ *              500 - {success: false, msg: {Ups, something went wrong!}, error} --> Prisma error
+ *
+ */
+const editRecipe = async (req, res,
+) => {
+  const {
+    rezeptID,
+    name,
+    description,
+    ingredients,
+    removeIngredients,
+    categories,
+    removeCategories,
+    servings,
+    removePictures,
+  } = req.body
+
+  if (!rezeptID) {
+    return res.status(400).send({
+      success: false,
+      err: 'There must be a rezeptID identify the recipe you want to change. ',
+    })
+  }
+
+  try {
+    const recipe = await prisma.recipe.findUnique({
+      where: {
+        id: Number(rezeptID),
+      },
+      include: {
+        creator: true,
+      },
+    })
+    if (recipe.creator.id !== req.user.id) {
+      return res.status(403).
+        send({ err: 'You can only change your own recipes' },
+        )
+    }
+  } catch (err) {
+    return res.status(500).send(err)
+  }
+
+  let data = {}
+  if (name) {
+    Object.assign(data, { name: name })
+  }
+  if (description) {
+    Object.assign(data, { description: description })
+  }
+  if (servings) {
+    Object.assign(data, { servings: servings })
+  }
+
+  let recipe
+  try {
+    recipe = await prisma.recipe.update({
+      where: {
+        id: Number(rezeptID),
+      },
+      data: data,
+    })
+  } catch (error) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+
+  if (ingredients && ingredients.length > 0) {
+    try {
+      for (let ingredient of ingredients) {
+        await prisma.recipeIncludesIngredient.create({
+          data: {
+            ingredientName: ingredient,
+            recipeID: rezeptID,
+          },
+        })
+      }
+    } catch (error) {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+
+  if (removeIngredients && removeIngredients.length > 0) {
+    for (let ingredient of removeIngredients) {
+      try {
+        await prisma.recipeIncludesIngredient.delete({
+          where: {
+            AND: [
+              {
+                ingredientName: ingredient,
+              },
+              {
+                recipeID: rezeptID,
+              },
+            ],
+          },
+        })
+      } catch (error) {
+        return res.status(500).
+          json({ success: false, err: 'Ups, something went wrong!', error })
+      }
+    }
+  }
+
+  if (removeCategories && removeCategories.length > 0) {
+    for (let category of removeCategories) {
+      try {
+        await prisma.recipeInCategory.delete({
+          where: {
+            AND: [
+              {
+                categoryName: category,
+              },
+              {
+                recipeID: rezeptID,
+              },
+            ],
+          },
+        })
+      } catch (error) {
+        return res.status(500).
+          json({ success: false, err: 'Ups, something went wrong!', error })
+      }
+    }
+  }
+
+  if (categories && categories.length > 0) {
+    try {
+      for (let category of categories) {
+        await prisma.recipeInCategory.create({
+          data: {
+            categoryName: category,
+            recipeID: rezeptID,
+          },
+        })
+      }
+    } catch (error) {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+
+  if (req.files.length > 0) {
+    try {
+      for (let picture of req.files) {
+        await prisma.picture.create({
+          data: {
+            url: picture.path,
+            recipeID: rezeptID,
+          },
+        })
+      }
+    } catch (error) {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+
+  if (removePictures && removePictures.length > 0) {
+    for (let picture of removePictures) {
+      try {
+        await prisma.picture.deleteMany({
+          where: {
+            url: picture,
+          },
+        })
+      } catch (error) {
+        return res.status(500).
+          json({ success: false, err: 'Ups, something went wrong!', error })
+      }
+    }
+  }
+  return res.status(200).send({ success: true, recipe })
 }
 
 /**
@@ -289,4 +484,4 @@ const rateRecipe = async (req, res) => {
     }
   }
 
-module.exports = { getRecipes, getFeatured, createRecipe, rateRecipe }
+module.exports = { getRecipes, getFeatured, createRecipe, rateRecipe, editRecipe }
