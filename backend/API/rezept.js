@@ -34,11 +34,10 @@ const fileFiler = (req, file, cb) => {
 
 //Setup multer with defined config
 const upload = multer({
-    storage: storage,
-    fileFiler: fileFiler,
-    limits: { fileSize: 1024 * 1024 * 40 }, //40mb
-  })
-  >>> >>> > main
+  storage: storage,
+  fileFiler: fileFiler,
+  limits: { fileSize: 1024 * 1024 * 40 }, //40mb
+})
 
 /**
  * The router allows us to receive requests in files that aren't the main file
