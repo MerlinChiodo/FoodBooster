@@ -18,7 +18,7 @@ const routes = [
     {path: '/einkaufsliste', name: 'Einkaufsliste', component: Einkaufsliste},
     {path: '/ernährungsplan', name: 'Ernährungsplan', component: Ernährungsplan},
     {path: '/accountregister', name: 'AccountRegister', component: AccountRegister},
-    {path: '/rezept', name: 'Rezept', component: rezeptDummy},
+    {path: '/rezeptDummy', name: 'rezeptDummy', component: rezeptDummy},
 ]
 
 // Creates the router instance and passes the `routes` option
