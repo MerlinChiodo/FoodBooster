@@ -2,12 +2,9 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
-<<<<<<< HEAD
-const { getRecipes, getFeatured, editRecipe } = require('../controller/rezept')
+const { getRecipes, getFeatured, editRecipe, createRecipe } = require(
+  '../controller/rezept')
 const { checkAuthenticated } = require('../passport-config')
-=======
-const { getRecipes, getFeatured, createRecipe } = require('../controller/rezept')
-const {checkAuthenticated} = require("../passport-config");
 const multer = require('multer')
 const path = require('path')
 
@@ -16,32 +13,32 @@ const path = require('path')
  ************************************/
 //destination to save picture to, how to handle the filename
 const storage = multer.diskStorage({
-    destination: (req,file,cb) => {
-        cb(null,'uploads')
-    },
-    filename: (req,file,cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
-    }
+  destination: (req, file, cb) => {
+    cb(null, 'uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname))
+  },
 })
 
 //which type of file to accept
-const fileFiler = (req,file,cb) => {
-    //accept file
-    if(file.mimetype === "image/jpeg" || file.mimetype === "image/png"){
-        cb(null,true);
+const fileFiler = (req, file, cb) => {
+  //accept file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true)
     //reject file
-    }else{
-        cb(null,false);
-    }
+  } else {
+    cb(null, false)
+  }
 }
 
 //Setup multer with defined config
 const upload = multer({
     storage: storage,
     fileFiler: fileFiler,
-    limits: { fileSize: 1024*1024*40 } //40mb
-})
->>>>>>> main
+    limits: { fileSize: 1024 * 1024 * 40 }, //40mb
+  })
+  >>> >>> > main
 
 /**
  * The router allows us to receive requests in files that aren't the main file
@@ -62,7 +59,7 @@ router.use(express.json())
 //using multer middleware to handle files in createRecipe
 router.post('/', checkAuthenticated, upload.array('productImage'), createRecipe)
 
-router.put('/', checkAuthenticated, editRecipe)
+router.put('/', checkAuthenticated, upload.array('productImage'), editRecipe)
 
 router.get('/', (req, res) => {
 
