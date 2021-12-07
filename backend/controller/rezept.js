@@ -131,7 +131,6 @@ const getFeatured = async (req, res) => {
  *      - removeIngredients[] --> removes the ingredients from the recipe
  *      - categories[] --> adds the categories to the recipe
  *      - removeCategories[] --> removes the categories from the recipe
- *      - pictures[] --> adds the pictures to the recipe
  *      - removePictures[] --> removes the pictures from the recipe
  * Responses:   200 - {success: true, recipe}
  *              400 - {success: false, err: 'There must be a rezeptID identify the recipe you want to change. '}
@@ -149,7 +148,6 @@ const editRecipe = async (req, res) => {
     categories,
     removeCategories,
     servings,
-    pictures,
     removePictures,
   } = req.body
 
@@ -278,14 +276,12 @@ const editRecipe = async (req, res) => {
     }
   }
 
-  if (pictures && pictures.length > 0) {
+  if (req.files.length > 0) {
     try {
-      for (let picture of pictures) {
-        await prisma.picture.update({
-          where: {
-            url: picture,
-          },
+      for (let picture of req.files) {
+        await prisma.picture.create({
           data: {
+            url: picture.path,
             recipeID: rezeptID,
           },
         })
@@ -299,12 +295,9 @@ const editRecipe = async (req, res) => {
   if (removePictures && removePictures.length > 0) {
     for (let picture of removePictures) {
       try {
-        await prisma.picture.update({
+        await prisma.picture.deleteMany({
           where: {
             url: picture,
-          },
-          data: {
-            recipeID: null,
           },
         })
       } catch (error) {
