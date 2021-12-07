@@ -2,9 +2,8 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
-const { getRecipes, getFeatured, editRecipe, createRecipe } = require(
-  '../controller/rezept')
-const { checkAuthenticated } = require('../passport-config')
+const { getRecipes, getFeatured, createRecipe, rateRecipe, editRecipe} = require('../controller/rezept')
+const {checkAuthenticated} = require("../passport-config");
 const multer = require('multer')
 const path = require('path')
 
@@ -68,9 +67,7 @@ router.get('/featured', getFeatured)
 
 router.get('/search', getRecipes)
 
-router.post('/bewertung', (req, res) => {
-
-})
+router.post('/bewertung', checkAuthenticated, rateRecipe)
 
 router.post('/kommentar', (req, res) => {
 
