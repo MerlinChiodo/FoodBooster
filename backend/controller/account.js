@@ -229,6 +229,8 @@ const favRecipe = async (req, res) => {
  * Responses:
  *    200 - success: true, msg: [favoriteRecipes] --> returns an array with recipes inside (might be empty)
  *    500 - success: false, err: Ups, something went wrong! --> prisma error
+ *
+ * @uses formatOutput function to format prisma output
  * */
 const getFavorite = async (req, res) => {
 
