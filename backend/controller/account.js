@@ -222,7 +222,60 @@ const favRecipe = async (req, res) => {
   }
 }
 
+/**
+ * Function to get the favorite recipes of the user
+ * Doesnt need any special arguments in the req.body.
+ *
+ * Responses:
+ *    200 - success: true, msg: [favoriteRecipes] --> returns an array with recipes inside (might be empty)
+ *    500 - success: false, err: Ups, something went wrong! --> prisma error
+ * */
+const getFavorite = async (req, res) => {
+
+  //requesting user
+  const user = req.user.id
+
+  //query for all favored recipes of user
+  let favRecipes
+  try {
+    favRecipes = await prisma.userFavorsRecipe.findMany({
+      where: {
+        userID: user,
+      },
+      //Only select the recipe field of userFavorsRecipe
+      select: {
+        recipe: true
+      }
+    })
+  }catch (err){
+    return res.status(500).json({success: false, err: "Ups something went wrong!"})
+  }
+
+  //Format prisma output to make it easier to work with
+  const retFavRecipes = await formatOutput(favRecipes)
+
+  //return result of query
+  return res.status(200).json({success: true, msg: retFavRecipes})
+}
+
+/**
+ * Helper function for getFavorite
+ * Formats the array with nested objects returned from prisma,
+ * so its easier to work with
+ *
+ * @param array array to be formated
+ * @return returnArray array after formating
+ * */
+const formatOutput = async (array) => {
+  let returnArray = []
+  for (let i = 0; i < array.length; i++){
+    console.log(array[i].recipe)
+    returnArray.push(array[i].recipe)
+  }
+  return returnArray
+}
+
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { createUser, putUser, seeOwnRecipe, favRecipe }
+module.exports = { createUser, putUser, seeOwnRecipe, favRecipe, getFavorite }
