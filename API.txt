@@ -10,7 +10,7 @@ DELETE /logout/ () -> Redirect (refresh, Redirect im Frontend)
 
 POST /api/account/ (username, email, password) -> Erfolg/400/error
 DELETE /api/account/ (accountemail) -> Erfolg/400/error
-PUT /api/account/password/ (sicherheitsfrageAntwort, neuesPasswort) -> Erfolg/400/error
+PUT /api/account/password/ (email, sicherheitsfrageAntwort, neuesPasswort) -> Erfolg/400/error
 PUT /api/account/ (accountemail, username) -> Erfolg/400/error
 POST /api/account/favorite/ (rezeptID) -> Erfolg/400/error
 GET /api/account/favorite/ () -> Liste der Favoriten

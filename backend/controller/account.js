@@ -128,15 +128,27 @@ const putUser = async (req, res) => {
  */
 const forgotPassword = async (req, res) => {
   if (req.body.sicherheitsfrageAntwort == null || req.body.neuesPasswort ==
-    null) {
+    null || req.body.email == null) {
     return res.status(400).json(
       {
         success: false,
-        err: `You must enter the answer to the security question and the new password`,
+        err: `You must enter your email address, the answer to the security question and the new password`,
       })
   }
 
-  if (!await bcrypt.compare(req.body.sicherheitsfrageAntwort, user.answer)) {
+  let user
+  try {
+    user = await prisma.user.findMany({
+      where: {
+        email: req.body.email,
+      },
+    })
+  } catch (error) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+
+  if (!await bcrypt.compare(req.body.sicherheitsfrageAntwort, user[0].answer)) {
     return res.status(200).
       send({
         success: false,
@@ -147,7 +159,7 @@ const forgotPassword = async (req, res) => {
     try {
       await prisma.user.update({
         where: {
-          id: req.user.id,
+          id: user[0].id,
         },
         data: {
           passwordHash: hashedPassword,
@@ -161,7 +173,7 @@ const forgotPassword = async (req, res) => {
     }
   }
 }
- /**
+/**
  * Function to get all the recipes the user has created
  * Used in ../API/account/rezept for the GET Method of the /API/account/ route
  * Returns a list of all the recipes the user has created
