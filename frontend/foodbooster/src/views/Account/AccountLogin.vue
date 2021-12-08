@@ -78,7 +78,7 @@
             </router-link>
           </ui-form-field>
 
-          <ui-form-field>
+          <ui-form-field v-if="successfullLoginEmail">
             <router-link to="/AdminMeldungen">
               Admin Bereich: Meldungen
             </router-link>

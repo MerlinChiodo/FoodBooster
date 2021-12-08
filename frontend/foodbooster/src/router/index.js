@@ -10,6 +10,8 @@ import AccountLogin from '../views/Account/AccountLogin.vue'
 import AccountPWForgot from "@/views/Account/AccountPWForgot";
 import Datenschutzeinstellungen from "@/views/Account/Datenschutzeinstellungen";
 import AdminMeldungen from "@/views/Account/AdminMeldungen";
+import Datenschutzerklaerung from "@/views/Datenschutzerklaerung";
+import Impressum from "@/views/Impressum";
 
 // Defines the routes
 // Each route should map to a component.
@@ -25,6 +27,8 @@ const routes = [
     {path: '/AccountPWForgot', name: 'AccountPWForgot', component: AccountPWForgot},
     {path: '/Datenschutzeinstellungen', name: 'Datenschutzeinstellungen', component: Datenschutzeinstellungen},
     {path: '/AdminMeldungen', name: 'AdminMeldungen', component: AdminMeldungen},
+    {path: '/Datenschutzerklaerung', name: 'Datenschutzerklaerung', component: Datenschutzerklaerung},
+    {path: '/Impressum', name: 'Impressum', component: Impressum},
 ]
 
 // Creates the router instance and passes the `routes` option

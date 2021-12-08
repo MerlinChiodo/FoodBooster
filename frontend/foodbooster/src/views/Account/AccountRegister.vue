@@ -52,6 +52,18 @@
               </ui-textfield-helper>
             </ui-form-field>
 
+
+            <!-- DATENSCHUTZBEDINGUNGEN AKZEPTIEREN -->
+            <ui-form-field>
+              <ui-checkbox v-model="datenschutzChecked" input-id="checkbox"></ui-checkbox>
+              <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>Ja ich akzeptiere die
+                <router-link to="/Datenschutzerklaerung">
+                  Datenschutzbedingungen
+                </router-link>
+                .
+              </ui-textfield-helper>
+            </ui-form-field>
+
             <!-- NEWSLETTER -->
             <ui-form-field>
               <ui-checkbox helper-text-id="newsletter-validation-msg"></ui-checkbox>
@@ -61,7 +73,7 @@
             </ui-form-field>
 
             <!-- SUBMIT -->
-            <ui-form-field :class="actionClass">
+            <ui-form-field v-if="datenschutzChecked" :class="actionClass">
               <ui-button @click="postData" raised>Registrieren</ui-button>
             </ui-form-field>
 
@@ -93,6 +105,7 @@ export default {
     return {
       postResult: null,
       postSuccessResult: null,
+      datenschutzChecked: false,
       vusername: "",
       vpassword: "",
       vanswer: "",
