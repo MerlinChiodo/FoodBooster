@@ -21,6 +21,7 @@
     "@prisma/client": "^3.4.2",
     "bcrypt": "^5.0.1",
     "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-flash": "0.0.2",
     "express-session": "^1.17.2",

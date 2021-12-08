@@ -20,6 +20,7 @@ const session = require('express-session')
  * Flash enables passport to send messages within the response body
  */
 const flash = require('express-flash')
+const cors = require('cors')
 /*******************************************************************************
  * Imports of other files from this project
  ******************************************************************************/
@@ -49,7 +50,10 @@ app.use(express.urlencoded({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-
+app.use(cors({
+  credentials: true,
+  origin: true,
+}))
 /*******************************************************************************
  * Router integration for the API
  ******************************************************************************/
