@@ -133,7 +133,7 @@ export default {
       try {
         const res = await http.post("login/", {
           email: this.vemail,
-          passwort: this.vpassword,
+          password: this.vpassword,
 
         }, {
           headers: {

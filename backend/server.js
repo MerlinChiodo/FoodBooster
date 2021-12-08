@@ -38,7 +38,6 @@ const rezept = require('./API/rezept')
 /*******************************************************************************
  * Middleware for the server to use
  ******************************************************************************/
-app.use(cors())
 app.use(flash())
 app.use(session({
     secret: 'secret',
@@ -52,8 +51,8 @@ app.use(express.urlencoded({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cors({
-  credentials: true,
-  origin: true,
+    credentials: true,
+    origin: true,
 }))
 /*******************************************************************************
  * Router integration for the API
