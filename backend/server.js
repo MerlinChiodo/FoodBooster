@@ -88,7 +88,7 @@ app.get('/login', checkUnauthenticated, (req, res) => {
  * Redirects back to the login page if the user couldn't be authenticated
  * Redirects to the home page if a logged in user tries to log in again
  */
-app.post('/login', checkUnauthenticated, passport.authenticate('local', {
+app.post('/api/login', checkUnauthenticated, passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/login',
   failureFlash: true,
@@ -99,7 +99,7 @@ app.post('/login', checkUnauthenticated, passport.authenticate('local', {
  * Logs users out if they were logged in, then redirects to the login page.
  * If a logged out user calls this function, it only redirects.
  */
-app.delete('/logout', (req, res) => {
+app.delete('/api/logout', (req, res) => {
   req.logOut()
   res.redirect('/login')
 })
