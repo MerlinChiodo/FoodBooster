@@ -40,7 +40,7 @@
             </ui-textfield>
           </ui-form-field>
           <!-- Change Password -->
-          <ui-form-field :class="actionClass">
+          <ui-form-field>
             <ui-button @click="postData" raised>Passwort ändern</ui-button>
           </ui-form-field>
         </ui-form>
@@ -51,9 +51,58 @@
 </template>
 
 <script>
+import http from "@/http-common";
+
+
 export default {
   name: "AccountPWForgot",
+  data() {
+    return {
+      postResult: null,
+      postSuccessResult: null,
+
+      vemail: null,
+      vpassword: null,
+      vanswer: null,
+
+      contentType: "application/json",
+    };
+  },
+  methods: {
+    fortmatResponse(res) {
+      return JSON.stringify(res, null, 2);
+    },
+    async postData() {
+      try {
+        const res = await http.put("/account/password", {
+          email: this.vemail,
+          sicherheitsfrageAntwort: this.vanswer,
+          neuesPasswort: this.vpassword,
+
+        }, {
+          headers: {
+            "x-access-token": "token-value",
+          },
+        });
+
+        const result = {
+          status: res.status + "-" + res.statusText,
+          headers: res.headers,
+          data: res.data,
+        };
+
+        this.postSuccessResult = this.fortmatResponse(result);
+      } catch (err) {
+        this.postResult = this.fortmatResponse(err.response?.data) || err;
+      }
+    },
+
+  },
+
+
 };
+
+
 </script>
 
 <style lang="scss" scoped>
