@@ -17,13 +17,12 @@ const createUser = async (req, res) => {
     const {password} = req.body
     const {answer} = req.body
 
-    console.log(req.body)
-    //Check if all Values are given
-    if (!email || !username || !password || !answer
-    ) {
-        return res.status(400).json(
-            {success: false, err: `Please provide all required Information!`})
-    }
+  //Check if all Values are given
+  if (!email || !username || !password || !answer) {
+    return res.status(400).
+      json(
+        { success: false, err: `Please provide all required Information!` })
+  }
 
     //Check if User with email already exists
     const userExists = await prisma.user.count({
@@ -122,6 +121,47 @@ const putUser = async (req, res) => {
 }
 
 /**
+ * Function to change the password of an existing user
+ * Used in ../API/account/password for the PUT Method of the /API/account/ route
+ * Returns an error if the answer to the security question is wrong, or if there
+ * is a database error
+ */
+const forgotPassword = async (req, res) => {
+  if (req.body.sicherheitsfrageAntwort == null || req.body.neuesPasswort ==
+    null) {
+    return res.status(400).json(
+      {
+        success: false,
+        err: `You must enter the answer to the security question and the new password`,
+      })
+  }
+
+  if (!await bcrypt.compare(req.body.sicherheitsfrageAntwort, user.answer)) {
+    return res.status(200).
+      send({
+        success: false,
+        err: 'The answer to the security question does not match',
+      })
+  } else {
+    const hashedPassword = await bcrypt.hash(req.body.neuesPasswort, 10)
+    try {
+      await prisma.user.update({
+        where: {
+          id: req.user.id,
+        },
+        data: {
+          passwordHash: hashedPassword,
+        },
+      })
+      return res.status(200).
+        send({ success: true, msg: 'The password has been reset' })
+    } catch (error) {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+}
+ /**
  * Function to get all the recipes the user has created
  * Used in ../API/account/rezept for the GET Method of the /API/account/ route
  * Returns a list of all the recipes the user has created
@@ -145,4 +185,5 @@ const seeOwnRecipe = async (req, res) => {
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { createUser, putUser, seeOwnRecipe }
+module.exports = { createUser, putUser, seeOwnRecipe, forgotPassword }
+
