@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import http from "../http-common.js";
+import http from "../../http-common.js";
 
 export default {
   name: "AccountRegister",
