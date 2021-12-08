@@ -101,7 +101,7 @@ app.post('/login', checkUnauthenticated, passport.authenticate('local', {
  */
 app.delete('/logout', (req, res) => {
     req.logOut()
-    res.redirect('/login')
+    res.redirect('')
 })
 
 /*******************************************************************************

@@ -36,5 +36,4 @@ app.use(BalmUINext, {
 });
 
 app.use(BalmUIPlus);
-app.use(router);
 app.mount('#app');

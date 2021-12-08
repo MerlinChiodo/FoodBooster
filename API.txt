@@ -6,7 +6,7 @@ PUT Daten aendern
 DELTE Daten loeschen
 
 POST /login/ (email, password) -> Redirect zu Home page oder login page bei falschen Logindaten
-DELETE /logout/ () -> Redirect zu Home page ausgeloggt
+DELETE /logout/ () -> Redirect (refresh, Redirect im Frontend)
 
 POST /api/account/ (username, email, password) -> Erfolg/400/error
 DELETE /api/account/ (accountemail) -> Erfolg/400/error

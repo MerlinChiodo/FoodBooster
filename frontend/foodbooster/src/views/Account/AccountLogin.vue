@@ -54,6 +54,8 @@
 
           <!-- RESPONSE FAIL MESSAGE -->
           <ui-alert v-if="postResult" state="info">Ausgeloggt.</ui-alert>
+          <ui-alert v-if="postWrongLoginData" state="warning"> Du hast die falsche E-Mail oder Passwort eingegeben.
+          </ui-alert>
           <!-- RESPONSE SUCCESS MESSAGE -->
           <ui-alert v-if="postSuccessResult" state="success">Super! Das hat geklappt.</ui-alert>
 
@@ -69,17 +71,6 @@
             </router-link>
           </ui-form-field>
 
-          <ui-form-field v-if="successfullLoginEmail">
-            <router-link to="/ListederPraeferenzen">
-              Liste der Präferenzen
-            </router-link>
-          </ui-form-field>
-
-          <ui-form-field v-if="successfullLoginEmail">
-            <router-link to="/Praeferenzhinzufuegen">
-              Präferenz hinzufügen
-            </router-link>
-          </ui-form-field>
 
           <ui-form-field v-if="successfullLoginEmail">
             <router-link to="/Datenschutzeinstellungen">
@@ -118,9 +109,9 @@ export default {
     return {
       postResult: null,
       postSuccessResult: null,
+      postWrongLoginData: null,
       vpassword: "",
       vemail: "",
-      successfullLogin: "",
       successfullLoginEmail: "",
     }
   },
@@ -131,7 +122,7 @@ export default {
 
     async postData() {
       try {
-        const res = await http.post("login/", {
+        const res = await http.post("login", {
           email: this.vemail,
           password: this.vpassword,
 
@@ -148,27 +139,34 @@ export default {
 
         };
 
-        this.postSuccessResult = this.fortmatResponse(result);
-        this.postResult = null;
-        if (res.data === "Home") {
+
+        if (res.data === "Hallo") {
           this.cookies.set("LoggedInCookie", this.vemail);
           this.successfullLoginEmail = this.cookies.get("LoggedInCookie");
+          this.postWrongLoginData = null;
+          this.postSuccessResult = this.fortmatResponse(result);
+          this.postResult = null;
           console.log(this.successfullLoginEmail);
 
-
+        } else if (res.data === "Login Page") {
+          this.postWrongLoginData = this.fortmatResponse(result);
+          this.postResult = null;
+          this.postSuccessResult = null;
+          console.log(this.successfullLoginEmail);
         }
 
 
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
         this.postSuccessResult = null;
+        this.postWrongLoginData = null;
       }
     },
 
 
     async deleteLogoutData() {
       try {
-        const res = await http.delete("logout/", {
+        const res = await http.delete("logout", {
               headers: {
                 "x-access-token": "token-value",
                 data: {}
@@ -186,6 +184,7 @@ export default {
         this.postResult = null;
         this.cookies.remove("LoggedInCookie");
         this.successfullLoginEmail = false;
+        this.postWrongLoginData = null;
 
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
@@ -193,6 +192,7 @@ export default {
         // try {
         this.cookies.remove("LoggedInCookie");
         this.successfullLoginEmail = false;
+        this.postWrongLoginData = null;
         // } catch (err) {
         //   console.log("Cookie was not Removed" || err)
         // }
