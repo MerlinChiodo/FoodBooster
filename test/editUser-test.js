@@ -13,9 +13,9 @@ chai.use(chaiHTTP)
 
 //Test data to create User
 let newDataCorrect = {
-  email: 'editUser@muster.com',
-  username: 'editUser',
-  password: 'userEdit',
+  email: 'mustermail2@muster.com',
+  username: 'musterName',
+  password: 'muster',
   answer: 'Hund',
 }
 

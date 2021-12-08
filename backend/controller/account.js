@@ -167,8 +167,29 @@ const forgotPassword = async (req, res) => {
     }
   }
 }
+ /**
+ * Function to get all the recipes the user has created
+ * Used in ../API/account/rezept for the GET Method of the /API/account/ route
+ * Returns a list of all the recipes the user has created
+ * Returns an error if there is a database error
+ */
+const seeOwnRecipe = async (req, res) => {
+  try {
+    const recipes = await prisma.recipe.findMany({
+      where: {
+        creatorID: req.user.id,
+      },
+    })
+    console.log(recipes)
+    return res.status(200).send({ success: true, recipes })
+  } catch (err) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+}
 
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { createUser, putUser, forgotPassword }
+module.exports = { createUser, putUser, seeOwnRecipe, forgotPassword }
+
