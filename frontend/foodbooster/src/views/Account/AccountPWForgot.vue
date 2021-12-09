@@ -43,6 +43,13 @@
           <ui-form-field>
             <ui-button @click="postData" raised>Passwort ändern</ui-button>
           </ui-form-field>
+
+          <!-- RESPONSE FAIL MESSAGE -->
+          <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
+          <!-- RESPONSE SUCCESS MESSAGE -->
+          <ui-alert v-if="postSuccessResult" state="success">{{ postSuccessResult }}</ui-alert>
+
+
         </ui-form>
       </div>
     </ui-grid-cell
@@ -91,9 +98,18 @@ export default {
           data: res.data,
         };
 
-        this.postSuccessResult = this.fortmatResponse(result);
+
+        if (result.data.success) {
+          this.postSuccessResult = "Das Passwort wurde geändert.";
+          this.postResult = false;
+        } else {
+          this.postResult = result.data.err;
+          this.postSuccessResult = false;
+        }
+ 
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
+        this.postSuccessResult = false;
       }
     },
 

@@ -56,7 +56,7 @@
             <!-- DATENSCHUTZBEDINGUNGEN AKZEPTIEREN -->
             <ui-form-field>
               <ui-checkbox v-model="datenschutzChecked" input-id="checkbox"></ui-checkbox>
-              <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>Ja ich akzeptiere die
+              <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>* Ja ich akzeptiere die
                 <router-link to="/Datenschutzerklaerung">
                   Datenschutzbedingungen
                 </router-link>
@@ -80,11 +80,7 @@
             <!-- RESPONSE FAIL MESSAGE -->
             <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
             <!-- RESPONSE SUCCESS MESSAGE -->
-            <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.
-              <!--  <p>
-                  {{ postSuccessResult }}
-                </p> -->
-            </ui-alert>
+            <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.</ui-alert>
 
           </template>
         </ui-form>
