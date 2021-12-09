@@ -22,7 +22,7 @@ PUT /api/rezept/ (rezeptID, name, description, ingredients[], removeIngredients[
 GET /api/rezept/featured/ () -> Liste der featured Rezepte
 GET /api/rezept/search/ (suchkriterien{kategorie[], name, zutaten[], erstelleraccount, tags[]} -> Liste der gefilterten Rezepte
 POST /api/rezept/bewertung/ (rezeptID, bewertung(1-5)) -> Erfolg/400/error
-POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar, verfasseremail) -> Erfolg/400/error
+POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar) -> Erfolg/400/error
 
 POST /api/picture/ (foto) -> URL des Fotos
 GET /api/picture/ (URL) -> Foto
