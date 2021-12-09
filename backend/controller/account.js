@@ -148,6 +148,13 @@ const forgotPassword = async (req, res) => {
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
 
+  if (user.length < 1) {
+    return res.status(200).send({
+      success: false,
+      err: 'There is no user with that email'
+    })
+  }
+
   if (!await bcrypt.compare(req.body.sicherheitsfrageAntwort, user[0].answer)) {
     return res.status(200).
       send({
