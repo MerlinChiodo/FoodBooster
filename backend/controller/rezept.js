@@ -263,6 +263,11 @@ const getSingleRecipe = async (req,res) =>{
             where: {
                 id: Number(recipeID),
             },
+          include: {
+              ingredients : true,
+              comments: true,
+              category: true,
+          },
         })
         //Check if a recipe has been found, send response accordingly
         if(recipe){

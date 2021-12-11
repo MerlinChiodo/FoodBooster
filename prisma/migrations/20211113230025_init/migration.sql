@@ -26,7 +26,7 @@ CREATE TABLE `Recipe` (
     `description` VARCHAR(1000) NOT NULL,
     `servings` INTEGER NOT NULL,
     `created` DATETIME NOT NULL,
-    `bewertung` INTEGER NULL,
+    `rating` INTEGER NULL,
     `featured` BOOLEAN NOT NULL DEFAULT false,
     `creatorID` INTEGER NOT NULL,
 

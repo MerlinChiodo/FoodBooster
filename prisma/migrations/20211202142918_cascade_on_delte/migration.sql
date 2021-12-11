@@ -17,7 +17,7 @@ ALTER TABLE `RecipeIncludesIngredient` DROP FOREIGN KEY `RecipeIncludesIngredien
 ALTER TABLE `RecipeIncludesIngredient` DROP FOREIGN KEY `RecipeIncludesIngredient_recipeID_fkey`;
 
 -- AlterTable
-ALTER TABLE `Recipe` DROP COLUMN `bewertung`,
+ALTER TABLE `Recipe` DROP COLUMN `rating`,
     ADD COLUMN `rating` INTEGER NULL;
 
 -- AddForeignKey
