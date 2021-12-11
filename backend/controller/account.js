@@ -152,13 +152,13 @@ const seeOwnRecipe = async (req, res) => {
  * Function to favorite a recipe as logged in user
  * Function gets the user from req.user and the ID via request parameter
  * If the user is already favoring the recipe, calling this function unfavors it
- * If the user is not already facvoring the recipe, call this function will favor it
+ * If the user is not already favoring the recipe, calling this function will favor it
  *
- * Paramter needs to be a number and a valid recipeID
+ * Parameter needs to be a number and a valid recipeID
  *
  * Responses:
- *    200 - {success: true, msg: User now favors given recipe}
- *    200 - {success: true, msg: User no longer favors given recipe}
+ *    200 - {success: true, msg: User now favors given recipe, fav: 1} --> user favors given recipe
+ *    200 - {success: true, msg: User no longer favors given recipe, fav: 0} --> user no longer favors given recipe
  *    500 - {success: false, err: Ups, something went wrong} --> Prisma error
  * */
 const favRecipe = async (req, res) => {
@@ -198,7 +198,7 @@ const favRecipe = async (req, res) => {
           userID: user
         }
       })
-      return res.status(200).json({success: true, msg: "User now favors given recipe"})
+      return res.status(200).json({success: true, msg: "User now favors given recipe", fav: 1})
     } catch (err) {
       console.log(err)
       return res.status(500).json({success: false, err: "Ups, something went wrong!"})
@@ -215,7 +215,7 @@ const favRecipe = async (req, res) => {
           }
         }
       })
-      return res.status(200).json({success: true, msg: "User no longer favors given recipe"})
+      return res.status(200).json({success: true, msg: "User no longer favors given recipe", fav: 0})
     }catch (err){
       return res.status(500).json({success: false, err: "Ups, something went wrong!"})
     }
