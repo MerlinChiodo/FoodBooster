@@ -160,14 +160,32 @@ const seeOwnRecipe = async (req, res) => {
  *    200 - {success: true, msg: User now favors given recipe, fav: 1} --> user favors given recipe
  *    200 - {success: true, msg: User no longer favors given recipe, fav: 0} --> user no longer favors given recipe
  *    500 - {success: false, err: Ups, something went wrong} --> Prisma error
+ *    404 - {success: false, err: No recipe with given ID found} --> No recipe found
  * */
 const favRecipe = async (req, res) => {
 
   const {recipeID} = req.params
   const user = req.user.id
 
+
   //only allow numbers to be passed as id
   if(isNaN(recipeID)) return res.status(400).json({success: false, err: "Please provide a number!"})
+
+  //check if recipe is existing
+  try{
+    const recipe = await prisma.recipe.findMany({
+      where: {
+        id: Number(recipeID)
+      }
+    })
+
+    if(recipe.length <= 0){
+      return res.status(404).json({success: false, err: 'No recipe with given ID found!'})
+    }
+
+  }catch (err){
+    return res.status(400).json({success: false, err: 'Ups, something went wrong!'})
+  }
 
   //check if user already is favoring the recipe
   let fav
@@ -200,7 +218,6 @@ const favRecipe = async (req, res) => {
       })
       return res.status(200).json({success: true, msg: "User now favors given recipe", fav: 1})
     } catch (err) {
-      console.log(err)
       return res.status(500).json({success: false, err: "Ups, something went wrong!"})
     }
   //User already favors that recipe
