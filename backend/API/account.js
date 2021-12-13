@@ -14,8 +14,9 @@ const {
   forgotPassword,
   createUser,
   deleteUser,
-} = require(
-  '../controller/account')
+  favRecipe,
+  getFavorite,
+ } = require('../controller/account')
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -36,13 +37,9 @@ router.put('/', checkIfUser, putUser)
 
 router.put('/password', forgotPassword)
 
-router.post('/favorite', (req, res) => {
+router.post('/favorite/:recipeID',checkAuthenticated, favRecipe)
 
-})
-
-router.get('/favorite', (req, res) => {
-
-})
+router.get('/favorite', checkAuthenticated, getFavorite)
 
 router.get('/rezept', checkAuthenticated, seeOwnRecipe)
 
