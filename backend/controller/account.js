@@ -157,7 +157,7 @@ const forgotPassword = async (req, res) => {
   if (user.length < 1) {
     return res.status(200).send({
       success: false,
-      err: 'There is no user with that email'
+      err: 'There is no user with that email',
     })
   }
 
@@ -207,8 +207,78 @@ const seeOwnRecipe = async (req, res) => {
   }
 }
 
+/**
+ * Function to delete an account
+ * You have to state the email of the account, to accommodate the future function
+ * of admins being able to delete accounts.
+ * Used in ../API/account/ for the DELETE Method of the /API/account/ route
+ * Returns a status 400 if there is no email
+ * Returns a status 200 if the account has been deleted
+ * Returns a status 500 if there was an error
+ */
+const deleteUser = async (req, res) => {
+  const email = req.body.email
+
+  if (email == null) {
+    return res.status(400).send({
+      success: false,
+      err: 'You must enter the email address of the account you want to delete',
+    })
+  }
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: {
+        comments: {
+          deleteMany: {},
+        },
+        groceryList: {
+          deleteMany: {},
+        },
+        nutritionplans: {
+          deleteMany: {},
+        },
+        recipies: {
+          deleteMany: {},
+        },
+        reports: {
+          deleteMany: {},
+        },
+        threads: {
+          deleteMany: {},
+        },
+        favors: {
+          deleteMany: {},
+        },
+      },
+    })
+    await prisma.user.delete({
+      where: {
+        id: req.user.id,
+      },
+    })
+    req.user.logout()
+    return res.status(200).send({
+      success: true,
+      msg: 'Your account and all corresponding data has been deleted',
+    })
+  } catch (error) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+}
+
 /*****************************************
  * Export for use in other files
  ****************************************/
-module.exports = { createUser, putUser, seeOwnRecipe, forgotPassword }
+module.exports = {
+  createUser,
+  putUser,
+  seeOwnRecipe,
+  forgotPassword,
+  deleteUser,
+}
 

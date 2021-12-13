@@ -8,7 +8,13 @@ const express = require('express')
 const router = express.Router()
 
 const { checkIfUser, checkAuthenticated } = require('../passport-config')
-const { putUser, seeOwnRecipe, forgotPassword, createUser } = require(
+const {
+  putUser,
+  seeOwnRecipe,
+  forgotPassword,
+  createUser,
+  deleteUser,
+} = require(
   '../controller/account')
 /*******************************************************************************
  * Middleware for the server to use
@@ -24,9 +30,7 @@ router.use(express.json())
 
 router.route('/').post(createUser)
 
-router.delete('/', (req, res) => {
-
-})
+router.delete('/', checkIfUser, deleteUser)
 
 router.put('/', checkIfUser, putUser)
 
