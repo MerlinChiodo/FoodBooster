@@ -52,6 +52,18 @@
               </ui-textfield-helper>
             </ui-form-field>
 
+
+            <!-- DATENSCHUTZBEDINGUNGEN AKZEPTIEREN -->
+            <ui-form-field>
+              <ui-checkbox v-model="datenschutzChecked" input-id="checkbox"></ui-checkbox>
+              <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>* Ja ich akzeptiere die
+                <router-link to="/Datenschutzerklaerung">
+                  Datenschutzbedingungen
+                </router-link>
+                .
+              </ui-textfield-helper>
+            </ui-form-field>
+
             <!-- NEWSLETTER -->
             <ui-form-field>
               <ui-checkbox helper-text-id="newsletter-validation-msg"></ui-checkbox>
@@ -61,18 +73,14 @@
             </ui-form-field>
 
             <!-- SUBMIT -->
-            <ui-form-field :class="actionClass">
+            <ui-form-field v-if="datenschutzChecked" :class="actionClass">
               <ui-button @click="postData" raised>Registrieren</ui-button>
             </ui-form-field>
 
             <!-- RESPONSE FAIL MESSAGE -->
             <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
             <!-- RESPONSE SUCCESS MESSAGE -->
-            <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.
-              <!--  <p>
-                  {{ postSuccessResult }}
-                </p> -->
-            </ui-alert>
+            <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.</ui-alert>
 
           </template>
         </ui-form>
@@ -85,7 +93,7 @@
 </template>
 
 <script>
-import http from "../http-common.js";
+import http from "../../http-common.js";
 
 export default {
   name: "AccountRegister",
@@ -93,6 +101,7 @@ export default {
     return {
       postResult: null,
       postSuccessResult: null,
+      datenschutzChecked: false,
       vusername: "",
       vpassword: "",
       vanswer: "",

@@ -14,7 +14,7 @@ model User {
   passwordHash    String
   created         DateTime?          @db.DateTime(0)
   isAdmin         Boolean?           @default(false)
-  answer          String             @default("NULL")
+  answer          String
   comments        Comment[]
   groceryList     GroceryList?
   nutritionsplans Nutritionplan[]
@@ -32,21 +32,22 @@ model GroceryList {
 }
 
 model Recipe {
-  id          Int                           @id @default(autoincrement())
-  name        String                        @db.VarChar(50)
-  description String                        @db.VarChar(1000)
-  servings    Int
-  created     DateTime                      @db.DateTime(0)
-  rating      Int?
-  featured    Boolean                       @default(false)
-  creatorID   Int
-  creator     User                          @relation(fields: [creatorID], references: [id])
-  comments    Comment[]
-  used        NutritionplanIncludesRecipe[]
-  pictures    Picture[]
-  category    RecipeInCategory[]
-  ingredients RecipeIncludesIngredient[]
-  favored     UserFavorsRecipe[]
+  id           Int                           @id @default(autoincrement())
+  name         String                        @db.VarChar(50)
+  description  String                        @db.VarChar(1000)
+  servings     Int
+  created      DateTime                      @db.DateTime(0)
+  featured     Boolean                       @default(false)
+  creatorID    Int
+  rating       Int?                          @default(0)
+  totalRatings Int?                          @default(0)
+  creator      User                          @relation(fields: [creatorID], references: [id])
+  comments     Comment[]
+  used         NutritionplanIncludesRecipe[]
+  pictures     Picture[]
+  category     RecipeInCategory[]
+  ingredients  RecipeIncludesIngredient[]
+  favored      UserFavorsRecipe[]
 
   @@index([creatorID], map: "Recipe_creatorID_fkey")
 }
@@ -105,8 +106,8 @@ model GroceryListIncludesIngredient {
 model RecipeIncludesIngredient {
   ingredientName String     @db.VarChar(50)
   recipeID       Int
-  ingredient     Ingredient @relation(fields: [ingredientName], references: [name])
-  recipe         Recipe     @relation(fields: [recipeID], references: [id])
+  ingredient     Ingredient @relation(fields: [ingredientName], references: [name], onDelete: Cascade)
+  recipe         Recipe     @relation(fields: [recipeID], references: [id], onDelete: Cascade)
 
   @@id([ingredientName, recipeID])
   @@index([recipeID], map: "RecipeIncludesIngredient_recipeID_fkey")
@@ -127,7 +128,7 @@ model Picture {
   id       Int    @id @default(autoincrement())
   url      String @db.VarChar(50)
   recipeID Int
-  recipe   Recipe @relation(fields: [recipeID], references: [id])
+  recipe   Recipe @relation(fields: [recipeID], references: [id], onDelete: Cascade)
 
   @@index([recipeID], map: "Picture_recipeID_fkey")
 }
@@ -152,8 +153,8 @@ model Category {
 model RecipeInCategory {
   recipeID     Int
   categoryName String   @db.VarChar(50)
-  category     Category @relation(fields: [categoryName], references: [name])
-  recipe       Recipe   @relation(fields: [recipeID], references: [id])
+  category     Category @relation(fields: [categoryName], references: [name], onDelete: Cascade)
+  recipe       Recipe   @relation(fields: [recipeID], references: [id], onDelete: Cascade)
 
   @@id([recipeID, categoryName])
   @@index([categoryName], map: "RecipeInCategory_categoryName_fkey")
