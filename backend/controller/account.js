@@ -232,13 +232,28 @@ const deleteUser = async (req, res) => {
         id: req.user.id,
       },
       data: {
+        groceryList: {
+          delete: true,
+        },
+      },
+    })
+  } catch (error) {
+    if (error.code !== 'P2025') {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+
+  try {
+    await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: {
         comments: {
           deleteMany: {},
         },
-        groceryList: {
-          deleteMany: {},
-        },
-        nutritionplans: {
+        nutritionsplans: {
           deleteMany: {},
         },
         recipies: {
@@ -260,12 +275,12 @@ const deleteUser = async (req, res) => {
         id: req.user.id,
       },
     })
-    req.user.logout()
     return res.status(200).send({
       success: true,
       msg: 'Your account and all corresponding data has been deleted',
     })
   } catch (error) {
+    console.log(error)
     return res.status(500).
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
