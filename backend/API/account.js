@@ -7,10 +7,9 @@ const express = require('express')
  */
 const router = express.Router()
 
-const { createUser } = require('../controller/account.js')
 const { checkIfUser, checkAuthenticated } = require('../passport-config')
-const { putUser, seeOwnRecipe, favRecipe, getFavorite } = require('../controller/account')
-
+const { putUser, seeOwnRecipe, forgotPassword, createUser, favRecipe, getFavorite } = require(
+  '../controller/account')
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -31,9 +30,7 @@ router.delete('/', (req, res) => {
 
 router.put('/', checkIfUser, putUser)
 
-router.put('/password', (req, res) => {
-
-})
+router.put('/password', forgotPassword)
 
 router.post('/favorite/:recipeID',checkAuthenticated, favRecipe)
 

@@ -39,7 +39,8 @@ model Recipe {
   created     DateTime                      @db.DateTime(0)
   featured    Boolean                       @default(false)
   creatorID   Int
-  rating      Int?
+  rating      Int?                          @default(0)
+  totalRatings Int?                         @default(0)
   creator     User                          @relation(fields: [creatorID], references: [id])
   comments    Comment[]
   used        NutritionplanIncludesRecipe[]

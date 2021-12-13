@@ -2,6 +2,9 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
+const {createNutritionPlan} = require('../controller/ernaehrungsplan')
+const {checkAuthenticated} = require("../passport-config");
+
 /**
  * The router allows us to receive requests in files that aren't the main file
  */
@@ -18,9 +21,7 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
-router.post('/', (req, res) => {
-
-})
+router.post('/', checkAuthenticated, createNutritionPlan)
 
 router.put('/', (req, res) => {
 
