@@ -29,6 +29,7 @@
           </ui-item-text-content>
         </ui-item>
       </ui-list>
+      <ui-slider v-model="value0" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider> <!--aktuelle Position wird noch nicht angezeigt-->
     </ui-grid-cell>
 
     <ui-grid-cell class="leer" columns="2">
@@ -45,15 +46,16 @@
       <ui-icon-button v-model="value3" :toggle="icon1"> </ui-icon-button>
       <ui-icon-button v-model="value4" :toggle="icon1"> </ui-icon-button>
       <ui-icon-button v-model="value5" :toggle="icon1"> </ui-icon-button>
+      <p>x Bewertungen</p><!--Anzahl einlesen-->
     </ui-grid-cell>
 
     <ui-grid-cell class="nutri" columns="2">
-
+      <img src="../assets/nutri.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
     </ui-grid-cell>
 
     <ui-grid-cell class="anleitung" columns="5">
-      <h2>Anleitung:</h2><!--muss geladen werden-->
-      PlatzhalterText
+      <h2>Anleitung:</h2>
+      <p>PlatzhalterText</p><!--muss geladen werden-->
     </ui-grid-cell>
 
     <ui-grid-cell class="leer" columns="2">
@@ -90,6 +92,7 @@ export default {
 
     data() {
       return {
+        value0: 1,
         value1: false,
         value2:false,
         value3:false,
@@ -124,8 +127,13 @@ export default {
   object-fit: cover;
 }
 
-.bewertung{
- border: 4px solid goldenrod;
+
+.nutri img{
+  width: 50%;
+}
+
+.lesen{
+  background-color:gainsboro;
 }
 
 
