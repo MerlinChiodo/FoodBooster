@@ -8,7 +8,7 @@
       </ui-grid-cell>
       <ui-grid-cell columns="10">
         <div class="TabsBox">
-          <ui-tabs v-model="active">
+          <ui-tabs>
             <router-link to="/">
               <ui-tab>Home</ui-tab>
             </router-link>
@@ -27,7 +27,7 @@
             <router-link to="/ernährungsplan">
               <ui-tab>Ernährungsplan</ui-tab>
             </router-link>
-            <router-link to="/accountregister">
+            <router-link to="/accountlogin">
               <ui-tab>Account</ui-tab>
             </router-link>
           </ui-tabs>

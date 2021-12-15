@@ -32,6 +32,7 @@ model GroceryList {
 }
 
 model Recipe {
+
   id          Int                           @id @default(autoincrement())
   name        String                        @db.VarChar(50)
   description String                        @db.VarChar(1000)
@@ -48,6 +49,7 @@ model Recipe {
   category    RecipeInCategory[]
   ingredients RecipeIncludesIngredient[]
   favored     UserFavorsRecipe[]
+
 
   @@index([creatorID], map: "Recipe_creatorID_fkey")
 }

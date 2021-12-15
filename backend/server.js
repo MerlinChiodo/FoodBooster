@@ -24,7 +24,7 @@ const cors = require('cors')
 /*******************************************************************************
  * Imports of other files from this project
  ******************************************************************************/
-const { initialize, checkUnauthenticated } = require('./passport-config')
+const {initialize, checkUnauthenticated} = require('./passport-config')
 
 initialize(passport)
 
@@ -40,19 +40,19 @@ const rezept = require('./API/rezept')
  ******************************************************************************/
 app.use(flash())
 app.use(session({
-  secret: 'secret',
-  resave: false,
-  saveUninitialized: false,
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
 }))
 app.use(express.json())
 app.use(express.urlencoded({
-  extended: false,
+    extended: false,
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cors({
-  credentials: true,
-  origin: true,
+    credentials: true,
+    origin: true,
 }))
 /*******************************************************************************
  * Router integration for the API
@@ -72,14 +72,14 @@ app.use('/api/rezept', rezept)
  * Get Request for the homepage
  */
 app.get('/', (req, res) => {
-  res.send('Hallo')
+    res.send('Hallo')
 })
 /**
  * Get for the login page
  * Redirects to the home page if a logged in user tries to call this page
  */
 app.get('/login', checkUnauthenticated, (req, res) => {
-  res.send('Login Page')
+    res.send('Login Page')
 })
 
 /**

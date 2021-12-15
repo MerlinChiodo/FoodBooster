@@ -1,11 +1,17 @@
 import {createRouter, createWebHistory,} from "vue-router";
 import Home from '../views/Home.vue'
-import Rezepte from '../views/Rezepte.vue'
-import Featured_Rezepte from '../views/Featured_Rezepte.vue'
-import Forum from '../views/Forum.vue'
-import Einkaufsliste from '../views/Einkaufsliste.vue'
-import Ernährungsplan from '../views/Ernährungsplan.vue'
-import AccountRegister from '../views/AccountRegister.vue'
+import Rezepte from '../views/Rezept/Rezepte.vue'
+import Featured_Rezepte from '../views/Rezept/Featured_Rezepte.vue'
+import Forum from '../views/Forum/Forum.vue'
+import Einkaufsliste from '../views/Einkaufsliste/Einkaufsliste.vue'
+import Ernährungsplan from '../views/Ernaehrungsplan/Ernährungsplan.vue'
+import AccountRegister from '../views/Account/AccountRegister.vue'
+import AccountLogin from '../views/Account/AccountLogin.vue'
+import AccountPWForgot from "@/views/Account/AccountPWForgot";
+import Datenschutzeinstellungen from "@/views/Account/Datenschutzeinstellungen";
+import AdminMeldungen from "@/views/Account/AdminMeldungen";
+import Datenschutzerklaerung from "@/views/Datenschutzerklaerung";
+import Impressum from "@/views/Impressum";
 
 // Defines the routes
 // Each route should map to a component.
@@ -17,6 +23,12 @@ const routes = [
     {path: '/einkaufsliste', name: 'Einkaufsliste', component: Einkaufsliste},
     {path: '/ernährungsplan', name: 'Ernährungsplan', component: Ernährungsplan},
     {path: '/accountregister', name: 'AccountRegister', component: AccountRegister},
+    {path: '/accountlogin', name: 'AccountLogin', component: AccountLogin},
+    {path: '/AccountPWForgot', name: 'AccountPWForgot', component: AccountPWForgot},
+    {path: '/Datenschutzeinstellungen', name: 'Datenschutzeinstellungen', component: Datenschutzeinstellungen},
+    {path: '/AdminMeldungen', name: 'AdminMeldungen', component: AdminMeldungen},
+    {path: '/Datenschutzerklaerung', name: 'Datenschutzerklaerung', component: Datenschutzerklaerung},
+    {path: '/Impressum', name: 'Impressum', component: Impressum},
 ]
 
 // Creates the router instance and passes the `routes` option
