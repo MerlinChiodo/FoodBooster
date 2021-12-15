@@ -5,29 +5,33 @@
 
 */
 -- DropForeignKey
-ALTER TABLE `RecipeInCategory` DROP FOREIGN KEY `RecipeInCategory_categoryName_fkey`;
+ALTER TABLE `RecipeInCategory`
+    DROP FOREIGN KEY `RecipeInCategory_categoryName_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `RecipeInCategory` DROP FOREIGN KEY `RecipeInCategory_recipeID_fkey`;
+ALTER TABLE `RecipeInCategory`
+    DROP FOREIGN KEY `RecipeInCategory_recipeID_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `RecipeIncludesIngredient` DROP FOREIGN KEY `RecipeIncludesIngredient_ingredientName_fkey`;
+ALTER TABLE `RecipeIncludesIngredient`
+    DROP FOREIGN KEY `RecipeIncludesIngredient_ingredientName_fkey`;
 
 -- DropForeignKey
-ALTER TABLE `RecipeIncludesIngredient` DROP FOREIGN KEY `RecipeIncludesIngredient_recipeID_fkey`;
-
--- AlterTable
-ALTER TABLE `Recipe` DROP COLUMN `bewertung`,
-    ADD COLUMN `rating` INTEGER NULL;
+ALTER TABLE `RecipeIncludesIngredient`
+    DROP FOREIGN KEY `RecipeIncludesIngredient_recipeID_fkey`;
 
 -- AddForeignKey
-ALTER TABLE `RecipeIncludesIngredient` ADD CONSTRAINT `RecipeIncludesIngredient_ingredientName_fkey` FOREIGN KEY (`ingredientName`) REFERENCES `Ingredient`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `RecipeIncludesIngredient`
+    ADD CONSTRAINT `RecipeIncludesIngredient_ingredientName_fkey` FOREIGN KEY (`ingredientName`) REFERENCES `Ingredient` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `RecipeIncludesIngredient` ADD CONSTRAINT `RecipeIncludesIngredient_recipeID_fkey` FOREIGN KEY (`recipeID`) REFERENCES `Recipe`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `RecipeIncludesIngredient`
+    ADD CONSTRAINT `RecipeIncludesIngredient_recipeID_fkey` FOREIGN KEY (`recipeID`) REFERENCES `Recipe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `RecipeInCategory` ADD CONSTRAINT `RecipeInCategory_categoryName_fkey` FOREIGN KEY (`categoryName`) REFERENCES `Category`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `RecipeInCategory`
+    ADD CONSTRAINT `RecipeInCategory_categoryName_fkey` FOREIGN KEY (`categoryName`) REFERENCES `Category` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `RecipeInCategory` ADD CONSTRAINT `RecipeInCategory_recipeID_fkey` FOREIGN KEY (`recipeID`) REFERENCES `Recipe`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `RecipeInCategory`
+    ADD CONSTRAINT `RecipeInCategory_recipeID_fkey` FOREIGN KEY (`recipeID`) REFERENCES `Recipe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

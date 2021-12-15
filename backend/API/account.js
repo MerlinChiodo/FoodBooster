@@ -8,8 +8,15 @@ const express = require('express')
 const router = express.Router()
 
 const { checkIfUser, checkAuthenticated } = require('../passport-config')
-const { putUser, seeOwnRecipe, forgotPassword, createUser } = require(
-  '../controller/account')
+const {
+  putUser,
+  seeOwnRecipe,
+  forgotPassword,
+  createUser,
+  deleteUser,
+  favRecipe,
+  getFavorite,
+ } = require('../controller/account')
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -24,21 +31,15 @@ router.use(express.json())
 
 router.route('/').post(createUser)
 
-router.delete('/', (req, res) => {
-
-})
+router.delete('/', checkIfUser, deleteUser)
 
 router.put('/', checkIfUser, putUser)
 
 router.put('/password', forgotPassword)
 
-router.post('/favorite', (req, res) => {
+router.post('/favorite/:recipeID',checkAuthenticated, favRecipe)
 
-})
-
-router.get('/favorite', (req, res) => {
-
-})
+router.get('/favorite', checkAuthenticated, getFavorite)
 
 router.get('/rezept', checkAuthenticated, seeOwnRecipe)
 

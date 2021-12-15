@@ -249,33 +249,34 @@ const createRecipe = async (req, res) => {
  *
  *  TODO : Database cleanup --> Attributes are mixed with english and german
  * */
-const getSingleRecipe = async (req,res) =>{
+const getSingleRecipe = async (req, res) => {
 
-    //get the recipeID out of the params
-    const {recipeID} = req.params
+  //get the recipeID out of the params
+  const { recipeID } = req.params
 
-    //Only allow Numbers, as the ID is stored as Number
-    if(isNaN(recipeID))  return res.status(400).json( { success: false, err: "Please provide a Number" } )
+  //Only allow Numbers, as the ID is stored as Number
+  if (isNaN(recipeID)) return res.status(400).
+    json({ success: false, err: 'Please provide a Number' })
 
-    //read recipe from database
-    try{
-        const recipe = await prisma.recipe.findUnique({
-            where: {
-                id: Number(recipeID),
-            },
-        })
-        //Check if a recipe has been found, send response accordingly
-        if(recipe){
-            return res.status(200).json( { success: true, msg: recipe} )
-        }else{
-            return res.status(404).json( { success: false, err: "404 Not Found"} )
-        }
-    }catch (err){
-        return res.status(500).json( { success: false, err: "err" } )
+  //read recipe from database
+  try {
+    const recipe = await prisma.recipe.findUnique({
+      where: {
+        id: Number(recipeID),
+      },
+    })
+    //Check if a recipe has been found, send response accordingly
+    if (recipe) {
+      return res.status(200).json({ success: true, msg: recipe })
+    } else {
+      return res.status(404).json({ success: false, err: '404 Not Found' })
     }
+  } catch (err) {
+    return res.status(500).json({ success: false, err: 'err' })
+  }
 }
 
- /* Edits recipes
+/** Edits recipes
  * Needs to get rezeptID to identify the recipe that you want to change
  * Note that you can only change your own recipes
  * Defined Arguments:
@@ -480,45 +481,117 @@ const editRecipe = async (req, res,
  */
 const rateRecipe = async (req, res) => {
 
-  const {recipeID, rating} = req.body
+  const { recipeID, rating } = req.body
 
   //Check if every required argument is given
-  if(!recipeID || !rating){
-    return res.status(400).send( {success: false, err: "Please provide all required information!"} )
+  if (!recipeID || !rating) {
+    return res.status(400).
+      send({ success: false, err: 'Please provide all required information!' })
   }
 
   //Get recipe to calculate new rating
   try {
     const recipe = await prisma.recipe.findUnique({
       where: {
-        id: recipeID
-      }
+        id: recipeID,
+      },
     })
     //the user cant rate his own recipe
     if (recipe.creatorID !== req.user.id) {
 
-        await prisma.recipe.update({
-          where: {
-            id: recipe.id
-          },
-          data: {
-            rating: (recipe.rating + rating),
-            totalRatings: (recipe.totalRatings + 1)
-          }
-        })
+      await prisma.recipe.update({
+        where: {
+          id: recipe.id,
+        },
+        data: {
+          rating: (recipe.rating + rating),
+          totalRatings: (recipe.totalRatings + 1),
+        },
+      })
 
-        //Update Info in returned recipe manually to decrease loading time
-        recipe.rating += rating
-        recipe.totalRatings++;
-      return res.status(200).send( {success: true, msg: recipe} )
-    }else{
+      //Update Info in returned recipe manually to decrease loading time
+      recipe.rating += rating
+      recipe.totalRatings++
+      return res.status(200).send({ success: true, msg: recipe })
+    } else {
       //User tried to vote for his own recipe
-      return res.status(403).send( {success: false, err: "You cant vote for your own recipe!"} )
+      return res.status(403).
+        send({ success: false, err: 'You cant vote for your own recipe!' })
     }
-  }catch(err){
-      //Prisma error
-      return res.status(500).send({success: false, err: "Ups, something went wrong!"})
-    }
+  } catch (err) {
+    //Prisma error
+    return res.status(500).
+      send({ success: false, err: 'Ups, something went wrong!' })
+  }
+}
+
+/**
+ * Function to comment on a recipe or answer to a comment of a recipe
+ * Arguments:
+ *    - rezeptID--> the recipe that the comment was posted to
+ *    - kommentar --> the comment as a string
+ *    - kommentarID --> the comment id if the new comment answers to another comment
+ * Responses:
+ *    400 - {success: false, err: 'There must be at least the id of the recipe you
+ *    want to comment and the comment itself'} --> Some information is missing
+ *    404 - {success: false, err: `There is no recipe with the id ${rezeptID}`} --> There is no recipe with that id
+ *    200 - {success: true, comment} --> Comment was created
+ *    500 - {success: false, err: Ups, something went wrong!} --> Prisma Error
+ */
+const commentRecipe = async (req, res) => {
+  const {
+    rezeptID,
+    kommentarID,
+    kommentar,
+  } = req.body
+
+  if (!rezeptID || !kommentar) {
+    return res.status(400).send({
+      success: false, err: 'There must be at least the id ' +
+        'of the recipe you want to comment and the comment itself',
+    })
   }
 
-module.exports = { getRecipes, getFeatured, createRecipe, rateRecipe, editRecipe, getSingleRecipe }
+  try {
+    const recipe = await prisma.recipe.findUnique({
+      where: {
+        id: Number(rezeptID),
+      },
+    })
+    if (recipe == null) {
+      return res.status(404).
+        send(
+          { success: false, err: `There is no recipe with the id ${rezeptID}` })
+    }
+  } catch (error) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+
+  try {
+    const comment = await prisma.comment.create({
+      data: {
+        text: String(kommentar),
+        userID: req.user.id,
+        created: new Date(),
+        recipeID: Number(rezeptID),
+        topCommentID: (kommentarID ? Number(kommentarID) : undefined),
+      },
+    })
+    return res.status(201).send({ success: true, comment })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
+}
+
+module.exports = {
+  getRecipes,
+  getFeatured,
+  createRecipe,
+  rateRecipe,
+  editRecipe,
+  getSingleRecipe,
+  commentRecipe,
+}
