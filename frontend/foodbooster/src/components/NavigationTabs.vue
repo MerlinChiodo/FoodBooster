@@ -27,6 +27,9 @@
             <router-link to="/ernährungsplan">
               <ui-tab>Ernährungsplan</ui-tab>
             </router-link>
+            <router-link to="/MeineRezepte">
+              <ui-tab>Meine Rezepte</ui-tab>
+            </router-link>
             <router-link to="/accountlogin">
               <ui-tab>Account</ui-tab>
             </router-link>
