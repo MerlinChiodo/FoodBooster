@@ -19,28 +19,18 @@
             </ui-form-field>
 
 
-            <!-- DATENSCHUTZBEDINGUNGEN AKZEPTIEREN -->
+            <!-- BESCHREIBUNG -->
             <ui-form-field>
-              <ui-checkbox v-model="datenschutzChecked" input-id="checkbox"></ui-checkbox>
-              <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>* Ja ich akzeptiere die
-                <router-link to="/Datenschutzerklaerung">
-                  Datenschutzbedingungen
-                </router-link>
-                .
-              </ui-textfield-helper>
+              <label class="actionClass"> Beschreibung</label>
+              <ui-textfield v-model="beschreibung" input-type="textarea" rows="6" cols="21">
+                Beschreibe hier dein Rezept.
+              </ui-textfield>
             </ui-form-field>
 
-            <!-- NEWSLETTER -->
-            <ui-form-field>
-              <ui-checkbox helper-text-id="newsletter-validation-msg"></ui-checkbox>
-              <ui-textfield-helper id="newsletter-validation-msg" visible validMsg>
-                Ja, ich will den Newsletter abonieren.
-              </ui-textfield-helper>
-            </ui-form-field>
 
             <!-- SUBMIT -->
-            <ui-form-field v-if="datenschutzChecked" :class="actionClass">
-              <ui-button @click="postData" raised>Registrieren</ui-button>
+            <ui-form-field v-if="name" :class="actionClass">
+              <ui-button @click="postData" raised>Erstellen</ui-button>
             </ui-form-field>
 
             <!-- RESPONSE FAIL MESSAGE -->
@@ -59,8 +49,57 @@
 </template>
 
 <script>
+import http from "@/http-common";
+
+const FormData = require('form-data');
+
+
 export default {
-  name: "Rezept_erstellen"
+  name: "Rezept_erstellen",
+  data() {
+    return {
+      name: null,
+      beschreibung: null,
+      kategorie: ['Suppe', 'Mittagsesseen'],
+      zutaten: ['Apple', 'Banana'],
+      portionen: 3,
+      postSuccessResult: null,
+      postResult: null,
+
+    }
+  },
+  methods: {
+    fortmatResponse(res) {
+      return JSON.stringify(res, null, 2);
+    },
+
+    async postData() {
+      try {
+        const formData = new FormData();
+        formData.append('name', this.name);
+        formData.append('description', this.beschreibung);
+        formData.append('servings', this.portionen);
+        formData.append('ingredients', this.zutaten);
+
+        const res = await http.post("rezept/", formData, {
+          headers: {
+            "x-access-token": "token-value",
+          },
+        });
+
+        const result = {
+          status: res.status + "-" + res.statusText,
+          headers: res.headers,
+          data: res.data,
+        };
+
+        this.postSuccessResult = this.fortmatResponse(result);
+      } catch (err) {
+        this.postResult = this.fortmatResponse(err.response?.data) || err;
+      }
+    },
+  }
+
 }
 </script>
 
