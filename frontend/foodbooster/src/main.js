@@ -24,6 +24,9 @@ app.use(BalmUI, {
     },
     UiGridCell: {
         //columns: 4,
+    },
+    UiSlider: {
+        // some props
     }
 
 });
