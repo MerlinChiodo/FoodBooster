@@ -3,7 +3,7 @@
   <ui-grid class="head-grid">
     <ui-grid-cell class="demo-cell" columns="12">
       <ui-form-field>
-        <h1>Rezept Name</h1> <!--Variable ersetzen-->
+        <h1>{{name}}</h1>
       </ui-form-field>
     </ui-grid-cell>
   </ui-grid>
@@ -44,17 +44,38 @@
       <ui-icon-button v-model="value3" :toggle="icon1"></ui-icon-button>
       <ui-icon-button v-model="value4" :toggle="icon1"></ui-icon-button>
       <ui-icon-button v-model="value5" :toggle="icon1"></ui-icon-button>
-      <p>x Bewertungen</p><!--Anzahl einlesen-->
+      <p>{{totalRatings}} Bewertungen</p>
     </ui-grid-cell>
 
     <ui-grid-cell class="nutri" columns="2">
       <img src="../../assets/nutri.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
     </ui-grid-cell>
 
+
+
     <ui-grid-cell class="anleitung" columns="5">
-      <h2>Anleitung:</h2>
-      <p>PlatzhalterText</p><!--muss geladen werden-->
+      <ui-card outlined class="demo-card">
+        <div>
+          Beschreibung:
+        </div>
+        <ui-list-divider></ui-list-divider>
+        <a class="demo-card-article">
+          <p class="demo-card-article__snippet">{{ description }}</p>
+        </a>
+        <ui-list-divider></ui-list-divider>
+        <ui-card-actions full-bleed>
+          <ui-button class="demo-card-action">
+            Rezept bearbeiten
+            <template #after>
+              <ui-icon>arrow_forward</ui-icon>
+            </template>
+          </ui-button>
+        </ui-card-actions>
+      </ui-card>
     </ui-grid-cell>
+
+
+
 
     <ui-grid-cell class="leer" columns="2">
     </ui-grid-cell>
@@ -78,12 +99,23 @@
 
 
 <script>
+import http from "@/http-common";
+
 export default {
   name: "rezeptDummy",
 
 
   data() {
     return {
+      name: null,
+      servings: null,
+      description: null,
+      featured: null,
+      rating: null,
+      totalRatings: null,
+      recipeID: 7,
+      recipe: null,
+
       value0: 1,
       value1: false,
       value2: false,
@@ -95,7 +127,20 @@ export default {
         off: 'star_border'
       },
     };
-  }
+  },
+
+  async mounted() {    // GET request using axios with async/await
+    const response = await http.get("rezept/single/"+this.recipeID, {
+        }
+    );
+    this.name=response.data.msg.name;
+    this.servings=response.data.msg.servings;
+    this.description=response.data.msg.description;
+    this.rating=response.data.msg.rating;
+    this.featured=response.data.msg.featured;
+    this.totalRatings=response.data.msg.totalRatings;
+
+  },
 
 
 };
@@ -105,6 +150,11 @@ export default {
 
 
 <style scoped>
+
+.demo-card-article{
+  color:#0000008A;
+  padding: 15px;
+}
 
 .bild img {
   height: auto;
