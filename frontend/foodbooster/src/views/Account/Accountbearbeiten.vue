@@ -4,10 +4,9 @@
   <ui-grid class="demo-grid">
     <ui-grid-cell class="demo-cell"></ui-grid-cell>
     <ui-grid-cell class="demo-cell">
-      <h1>Account bearbeiten.</h1>
+      <h1>Willkommen {{accountmail}}</h1>
 
       <h3>Hier kannst du dein Username ändern.</h3>
-      <h3>Hier kannst du dein Passwort ändern.</h3>
 
       <!--  <ui-grid class="demo-grid">-->
       <!--    <ui-grid-cell columns="4" class="demo-cell">-->
@@ -20,23 +19,8 @@
             <!-- Username -->
             <ui-form-field>
               <label class="required">Username:</label>
-              <ui-textfield v-model="vname" required>
-                Name deines Users
-              </ui-textfield>
-            </ui-form-field>
-
-
-            <!-- PASSWORD -->
-            <ui-form-field>
-              <label class="required">Passwort:</label>
-              <ui-textfield
-                  v-model="vpassword"
-                  input-type="password"
-                  required
-                  pattern=".{8,}"
-                  :attrs="{autocomplete: 'current-password'}"
-              >
-                Password
+              <ui-textfield v-model="username" required>
+                ...
               </ui-textfield>
             </ui-form-field>
 
@@ -69,14 +53,21 @@
 
 <script>
 import http from "@/http-common";
+import {useCookies} from "vue3-cookies";
 
 
 export default {
   name: "Accountbearbeiten",
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
   data() {
     return {
       postResult: null,
       postSuccessResult: null,
+      accountmail: this.cookies.get("LoggedInCookie"),
+      username: "",
 
 
     };
@@ -88,9 +79,9 @@ export default {
 
     async postData() {
       try {
-        const res = await http.put("XXXXXEINFÜGEN/", {
-          Haustierprofil_ID: this.haustierprofil_ID,
-          name: this.vname,
+        const res = await http.put("account", {
+          email: this.accountmail,
+          username: this.username,
 
 
         }, {
@@ -111,6 +102,7 @@ export default {
       }
     },
   }
+
 
 }
 
