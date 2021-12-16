@@ -12,7 +12,7 @@ import Datenschutzeinstellungen from "@/views/Account/Datenschutzeinstellungen";
 import AdminMeldungen from "@/views/Account/AdminMeldungen";
 import Datenschutzerklaerung from "@/views/Datenschutzerklaerung";
 import Impressum from "@/views/Impressum";
-import rezeptDummy from '../views/rezeptDummy.vue'
+import rezeptDummy from '../views/Rezept/rezeptDummy.vue'
 
 // Defines the routes
 // Each route should map to a component.

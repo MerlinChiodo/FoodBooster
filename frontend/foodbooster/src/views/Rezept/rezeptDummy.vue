@@ -9,12 +9,11 @@
   </ui-grid>
 
 
-
   <ui-grid class="bildUndListe">
     <ui-grid-cell class="bild" columns="4">
       <ui-form-field>
         <div class="bild">
-          <img src="../assets/essen_dummy.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+          <img src="../../assets/essen_dummy.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
         </div>
       </ui-form-field>
     </ui-grid-cell>
@@ -29,7 +28,8 @@
           </ui-item-text-content>
         </ui-item>
       </ui-list>
-      <ui-slider v-model="value0" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider> <!--aktuelle Position wird noch nicht angezeigt-->
+      <ui-slider v-model="value0" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider>
+      <!--aktuelle Position wird noch nicht angezeigt-->
     </ui-grid-cell>
 
     <ui-grid-cell class="leer" columns="2">
@@ -37,20 +37,18 @@
   </ui-grid>
 
 
-
-
   <ui-grid class="bewertungUndNutriUndAnleitung">
     <ui-grid-cell class="bewertung" columns="3">
-      <ui-icon-button v-model="value1" :toggle="icon1"> </ui-icon-button>
-      <ui-icon-button v-model="value2" :toggle="icon1"> </ui-icon-button>
-      <ui-icon-button v-model="value3" :toggle="icon1"> </ui-icon-button>
-      <ui-icon-button v-model="value4" :toggle="icon1"> </ui-icon-button>
-      <ui-icon-button v-model="value5" :toggle="icon1"> </ui-icon-button>
+      <ui-icon-button v-model="value1" :toggle="icon1"></ui-icon-button>
+      <ui-icon-button v-model="value2" :toggle="icon1"></ui-icon-button>
+      <ui-icon-button v-model="value3" :toggle="icon1"></ui-icon-button>
+      <ui-icon-button v-model="value4" :toggle="icon1"></ui-icon-button>
+      <ui-icon-button v-model="value5" :toggle="icon1"></ui-icon-button>
       <p>x Bewertungen</p><!--Anzahl einlesen-->
     </ui-grid-cell>
 
     <ui-grid-cell class="nutri" columns="2">
-      <img src="../assets/nutri.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+      <img src="../../assets/nutri.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
     </ui-grid-cell>
 
     <ui-grid-cell class="anleitung" columns="5">
@@ -63,26 +61,20 @@
   </ui-grid>
 
 
+  <ui-grid class="kommentare">
+    <ui-grid-cell class="schreiben" columns="6">
+      <ui-textfield input-type="textarea" rows="20" cols="120">
+        Schreiben Sie einen Kommentar.
+      </ui-textfield>
+    </ui-grid-cell>
 
-
- <ui-grid class="kommentare">
-   <ui-grid-cell class="schreiben" columns="6">
-     <ui-textfield input-type="textarea" rows="20" cols="120">
-       Schreiben Sie einen Kommentar.
-     </ui-textfield>
-   </ui-grid-cell>
-
-   <ui-grid-cell class="lesen" columns="6">
-     Andere Kommentare <!--einlesen-->
-   </ui-grid-cell>
- </ui-grid>
+    <ui-grid-cell class="lesen" columns="6">
+      Andere Kommentare <!--einlesen-->
+    </ui-grid-cell>
+  </ui-grid>
 
 
 </template>
-
-
-
-
 
 
 <script>
@@ -90,33 +82,26 @@ export default {
   name: "rezeptDummy",
 
 
-    data() {
-      return {
-        value0: 1,
-        value1: false,
-        value2:false,
-        value3:false,
-        value4: false,
-        value5:false,
-        icon1: {
-          on: 'star',
-          off: 'star_border'
-        },
-      };
-    }
-
-
+  data() {
+    return {
+      value0: 1,
+      value1: false,
+      value2: false,
+      value3: false,
+      value4: false,
+      value5: false,
+      icon1: {
+        on: 'star',
+        off: 'star_border'
+      },
+    };
+  }
 
 
 };
 
 
-
 </script>
-
-
-
-
 
 
 <style scoped>
@@ -128,12 +113,12 @@ export default {
 }
 
 
-.nutri img{
+.nutri img {
   width: 50%;
 }
 
-.lesen{
-  background-color:gainsboro;
+.lesen {
+  background-color: gainsboro;
 }
 
 
