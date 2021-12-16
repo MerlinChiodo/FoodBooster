@@ -34,7 +34,7 @@ model GroceryList {
 model Recipe {
   id           Int                           @id @default(autoincrement())
   name         String                        @db.VarChar(50)
-  description  String                        @db.VarChar(1000)
+  description  String                        @db.VarChar(10000)
   servings     Int
   created      DateTime                      @db.DateTime(0)
   featured     Boolean                       @default(false)
