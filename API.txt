@@ -16,11 +16,11 @@ POST /api/account/favorite/:recipeID -> Erfolg/400/error
 GET /api/account/favorite/ () -> Liste der Favoriten
 GET /api/account/rezept/ () -> Liste der eigenen Rezepte
 
-POST /api/rezept/ (name, erstelleraccount, beschreibung, zutaten{}, fotos[url], kategorie[], portionen) -> Erfolg/400/error
+POST /api/rezept/ (name, erstelleraccount, description, ingredients{}, fotos[url], kategorie[], servings) -> Erfolg/400/error
 GET /api/rezept/single/:rezeptID -> Rezept mit der ID
 PUT /api/rezept/ (rezeptID, name, description, ingredients[], removeIngredients[], pictures[url], removePictures[URL] servings, categories[], removeCategories[]) -> Erfolg/400/error
 GET /api/rezept/featured/ () -> Liste der featured Rezepte
-GET /api/rezept/search/ (suchkriterien{kategorie[], name, zutaten[], erstelleraccount, tags[]} -> Liste der gefilterten Rezepte
+GET /api/rezept/search/ (suchkriterien{kategorie[], name, ingredients[], erstelleraccount, tags[]} -> Liste der gefilterten Rezepte
 POST /api/rezept/bewertung/ (rezeptID, bewertung(1-5)) -> Erfolg/400/error
 POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar) -> Erfolg/400/error
 
@@ -32,8 +32,8 @@ PUT /api/ernaehrungsplan/ (id, {rezeptID: [Tag, Uhrzeit]})
 GET /api/ernaehrungsplan/liste/ () -> Liste aller Ernaehrungsplaene
 GET /api/ernaehrungsplan/ (id) -> Konkreter Plan
 
-POST /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
-DELETE /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
+POST /api/einkaufsliste/ (ingredients[]) -> Erfolg/400/error
+DELETE /api/einkaufsliste/ (ingredients[]) -> Erfolg/400/error
 GET /api/einkaufsliste/ () -> Liste der Zutaten
 
 POST /api/forum/ (threadname, erstelleraccount, kommentar) -> Erfolg/400/error

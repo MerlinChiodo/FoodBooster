@@ -5,40 +5,55 @@
 
 
       <div class="CreateRezeptBox">
-
-        <h1>Erstelle ein neues Rezept</h1>
         <ui-form nowrap item-margin-bottom="16" label-width="80">
-          <template #default="{ actionClass }">
+          <h1>Erstelle ein neues Rezept</h1>
+          <ui-form nowrap item-margin-bottom="16" label-width="80">
+            <template #default="{ actionClass }">
 
-            <!-- Rezeptname -->
-            <ui-form-field>
-              <label class="required"> Name: </label>
-              <ui-textfield v-model="name" required>
-                Rezeptname
-              </ui-textfield>
-            </ui-form-field>
-
-
-            <!-- BESCHREIBUNG -->
-            <ui-form-field>
-              <label class="actionClass"> Beschreibung</label>
-              <ui-textfield v-model="beschreibung" input-type="textarea" rows="6" cols="21">
-                Beschreibe hier dein Rezept.
-              </ui-textfield>
-            </ui-form-field>
+              <!-- Rezeptname -->
+              <ui-form-field>
+                <label class="required"> Name: </label>
+                <ui-textfield v-model="name" required>
+                  Rezeptname
+                </ui-textfield>
+              </ui-form-field>
 
 
-            <!-- SUBMIT -->
-            <ui-form-field v-if="name" :class="actionClass">
-              <ui-button @click="postData" raised>Erstellen</ui-button>
-            </ui-form-field>
+              <!-- BESCHREIBUNG -->
+              <ui-form-field>
+                <label class="actionClass"> Beschreibung</label>
+                <ui-textfield v-model="description" input-type="textarea" rows="6" cols="21" required>
+                  Beschreibe dein Rezept
+                </ui-textfield>
+              </ui-form-field>
 
-            <!-- RESPONSE FAIL MESSAGE -->
-            <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
-            <!-- RESPONSE SUCCESS MESSAGE -->
-            <ui-alert v-if="postSuccessResult" state="success">Erforlgreich Registriert.</ui-alert>
+              <ui-form-field>
+                <a>Bitte wähle aus wie viele Portionen dein Rezept hat: {{ servings }}</a>
+              </ui-form-field>
 
-          </template>
+              <ui-slider
+                  v-model="servings"
+                  type="discrete"
+                  :step="1"
+                  min="1"
+                  max="15"
+                  with-tick-marks
+              >
+              </ui-slider>
+
+
+              <!-- SUBMIT -->
+              <ui-form-field v-if="name" :class="actionClass">
+                <ui-button @click="postData" raised>Hochladen</ui-button>
+              </ui-form-field>
+
+              <!-- RESPONSE FAIL MESSAGE -->
+              <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
+              <!-- RESPONSE SUCCESS MESSAGE -->
+              <ui-alert v-if="postSuccessResult" state="success">Das Rezept wurde erfolgreich hochgeladen.</ui-alert>
+
+            </template>
+          </ui-form>
         </ui-form>
       </div>
     </ui-grid-cell>
@@ -58,11 +73,12 @@ export default {
   name: "Rezept_erstellen",
   data() {
     return {
+
       name: null,
-      beschreibung: null,
+      description: null,
       kategorie: ['Suppe', 'Mittagsesseen'],
-      zutaten: ['Apple', 'Banana'],
-      portionen: 3,
+      ingredients: ['TEST_Zucker', 'TEST_Weissbrot'],
+      servings: 1,
       postSuccessResult: null,
       postResult: null,
 
@@ -77,9 +93,9 @@ export default {
       try {
         const formData = new FormData();
         formData.append('name', this.name);
-        formData.append('description', this.beschreibung);
-        formData.append('servings', this.portionen);
-        formData.append('ingredients', this.zutaten);
+        formData.append('description', this.description);
+        formData.append('servings', this.servings);
+        formData.append('ingredients', this.ingredients);
 
         const res = await http.post("rezept/", formData, {
           headers: {
