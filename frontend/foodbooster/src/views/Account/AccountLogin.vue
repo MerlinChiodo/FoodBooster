@@ -85,6 +85,15 @@
           </ui-form-field>
 
 
+          <ui-form-field>
+            <router-link to="/Accountbearbeiten">
+              <ui-button raised>
+                Account bearbeiten
+              </ui-button>
+            </router-link>
+          </ui-form-field>
+
+
         </ui-form>
       </div>
     </ui-grid-cell>
@@ -142,8 +151,8 @@ export default {
 
         if (res.data === "Hallo") {
           this.cookies.set("LoggedInCookie", this.vemail);
-          this.successfullLoginEmail = this.cookies.get("LoggedInCookie");
-          this.postWrongLoginData = null;
+          this.successfullLoginEmail =
+              this.postWrongLoginData = null;
           this.postSuccessResult = this.fortmatResponse(result);
           this.postResult = null;
           console.log(this.successfullLoginEmail);

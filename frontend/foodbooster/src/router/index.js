@@ -12,6 +12,8 @@ import Datenschutzeinstellungen from "@/views/Account/Datenschutzeinstellungen";
 import AdminMeldungen from "@/views/Account/AdminMeldungen";
 import Datenschutzerklaerung from "@/views/Datenschutzerklaerung";
 import Impressum from "@/views/Impressum";
+import Accountbearbeiten from "@/views/Account/Accountbearbeiten";
+
 
 // Defines the routes
 // Each route should map to a component.
@@ -29,6 +31,7 @@ const routes = [
     {path: '/AdminMeldungen', name: 'AdminMeldungen', component: AdminMeldungen},
     {path: '/Datenschutzerklaerung', name: 'Datenschutzerklaerung', component: Datenschutzerklaerung},
     {path: '/Impressum', name: 'Impressum', component: Impressum},
+    {path: '/Accountbearbeiten', name: 'Accountbearbeiten', component: Accountbearbeiten},
 ]
 
 // Creates the router instance and passes the `routes` option
