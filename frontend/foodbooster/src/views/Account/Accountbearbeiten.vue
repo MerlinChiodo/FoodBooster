@@ -73,31 +73,12 @@ import http from "@/http-common";
 
 export default {
   name: "Accountbearbeiten",
-  computed: {
-    destinationId() {
-      return parseInt(this.$route.params.id)
-    },
-    alter() {
-      return parseInt(this.$route.params.alter)
-    }
-  },
   data() {
     return {
       postResult: null,
       postSuccessResult: null,
-      postPicResult: null,
-      postPicSuccessResult: null,
 
-      vname: this.$route.params.name,
-      vbeschreibung: this.$route.params.beschreibung,
-      vrasse: this.$route.params.rasse,
-      valter: this.$route.params.alter,
-      vgeschlecht: this.$route.params.geschlecht,
-      vort: this.$route.params.ort,
 
-      contentType: "application/json",
-      file: "",
-      haustierprofil_ID: this.$route.params.id,
     };
   },
   methods: {
@@ -105,55 +86,12 @@ export default {
       return JSON.stringify(res, null, 2);
     },
 
-
-    handleFileUpload(event) {
-
-      console.log(event);
-      console.log(event.target.files);
-
-      this.file = event.target.files[0];
-      console.log(this.file);
-    },
-
-    async postPic() {
-
-      const formData = new FormData();
-      formData.append('files', this.file, 'foto');
-      formData.append('HAUSTIERID', this.$route.params.id)
-
-      try {
-        const res = await http.post("upload/",
-            formData
-            , {
-              headers: {
-                "x-access-token": "token-value",
-              },
-            });
-
-
-        const result = {
-          status: res.status + "-" + res.statusText,
-          headers: res.headers,
-          data: res.data,
-        };
-
-        this.postPicSuccessResult = this.fortmatResponse(result);
-      } catch (err) {
-        this.postPicResult = this.fortmatResponse(err.response?.data) || err;
-      }
-    },
-
-
     async postData() {
       try {
-        const res = await http.put("haustierprofil/", {
+        const res = await http.put("XXXXXEINFÜGEN/", {
           Haustierprofil_ID: this.haustierprofil_ID,
           name: this.vname,
-          beschreibung: this.vbeschreibung,
-          rasse: this.vrasse,
-          alter: this.valter,
-          geschlecht: this.vgeschlecht,
-          ort: this.vort,
+
 
         }, {
           headers: {
