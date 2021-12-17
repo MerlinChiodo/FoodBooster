@@ -76,7 +76,7 @@ const createNutritionPlan = async (req, res) => {
  *     403 - {success: false, err: You can only get your own plans}
  *     500 - {success: false, err: Ups, something went wrong!, error} //Prisma error
  */
-const getSinglePlan = (req, res) => {
+const getSinglePlan = async (req, res) => {
   const { id } = req.params
 
   //Only allow Numbers, as the ID is stored as Number
@@ -84,7 +84,7 @@ const getSinglePlan = (req, res) => {
     json({ success: false, err: 'Please provide a Number' })
 
   try {
-    const plan = prisma.nutritionplan.findUnique({
+    const plan = await prisma.nutritionplan.findUnique({
       where: {
         id: id,
       },
@@ -106,8 +106,18 @@ const getSinglePlan = (req, res) => {
   }
 }
 
-const getPlans = (req, res) => {
-
+const getPlans = async (req, res) => {
+  try {
+    const plans = await prisma.nutritionsplan.findMany({
+      where: {
+        userID: req.user.id,
+      },
+    })
+    return res.status(200).send({ success: true, plans })
+  } catch (error) {
+    return res.status(500).
+      send({ success: false, err: 'Ups, something went wrong!', error })
+  }
 }
 
 module.exports = { createNutritionPlan, getSinglePlan, getPlans }
