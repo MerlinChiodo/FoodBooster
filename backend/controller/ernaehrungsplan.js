@@ -74,6 +74,7 @@ const createNutritionPlan = async (req, res) => {
  *     200 - {success: true, plan}
  *     400 - {success: false, err: Please provide a Number}
  *     403 - {success: false, err: You can only get your own plans}
+ *     404 - {success: false, err: There is no plan with that id}
  *     500 - {success: false, err: Ups, something went wrong!, error} //Prisma error
  */
 const getSinglePlan = async (req, res) => {
