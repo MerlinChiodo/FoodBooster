@@ -2,8 +2,10 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
-const {createNutritionPlan} = require('../controller/ernaehrungsplan')
-const {checkAuthenticated} = require("../passport-config");
+const { createNutritionPlan, getPlans } = require(
+  '../controller/ernaehrungsplan')
+const { checkAuthenticated } = require('../passport-config')
+const { getSingleRecipe } = require('../controller/rezept')
 
 /**
  * The router allows us to receive requests in files that aren't the main file
@@ -27,12 +29,8 @@ router.put('/', (req, res) => {
 
 })
 
-router.get('/', (req, res) => {
+router.get('/single/:id', checkAuthenticated, getSingleRecipe)
 
-})
-
-router.get('/liste', (req, res) => {
-
-})
+router.get('/', checkAuthenticated, getPlans)
 
 module.exports = router

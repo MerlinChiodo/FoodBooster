@@ -83,8 +83,12 @@ POST /api/ernaehrungsplan/ (name)												{201: success: true, msg: plan},
 																				{500: success: false, err:"Ups, something went wrong!"}
 
 PUT /api/ernaehrungsplan/ (id, {rezeptID: [Tag, Uhrzeit]})
-GET /api/ernaehrungsplan/liste/ () -> Liste aller Ernaehrungsplaene
-GET /api/ernaehrungsplan/ (id) -> Konkreter Plan
+GET /api/ernaehrungsplan/ () -> Liste aller Ernaehrungsplaene
+GET /api/ernaehrungsplan/single/:id () -> 										{200: success: true, plan},
+																				{400: success: false, err: 'Please provide a Number'},
+																				{403: success: false, err: 'You can only get your own plans'},
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
 
 POST /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
 DELETE /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
