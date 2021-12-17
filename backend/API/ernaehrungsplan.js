@@ -2,7 +2,7 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
-const { createNutritionPlan, getPlans } = require(
+const { createNutritionPlan, getPlans, getSinglePlan } = require(
   '../controller/ernaehrungsplan')
 const { checkAuthenticated } = require('../passport-config')
 const { getSingleRecipe } = require('../controller/rezept')
@@ -29,7 +29,7 @@ router.put('/', (req, res) => {
 
 })
 
-router.get('/single/:id', checkAuthenticated, getSingleRecipe)
+router.get('/single/:id', checkAuthenticated, getSinglePlan)
 
 router.get('/', checkAuthenticated, getPlans)
 

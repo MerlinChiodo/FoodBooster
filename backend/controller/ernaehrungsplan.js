@@ -77,11 +77,15 @@ const createNutritionPlan = async (req, res) => {
  *     500 - {success: false, err: Ups, something went wrong!, error} //Prisma error
  */
 const getSinglePlan = async (req, res) => {
-  const { id } = req.params
+  let { id } = req.params
+
+  id = Number(id)
 
   //Only allow Numbers, as the ID is stored as Number
-  if (isNaN(id)) return res.status(400).
-    json({ success: false, err: 'Please provide a Number' })
+  if (isNaN(id)) {
+    return res.status(400).
+      json({ success: false, err: 'Please provide a Number' })
+  }
 
   try {
     const plan = await prisma.nutritionplan.findUnique({
@@ -93,6 +97,12 @@ const getSinglePlan = async (req, res) => {
       },
     })
 
+    if (plan == null) {
+      return res.status(404).send({
+        success: false, err: 'There is no plan with that id',
+      })
+    }
+
     if (plan.userID !== req.user.id) {
       return res.status(403).
         send({ success: false, err: 'You can only get your own plans' })
@@ -101,20 +111,30 @@ const getSinglePlan = async (req, res) => {
     }
 
   } catch (error) {
+    console.log(error)
     return res.status(500).
       send({ success: false, err: 'Ups, something went wrong!', error })
   }
 }
 
+/**
+ * Function to get all nutritionplans of the user that is logged in
+ * You cannot get the plans of other users, only yours
+ *
+ * Responses:
+ *     200 - {success: true, plans}
+ *     500 - {success: false, err: Ups, something went wrong!, error} //Prisma error
+ */
 const getPlans = async (req, res) => {
   try {
-    const plans = await prisma.nutritionsplan.findMany({
+    const plans = await prisma.nutritionplan.findMany({
       where: {
         userID: req.user.id,
       },
     })
     return res.status(200).send({ success: true, plans })
   } catch (error) {
+    console.log(error)
     return res.status(500).
       send({ success: false, err: 'Ups, something went wrong!', error })
   }
