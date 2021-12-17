@@ -16,7 +16,7 @@ const {
   deleteUser,
   favRecipe,
   getFavorite,
- } = require('../controller/account')
+} = require('../controller/account')
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -33,11 +33,11 @@ router.route('/').post(createUser)
 
 router.delete('/', checkIfUser, deleteUser)
 
-router.put('/', checkIfUser, putUser)
+router.put('/', checkAuthenticated, putUser)
 
 router.put('/password', forgotPassword)
 
-router.post('/favorite/:recipeID',checkAuthenticated, favRecipe)
+router.post('/favorite/:recipeID', checkAuthenticated, favRecipe)
 
 router.get('/favorite', checkAuthenticated, getFavorite)
 
