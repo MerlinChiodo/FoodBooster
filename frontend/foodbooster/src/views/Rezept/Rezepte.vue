@@ -4,19 +4,22 @@
   <ui-image-list type="masonry" :text-protection="labelsType === 2">
     <ui-grid class="demo-grid">
 
-      <ui-grid-cell v-for="(item, index) in 12"
+      <ui-grid-cell v-for="(rezept, index) in rezepte"
                     :key="index" columns="3" class="demo-cell">
 
-        <ui-image-item
-
-            :image="require(`@/assets/Food1.jpg`)"
-
+        <ui-image-item :image="require(`@/assets/Food1.jpg`)"
         >
           <ui-image-text v-if="labelsType">
-            Rezept {{ index + 1 }}
+            {{ rezept.name }} | Portionen: {{ rezept.servings }}
             <template #action>
-              <ui-icon-button icon="favorite_border"></ui-icon-button>
-              <ui-icon-button icon="favorite"></ui-icon-button>
+              <ui-icon icon="restaurant_menu"/>
+              <!--              <ui-icon-button v-if="checkFavourite(rezept.id)"-->
+              <!--                              @click="unfavouriteAnimal(rezept.id)"-->
+              <!--                              icon="favorite"></ui-icon-button>-->
+              <!--              <ui-icon-button v-else-->
+              <!--                              @click="favouriteAnimal(rezept.id)"-->
+              <!--                              icon="favorite_border"></ui-icon-button>-->
+
             </template>
           </ui-image-text>
         </ui-image-item>
@@ -28,11 +31,25 @@
 </template>
 
 <script>
+import http from "@/http-common";
+
 export default {
   data() {
     return {
-      labelsType: 1
+      labelsType: 1,
+      rezepte: null,
+      favorites: null,
+
+
     };
+  },
+  async mounted() {
+    const response = await http.get("rezept/search/");
+    this.rezepte = response.data.msg;
+    const favoritresponse = await http.get("rezept/search/");
+    this.favorites = favoritresponse.data.msg;
+
+
   }
 };
 </script>
@@ -45,7 +62,11 @@ $icon-size: 24px;
 $text-protection-background-color: rgba(0, 0, 0, 0.6);
 $text-protection-height: 48px;
 $text-protection-horizontal-padding: 16px;
-$shape-radius: 0
+$shape-radius: 15px;
+
+.ui-image-item {
+  border-radius: 20px;
+}
 
 
 </style>

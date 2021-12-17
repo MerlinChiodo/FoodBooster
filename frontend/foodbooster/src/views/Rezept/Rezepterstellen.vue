@@ -5,64 +5,66 @@
 
 
       <div class="CreateRezeptBox">
+
         <ui-form nowrap item-margin-bottom="16" label-width="80">
           <h1>Erstelle ein neues Rezept</h1>
           <ui-form nowrap item-margin-bottom="16" label-width="80">
             <template #default="{ actionClass }">
-
-              <!-- Rezeptname -->
-              <ui-form-field>
-                <label class="required"> Name: </label>
-                <ui-textfield v-model="name" required>
-                  Rezeptname
-                </ui-textfield>
-              </ui-form-field>
-
-
-              <!-- BESCHREIBUNG -->
-              <ui-form-field>
-                <label class="actionClass"> Beschreibung</label>
-                <ui-textfield v-model="description" input-type="textarea" rows="6" cols="21" required>
-                  Beschreibe dein Rezept
-                </ui-textfield>
-              </ui-form-field>
-
-              <ui-form-field>
-                <a>Bitte wähle aus wie viele Portionen dein Rezept hat: {{ servings }}</a>
-              </ui-form-field>
-
-              <ui-slider
-                  v-model="servings"
-                  type="discrete"
-                  :step="1"
-                  min="1"
-                  max="15"
-                  with-tick-marks
-              >
-              </ui-slider>
-
-              <!--              <ui-list role="group">-->
-              <!--                <template v-for="(item, index) in items">-->
-              <!--                  <ui-item-divider v-if="item === '-'" :key="index"></ui-item-divider>-->
-              <!--                  <ui-item v-else :key="index">-->
-              <!--                    <ui-item-text-content>{{ item.text }}</ui-item-text-content>-->
-              <!--                    <ui-item-last-content>-->
-              <!--                      <ui-checkbox-->
-              <!--                          v-model="checkedValues"-->
-              <!--                          :value="item.value"-->
-              <!--                          @click.stop-->
-              <!--                      ></ui-checkbox>-->
-              <!--                    </ui-item-last-content>-->
-              <!--                  </ui-item>-->
-              <!--                </template>-->
-              <!--              </ui-list>-->
+              <div v-if="!hochgeladen">
+                <!-- Rezeptname -->
+                <ui-form-field>
+                  <label class="required"> Name: </label>
+                  <ui-textfield v-model="name" required>
+                    Rezeptname
+                  </ui-textfield>
+                </ui-form-field>
 
 
-              <!-- SUBMIT -->
-              <ui-form-field v-if="name" :class="actionClass">
-                <ui-button @click="postData" raised>Hochladen</ui-button>
-              </ui-form-field>
+                <!-- BESCHREIBUNG -->
+                <ui-form-field>
+                  <label class="actionClass"> Beschreibung</label>
+                  <ui-textfield v-model="description" input-type="textarea" rows="6" cols="21" required>
+                    Beschreibe dein Rezept
+                  </ui-textfield>
+                </ui-form-field>
 
+                <ui-form-field>
+                  <a>Bitte wähle aus wie viele Portionen dein Rezept hat: {{ servings }}</a>
+                </ui-form-field>
+
+                <ui-slider
+                    v-model="servings"
+                    type="discrete"
+                    :step="1"
+                    min="1"
+                    max="15"
+                    with-tick-marks
+                >
+                </ui-slider>
+                <!-- ICONS UNTER BILDER FALLS NOCH NÖTIG, Favorisieren usw. -->
+                <!--              <ui-list role="group">-->
+                <!--                <template v-for="(item, index) in items">-->
+                <!--                  <ui-item-divider v-if="item === '-'" :key="index"></ui-item-divider>-->
+                <!--                  <ui-item v-else :key="index">-->
+                <!--                    <ui-item-text-content>{{ item.text }}</ui-item-text-content>-->
+                <!--                    <ui-item-last-content>-->
+                <!--                      <ui-checkbox-->
+                <!--                          v-model="checkedValues"-->
+                <!--                          :value="item.value"-->
+                <!--                          @click.stop-->
+                <!--                      ></ui-checkbox>-->
+                <!--                    </ui-item-last-content>-->
+                <!--                  </ui-item>-->
+                <!--                </template>-->
+                <!--              </ui-list>-->
+
+
+                <!-- SUBMIT -->
+                <ui-form-field v-if="name" :class="actionClass">
+                  <ui-button @click="postData" raised>Hochladen</ui-button>
+                </ui-form-field>
+
+              </div>
               <!-- RESPONSE FAIL MESSAGE -->
               <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
               <!-- RESPONSE SUCCESS MESSAGE -->
@@ -100,6 +102,7 @@ export default {
       servings: 1,
       postSuccessResult: null,
       postResult: null,
+      hochgeladen: false,
 
     }
   },
@@ -129,8 +132,10 @@ export default {
         };
 
         this.postSuccessResult = this.fortmatResponse(result);
+        this.hochgeladen = true;
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
+        this.hochgeladen = false;
       }
     },
   }
