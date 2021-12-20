@@ -166,6 +166,8 @@ const getPlans = async (req, res) => {
  *        400 - {success: false, err: There is no planID in the first element}
  *        400 - {success: false, err: There is either the recipeID, the day or the time missing on list index ${i}}
  *        400 - {success: false, err: Either the recipeID, the day, or the time is not an int}
+ *        403 - {success: false, err: You can only edit your own recipes}
+ *        404 - {success: false, err: There is no plan with the id ${planID}}
  *        500 - {success: false, err: Ups, something went wrong!, error} //Prisma error
  *
  */
@@ -193,6 +195,32 @@ const editPlan = async (req, res) => {
       success: false,
       err: 'The planID has to be an int',
     })
+  }
+
+  try {
+    const plan = await prisma.nutritionplan.findUnique({
+      where: {
+        id: planID,
+      },
+    })
+
+    if (plan == null) {
+      return res.status(404).send({
+        success: false,
+        err: `There is no plan with the id ${planID}`,
+      })
+    }
+
+    if (plan.userID !== req.user.id) {
+      return res.status(403).send({
+        success: false,
+        err: 'You can only edit your own recipes',
+      })
+    }
+
+  } catch (error) {
+    return res.status(500).
+      send({ success: false, err: 'Ups, something went wrong!', error })
   }
 
   if (list[0].name != null) {
