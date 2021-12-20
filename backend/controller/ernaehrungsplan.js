@@ -164,6 +164,7 @@ const getPlans = async (req, res) => {
  *        201 - {success: true, msg: The nutritionplan has been edited successfully}
  *        400 - {success: false, err: You must hand over an array that has a minimum length of 1}
  *        400 - {success: false, err: There is no planID in the first element}
+ *        400 - {success: false, err: The planID has to be an int}
  *        400 - {success: false, err: There is either the recipeID, the day or the time missing on list index ${i}}
  *        400 - {success: false, err: Either the recipeID, the day, or the time is not an int}
  *        403 - {success: false, err: You can only edit your own recipes}
