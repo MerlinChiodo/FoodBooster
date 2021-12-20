@@ -76,6 +76,8 @@ POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar) -> 				{201: succ
 																				{404: success: false, err: `There is no recipe with the id ${rezeptID}`},
 																				{500: success: false, err: 'Ups, something went wrong!', error}
 																				
+GET api/ingredient/ ->                                                          200 {success: true, msg: {ingredients}} --> ingredients as array
+                                                                                500 {success: false, err: Ups, something went wrong!} --> Prisma error
 
 GET /api/picture/ (URL) -> Foto
 
