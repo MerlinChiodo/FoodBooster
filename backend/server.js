@@ -35,6 +35,8 @@ const forum = require('./API/forum')
 const meldung = require('./API/meldung')
 const picture = require('./API/picture')
 const rezept = require('./API/rezept')
+const ingredients = require('./API/ingredients')
+
 /*******************************************************************************
  * Middleware for the server to use
  ******************************************************************************/
@@ -64,7 +66,7 @@ app.use('/api/forum', forum)
 app.use('/api/meldung', meldung)
 app.use('/api/picture', picture)
 app.use('/api/rezept', rezept)
-
+app.use('/api/ingredients', ingredients)
 /*******************************************************************************
  * Request Handling
  ******************************************************************************/
