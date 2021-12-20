@@ -8,7 +8,6 @@ DELTE Daten loeschen
 POST /api/login/ (email, password) -> Redirect zu Home page oder login page bei falschen Logindaten
 DELETE /api/logout/ () -> Redirect (refresh, Redirect im Frontend)
 
-
 POST /api/account/ (username, email, password, answer) -> 						{201: success: true, msg: newUser}, 
 																				{400: success: false, err: `Please provide all required Information!`}, 
 																				{400: success: false, err: 'A user is already using this email adress'}, 
@@ -41,13 +40,13 @@ GET /api/account/rezept/ () -> Liste der eigenen Rezepte						{200: success: tru
 																				{500: success: false, err: 'Ups, something went wrong!', error}
 
 
-POST /api/rezept/ (name, description, ingredients(csv), categories(csv), pictures(using multer), servings) -> 
+POST /api/rezept/ (name, description, ingredients(csv), categories(csv), servings) -> 
 																				{201: success: true, msg: recipe},
 																				{400: success: false, err: 'Please provide all required information!'},
 																				{400: success: false, err: 'Please provide ingredients for the recipe'},
 																				{500: success: false, err: 'Ups, something went wrong!'}
 																				
-GET /api/rezept/single/:recipeID () -> 											{200: success: true, msg: recipe},
+GET /api/rezept/single/:rezeptID () -> 											{200: success: true, msg: recipe},
 																				{400: success: false, err: 'Please provide a Number'},
 																				{404: success: false, err: '404 Not Found'},
 																				{500: success: false, err: 'err'}
@@ -61,7 +60,7 @@ PUT /api/rezept/ (rezeptID, name, description, ingredients(csv), removeIngredien
 GET /api/rezept/featured/ () -> Liste der featured Rezepte						{200: success: true, featured},
 																				{500: success: false, err: 'Ups, something went wrong!', error}
 
-GET /api/rezept/search?name & rating & author & servings & featured(true/false) & description & ingredients[] & categories[]  -> Liste der gefilterten Rezepte
+GET /api/rezept/search?name & rating & author & servings & featured & description & ingredients & categories (} -> Liste der gefilterten Rezepte
 																				{200: success: true, msg: recipes},
 																				{200: success: true, msg: recipesFiltered},
 																				{500: success: false, err: 'Ups, something went wrong!'}
@@ -76,8 +75,6 @@ POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar) -> 				{201: succ
 																				{404: success: false, err: `There is no recipe with the id ${rezeptID}`},
 																				{500: success: false, err: 'Ups, something went wrong!', error}
 																				
-GET api/ingredient/ ->                                                          200 {success: true, msg: {ingredients}} --> ingredients as array
-                                                                                500 {success: false, err: Ups, something went wrong!} --> Prisma error
 
 GET /api/picture/ (URL) -> Foto
 
@@ -85,7 +82,7 @@ POST /api/ernaehrungsplan/ (name)												{201: success: true, msg: plan},
 																				{400: success: false, err: "Please choose an unused name!"},
 																				{500: success: false, err:"Ups, something went wrong!"}
 
-PUT /api/ernaehrungsplan/ (id, {rezeptID: [Tag, Uhrzeit]})
+PUT /api/ernaehrungsplan/ (Es ist kompliziert, guckt im Pull Request nach, da gibts ein Beispiel)
 GET /api/ernaehrungsplan/ () -> Liste aller Ernaehrungsplaene					{200: success: true, plans},
 																				{500: success: false, err: 'Ups, something went wrong!', error}
 
