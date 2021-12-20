@@ -32,24 +32,22 @@ model GroceryList {
 }
 
 model Recipe {
-
-  id          Int                           @id @default(autoincrement())
-  name        String                        @db.VarChar(50)
-  description String                        @db.VarChar(1000)
-  servings    Int
-  created     DateTime                      @db.DateTime(0)
-  featured    Boolean                       @default(false)
-  creatorID   Int
-  rating      Int?                          @default(0)
-  totalRatings Int?                         @default(0)
-  creator     User                          @relation(fields: [creatorID], references: [id], onDelete: Cascade)
-  comments    Comment[]
-  used        NutritionplanIncludesRecipe[]
-  pictures    Picture[]
-  category    RecipeInCategory[]
-  ingredients RecipeIncludesIngredient[]
-  favored     UserFavorsRecipe[]
-
+  id           Int                           @id @default(autoincrement())
+  name         String                        @db.VarChar(50)
+  description  String                        @db.VarChar(10000)
+  servings     Int
+  created      DateTime                      @db.DateTime(0)
+  featured     Boolean                       @default(false)
+  creatorID    Int
+  rating       Int?                          @default(0)
+  totalRatings Int?                          @default(0)
+  creator      User                          @relation(fields: [creatorID], references: [id], onDelete: Cascade)
+  comments     Comment[]
+  used         NutritionplanIncludesRecipe[]
+  pictures     Picture[]
+  category     RecipeInCategory[]
+  ingredients  RecipeIncludesIngredient[]
+  favored      UserFavorsRecipe[]
 
   @@index([creatorID], map: "Recipe_creatorID_fkey")
 }

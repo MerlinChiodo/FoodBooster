@@ -33,7 +33,7 @@ router.route('/').post(createUser)
 
 router.delete('/', checkIfUser, deleteUser)
 
-router.put('/', checkIfUser, putUser)
+router.put('/',checkIfUser, putUser)
 
 router.put('/password', forgotPassword)
 

@@ -31,7 +31,11 @@ const getRecipes = async (req, res) => {
   //No special query defined --> return full list of recipes
   if (underscore.isEmpty(req.query)) {
 
-    const recipes = await prisma.recipe.findMany()
+    const recipes = await prisma.recipe.findMany({
+      include : {
+        pictures: true,
+      },
+    })
 
     return res.status(200).json({ success: true, msg: recipes })
   }
@@ -81,6 +85,9 @@ const getRecipes = async (req, res) => {
             },
           },
         ],
+      },
+      include: {
+        pictures: true,
       },
     })
 
@@ -137,8 +144,6 @@ const getFeatured = async (req, res) => {
  *    201 - {success: true, msg: {created recipe}} --> recipe was created and returned
  */
 const createRecipe = async (req, res) => {
-  console.log(req.files)
-  console.log(req.body)
 
   //Get all infos
   const { name, description, ingredients, categories, servings } = req.body
@@ -263,6 +268,11 @@ const getSingleRecipe = async (req, res) => {
     const recipe = await prisma.recipe.findUnique({
       where: {
         id: Number(recipeID),
+      },
+      include: {
+        pictures: true,
+        category: true,
+        ingredients: true,
       },
     })
     //Check if a recipe has been found, send response accordingly
