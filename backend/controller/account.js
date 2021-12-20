@@ -173,7 +173,6 @@ const seeOwnRecipe = async (req, res) => {
         creatorID: req.user.id,
       },
     })
-    console.log(recipes)
     return res.status(200).send({ success: true, recipes })
   } catch (err) {
     return res.status(500).
@@ -259,7 +258,7 @@ const deleteUser = async (req, res) => {
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
 }
-/*
+/**
  * Function to favorite a recipe as logged in user
  * Function gets the user from req.user and the ID via request parameter
  * If the user is already favoring the recipe, calling this function unfavors it
