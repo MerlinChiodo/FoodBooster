@@ -294,20 +294,19 @@ const getSingleRecipe = async (req, res) => {
  *      - name --> changes the name of the recipe
  *      - description --> changes the description of the recipe
  *      - servings --> changes the servings of the recipe
- *      - ingredients[] --> adds the ingredients to the recipe
- *      - removeIngredients[] --> removes the ingredients from the recipe
- *      - categories[] --> adds the categories to the recipe
- *      - removeCategories[] --> removes the categories from the recipe
- *      - removePictures[] --> removes the pictures from the recipe
+ *      - ingredients (csv) --> adds the ingredients to the recipe
+ *      - removeIngredients(csv) --> removes the ingredients from the recipe
+ *      - categories(csv) --> adds the categories to the recipe
+ *      - removeCategories(csv) --> removes the categories from the recipe
+ *      - removePictures(csv) --> removes the pictures from the recipe
  * Responses:   200 - {success: true, recipe}
  *              400 - {success: false, err: 'There must be a rezeptID identify the recipe you want to change. '}
  *                --> There is no rezeptID
  *              500 - {success: false, msg: {Ups, something went wrong!}, error} --> Prisma error
  *
  */
-const editRecipe = async (req, res,
-) => {
-  const {
+const editRecipe = async (req, res) => {
+  let {
     rezeptID,
     name,
     description,
@@ -318,6 +317,12 @@ const editRecipe = async (req, res,
     servings,
     removePictures,
   } = req.body
+
+  ingredients = ingredients.split(',')
+  removeIngredients = removeIngredients.split(',')
+  categories = categories.split(',')
+  removeCategories = removeCategories.split(',')
+  removePictures = removePictures.split(',')
 
   if (!rezeptID) {
     return res.status(400).send({
@@ -373,7 +378,7 @@ const editRecipe = async (req, res,
       for (let ingredient of ingredients) {
         await prisma.recipeIncludesIngredient.create({
           data: {
-            ingredientName: ingredient,
+            ingredientName: ingredient.trim(),
             recipeID: rezeptID,
           },
         })
@@ -391,7 +396,7 @@ const editRecipe = async (req, res,
           where: {
             AND: [
               {
-                ingredientName: ingredient,
+                ingredientName: ingredient.trim(),
               },
               {
                 recipeID: rezeptID,
@@ -413,7 +418,7 @@ const editRecipe = async (req, res,
           where: {
             AND: [
               {
-                categoryName: category,
+                categoryName: category.trim(),
               },
               {
                 recipeID: rezeptID,
@@ -433,7 +438,7 @@ const editRecipe = async (req, res,
       for (let category of categories) {
         await prisma.recipeInCategory.create({
           data: {
-            categoryName: category,
+            categoryName: category.trim(),
             recipeID: rezeptID,
           },
         })
@@ -449,7 +454,7 @@ const editRecipe = async (req, res,
       for (let picture of req.files) {
         await prisma.picture.create({
           data: {
-            url: picture.path,
+            url: picture.trim.path,
             recipeID: rezeptID,
           },
         })
@@ -465,7 +470,7 @@ const editRecipe = async (req, res,
       try {
         await prisma.picture.deleteMany({
           where: {
-            url: picture,
+            url: picture.trim(),
           },
         })
       } catch (error) {

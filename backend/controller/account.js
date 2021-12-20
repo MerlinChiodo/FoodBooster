@@ -11,11 +11,11 @@ const bcrypt = require(`bcrypt`)
  **/
 const createUser = async (req, res) => {
 
-    //Get parameters of body
-    const {email} = req.body
-    const {username} = req.body
-    const {password} = req.body
-    const {answer} = req.body
+  //Get parameters of body
+  const { email } = req.body
+  const { username } = req.body
+  const { password } = req.body
+  const { answer } = req.body
 
   //Check if all Values are given
   if (!email || !username || !password || !answer) {
@@ -24,51 +24,52 @@ const createUser = async (req, res) => {
         { success: false, err: `Please provide all required Information!` })
   }
 
-    //Check if User with email already exists
-    const userExists = await prisma.user.count({
-        where: {
+  //Check if User with email already exists
+  const userExists = await prisma.user.count({
+    where: {
+      email: email,
+    },
+  })
+
+  if (userExists === 0) {
+
+    //Set time of Creation
+    let created = new Date()
+
+    //Hash given password
+    let passwordHash = await bcrypt.hash(password, 10)
+
+    //Hash given answer
+    let answerHash = await bcrypt.hash(answer, 10)
+
+    //create User with given parameters
+    try {
+      const newUser = await prisma.user.create(
+        {
+          data: {
             email: email,
+            name: username,
+            passwordHash: passwordHash,
+            created: created,
+            isAdmin: false,
+            answer: answerHash,
+          },
         },
-    })
+      )
+      return res.status(201).json({ success: true, msg: newUser })
+    } catch (error) {
+      res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!' })
 
-    if (userExists === 0) {
-
-        //Set time of Creation
-        let created = new Date()
-
-        //Hash given password
-        let passwordHash = await bcrypt.hash(password, 10)
-
-        //Hash given answer
-        let answerHash = await bcrypt.hash(answer, 10)
-
-        //create User with given parameters
-        try {
-            const newUser = await prisma.user.create(
-                {
-                    data: {
-                        email: email,
-                        name: username,
-                        passwordHash: passwordHash,
-                        created: created,
-                        isAdmin: false,
-                        answer: answerHash,
-                    },
-                },
-            )
-            return res.status(201).json({success: true, msg: newUser})
-        } catch (error) {
-            res.status(500).json({success: false, err: 'Ups, something went wrong!'})
-
-        }
-
-    } else {
-
-        return res.status(400).json({
-            success: false,
-            err: 'A user is already using this email adress',
-        })
     }
+
+  } else {
+
+    return res.status(400).json({
+      success: false,
+      err: 'A user is already using this email adress',
+    })
+  }
 }
 
 /**
@@ -78,46 +79,25 @@ const createUser = async (req, res) => {
  * is a database error
  */
 const putUser = async (req, res) => {
-    let data = {}
+  let data = {}
 
-    // check if the email should be changed and if that email already belongs to
-    // another account
-    if (req.body.accountemail != null) {
-        try {
-            const users = await prisma.user.count({
-                where: {
-                    email: req.body.accountemail,
-                },
-            })
+  if (req.body.username != null) {
+    Object.assign(data, req.body.username)
+  }
 
-            if (users === 0) {
-                data['email'] = req.body.accountemail
-            } else {
-                return res.status(200).send({
-                    success: false,
-                    err: 'There already is an account with that email',
-                })
-            }
-        } catch (error) {
-            return res.status(500).json({success: false, err: 'Ups, something went wrong!', error})
-        }
-    }
-
-    if (req.body.username != null) {
-        data['name'] = req.body.username
-    }
-
-    try {
-        const user = await prisma.user.update({
-            where: {
-                id: req.user.id,
-            },
-            data: data,
-        })
-        return res.status(200).send({success: true, msg: 'User successfully edited', user})
-    } catch (error) {
-        return res.status(500).json({success: false, err: 'Ups, something went wrong!', error})
-    }
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: data,
+    })
+    return res.status(200).
+      send({ success: true, msg: 'User successfully edited', user })
+  } catch (error) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+  }
 }
 
 /**
@@ -294,77 +274,85 @@ const deleteUser = async (req, res) => {
  * */
 const favRecipe = async (req, res) => {
 
-  const {recipeID} = req.params
+  const { recipeID } = req.params
   const user = req.user.id
 
-
   //only allow numbers to be passed as id
-  if(isNaN(recipeID)) return res.status(400).json({success: false, err: "Please provide a number!"})
+  if (isNaN(recipeID)) return res.status(400).
+    json({ success: false, err: 'Please provide a number!' })
 
   //check if recipe is existing
-  try{
+  try {
     const recipe = await prisma.recipe.findMany({
       where: {
-        id: Number(recipeID)
-      }
+        id: Number(recipeID),
+      },
     })
 
-    if(recipe.length <= 0){
-      return res.status(404).json({success: false, err: 'No recipe with given ID found!'})
+    if (recipe.length <= 0) {
+      return res.status(404).
+        json({ success: false, err: 'No recipe with given ID found!' })
     }
 
-  }catch (err){
-    return res.status(400).json({success: false, err: 'Ups, something went wrong!'})
+  } catch (err) {
+    return res.status(400).
+      json({ success: false, err: 'Ups, something went wrong!' })
   }
 
   //check if user already is favoring the recipe
   let fav
-  try{
+  try {
     fav = await prisma.userFavorsRecipe.findMany({
-      where:{
+      where: {
         AND: [
-            {
+          {
             recipeID: Number(recipeID),
           },
           {
-            userID: user
-          }
-        ]
-      }
+            userID: user,
+          },
+        ],
+      },
     })
-  }catch (err){
-    return res.status(500).json({success: false, err: "Ups, something went wrong!"})
+  } catch (err) {
+    return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!' })
   }
 
   //User doesnt favor that recipe yet
-  if(fav.length === 0){
+  if (fav.length === 0) {
     //try to link the recipe and the user
     try {
       await prisma.userFavorsRecipe.create({
         data: {
           recipeID: Number(recipeID),
-          userID: user
-        }
+          userID: user,
+        },
       })
-      return res.status(200).json({success: true, msg: "User now favors given recipe", fav: 1})
+      return res.status(200).
+        json({ success: true, msg: 'User now favors given recipe', fav: 1 })
     } catch (err) {
-      return res.status(500).json({success: false, err: "Ups, something went wrong!"})
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!' })
     }
-  //User already favors that recipe
-  }else {
+    //User already favors that recipe
+  } else {
     //try to delete the link between user and recipe
-    try{
+    try {
       await prisma.userFavorsRecipe.delete({
         where: {
           userID_recipeID: {
             recipeID: Number(recipeID),
             userID: user,
-          }
-        }
+          },
+        },
       })
-      return res.status(200).json({success: true, msg: "User no longer favors given recipe", fav: 0})
-    }catch (err){
-      return res.status(500).json({success: false, err: "Ups, something went wrong!"})
+      return res.status(200).
+        json(
+          { success: true, msg: 'User no longer favors given recipe', fav: 0 })
+    } catch (err) {
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!' })
     }
   }
 }
@@ -393,18 +381,19 @@ const getFavorite = async (req, res) => {
       },
       //Only select the recipe field of userFavorsRecipe
       select: {
-        recipe: true
-      }
+        recipe: true,
+      },
     })
-  }catch (err){
-    return res.status(500).json({success: false, err: "Ups something went wrong!"})
+  } catch (err) {
+    return res.status(500).
+      json({ success: false, err: 'Ups something went wrong!' })
   }
 
   //Format prisma output to make it easier to work with
   const retFavRecipes = await formatOutput(favRecipes)
 
   //return result of query
-  return res.status(200).json({success: true, msg: retFavRecipes})
+  return res.status(200).json({ success: true, msg: retFavRecipes })
 }
 
 /**
@@ -417,7 +406,7 @@ const getFavorite = async (req, res) => {
  * */
 const formatOutput = async (array) => {
   let returnArray = []
-  for (let i = 0; i < array.length; i++){
+  for (let i = 0; i < array.length; i++) {
     console.log(array[i].recipe)
     returnArray.push(array[i].recipe)
   }
@@ -433,6 +422,6 @@ module.exports = {
   seeOwnRecipe,
   forgotPassword,
   deleteUser,
-  favRecipe, 
+  favRecipe,
   getFavorite,
 }
