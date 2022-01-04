@@ -38,24 +38,25 @@ export default {
   data() {
     return {
       labelsType: 1,
-      rezepte: null,
-      favorites: null,
-
+      zutaten: null,
 
     };
   },
-  async mounted() {
-    const response = await http.get("rezept/search/");
-    this.rezepte = response.data.msg;
-    const favoritresponse = await http.get("rezept/search/");
-    this.favorites = favoritresponse.data.msg;
+  async mounted() {    // GET request using axios with async/await
+    const response = await http.get("rezept/search/", {}
+    );
+    this.zutaten = response.data.msg.zutaten;
 
 
-  }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+h1 {
+  padding: 30px;
+  margin: 30px;
+}
 
 $standard-gutter-size: 4px;
 $masonry-gutter-size: 16px;
