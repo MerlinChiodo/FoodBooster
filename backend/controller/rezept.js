@@ -395,11 +395,12 @@ const editRecipe = async (req, res) => {
         await prisma.recipeIncludesIngredient.create({
           data: {
             ingredientName: ingredient.trim(),
-            recipeID: rezeptID,
+            recipeID: Number(rezeptID),
           },
         })
       }
     } catch (error) {
+      console.log(error)
       return res.status(500).
         json({ success: false, err: 'Ups, something went wrong!', error })
     }
@@ -410,17 +411,14 @@ const editRecipe = async (req, res) => {
       try {
         await prisma.recipeIncludesIngredient.delete({
           where: {
-            AND: [
-              {
-                ingredientName: ingredient.trim(),
-              },
-              {
-                recipeID: rezeptID,
-              },
-            ],
+            ingredientName_recipeID: {
+              ingredientName: ingredient.trim(),
+              recipeID: Number(rezeptID),
+            },
           },
         })
       } catch (error) {
+        console.log(error)
         return res.status(500).
           json({ success: false, err: 'Ups, something went wrong!', error })
       }
@@ -432,17 +430,14 @@ const editRecipe = async (req, res) => {
       try {
         await prisma.recipeInCategory.delete({
           where: {
-            AND: [
-              {
-                categoryName: category.trim(),
-              },
-              {
-                recipeID: rezeptID,
-              },
-            ],
+            recipeID_categoryName: {
+              categoryName: category.trim(),
+              recipeID: Number(rezeptID),
+            },
           },
         })
       } catch (error) {
+        console.log(error)
         return res.status(500).
           json({ success: false, err: 'Ups, something went wrong!', error })
       }
@@ -455,11 +450,12 @@ const editRecipe = async (req, res) => {
         await prisma.recipeInCategory.create({
           data: {
             categoryName: category.trim(),
-            recipeID: rezeptID,
+            recipeID: Number(rezeptID),
           },
         })
       }
     } catch (error) {
+      console.log(error)
       return res.status(500).
         json({ success: false, err: 'Ups, something went wrong!', error })
     }
@@ -471,7 +467,7 @@ const editRecipe = async (req, res) => {
         await prisma.picture.create({
           data: {
             url: picture.trim.path,
-            recipeID: rezeptID,
+            recipeID: Number(rezeptID),
           },
         })
       }
