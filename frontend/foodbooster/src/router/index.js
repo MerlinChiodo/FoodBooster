@@ -16,6 +16,7 @@ import MeineRezepte from "@/views/Rezept/MeineRezepte";
 import Rezepterstellen from "@/views/Rezept/Rezepterstellen";
 import Accountbearbeiten from "@/views/Account/Accountbearbeiten";
 import rezeptDummy from '../views/Rezept/rezeptDummy.vue'
+import Rezeptbearbeiten from "@/views/Rezept/Rezeptbearbeiten";
 
 
 // Defines the routes
@@ -38,6 +39,7 @@ const routes = [
     {path: '/Rezepterstellen', name: 'Rezepterstellen', component: Rezepterstellen},
     {path: '/Accountbearbeiten', name: 'Accountbearbeiten', component: Accountbearbeiten},
     {path: '/rezeptDummy', name: 'rezeptDummy', component: rezeptDummy},
+    {path: '/Rezeptbearbeiten/:id', name: 'Rezeptbearbeiten', component: Rezeptbearbeiten},
 ]
 
 // Creates the router instance and passes the `routes` option

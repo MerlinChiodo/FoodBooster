@@ -14,8 +14,15 @@
 
         <ui-image-item :image="require(`@/assets/Food1.jpg`)"
         >
+
+
+          <ui-fab
+              @click="$router.push({name: 'Rezeptbearbeiten', params: {id: rezept.id, name: rezept.name,
+                     description: rezept.description, servings: rezept.servings }})"
+              icon="edit"></ui-fab>
           <ui-image-text v-if="labelsType">
             {{ rezept.name }} | Portionen: {{ rezept.servings }}
+
             <template #action>
               <ui-icon icon="restaurant_menu"/>
               <!--              <ui-icon-button v-if="checkFavourite(rezept.id)"-->
@@ -26,8 +33,11 @@
               <!--                              icon="favorite_border"></ui-icon-button>-->
 
             </template>
+
           </ui-image-text>
         </ui-image-item>
+
+
       </ui-grid-cell>
 
 

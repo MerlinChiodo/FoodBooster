@@ -7,7 +7,9 @@
 
       <div class="CreateRezeptBox">
 
-        <h1>Erstelle ein neues Rezept</h1>
+        <h1>Hier kannst du dein Rezept {{ this.$route.params.name }} bearbeiten</h1>
+        <h3>Dein Rezept hat die ID: {{ this.$route.params.id }}.</h3>
+
         <ui-form nowrap item-margin-bottom="16" label-width="80">
           <template #default="{ actionClass }">
 
@@ -73,11 +75,12 @@ export default {
   name: "Rezeptbearbeiten",
   data() {
     return {
-      name: null,
-      description: null,
+      id: this.$route.params.id,
+      name: this.$route.params.name,
+      description: this.$route.params.description,
       kategorie: ['Suppe', 'Mittagsesseen'],
       ingredients: ['Apple', 'Banana'],
-      servings: 1,
+      servings: this.$route.params.servings,
       postSuccessResult: null,
       postResult: null,
 
@@ -91,12 +94,13 @@ export default {
     async postData() {
       try {
         const formData = new FormData();
+        formData.append('rezeptID', this.id);
         formData.append('name', this.name);
         formData.append('description', this.description);
         formData.append('servings', this.servings);
         formData.append('ingredients', this.ingredients);
 
-        const res = await http.post("rezept/", formData, {
+        const res = await http.put("rezept/", formData, {
           headers: {
             "x-access-token": "token-value",
           },
