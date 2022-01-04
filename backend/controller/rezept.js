@@ -32,7 +32,7 @@ const getRecipes = async (req, res) => {
   if (underscore.isEmpty(req.query)) {
 
     const recipes = await prisma.recipe.findMany({
-      include : {
+      include: {
         pictures: true,
       },
     })
@@ -318,11 +318,21 @@ const editRecipe = async (req, res) => {
     removePictures,
   } = req.body
 
-  ingredients = ingredients.split(',')
-  removeIngredients = removeIngredients.split(',')
-  categories = categories.split(',')
-  removeCategories = removeCategories.split(',')
-  removePictures = removePictures.split(',')
+  if (ingredients) {
+    ingredients = ingredients.split(',')
+  }
+  if (removeIngredients) {
+    removeIngredients = removeIngredients.split(',')
+  }
+  if (categories) {
+    categories = categories.split(',')
+  }
+  if (removeCategories) {
+    removeCategories = removeCategories.split(',')
+  }
+  if (removePictures) {
+    removePictures = removePictures.split(',')
+  }
 
   if (!rezeptID) {
     return res.status(400).send({
@@ -340,12 +350,17 @@ const editRecipe = async (req, res) => {
         creator: true,
       },
     })
+    if (!recipe) {
+      return res.status(404).
+        send({ success: false, err: 'There is no recipe with that id' })
+    }
     if (recipe.creator.id !== req.user.id) {
       return res.status(403).
         send({ err: 'You can only change your own recipes' },
         )
     }
   } catch (err) {
+    console.log(err)
     return res.status(500).send(err)
   }
 
@@ -357,7 +372,7 @@ const editRecipe = async (req, res) => {
     Object.assign(data, { description: description })
   }
   if (servings) {
-    Object.assign(data, { servings: servings })
+    Object.assign(data, { servings: Number(servings) })
   }
 
   let recipe
@@ -369,6 +384,7 @@ const editRecipe = async (req, res) => {
       data: data,
     })
   } catch (error) {
+    console.log(error)
     return res.status(500).
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
