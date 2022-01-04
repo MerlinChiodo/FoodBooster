@@ -75,6 +75,8 @@ model Nutritionplan {
 model NutritionplanIncludesRecipe {
   nutritionplanID Int
   recipeID        Int
+  day             Int
+  time            Int
   nutritionplan   Nutritionplan @relation(fields: [nutritionplanID], references: [id], onDelete: Cascade)
   recipe          Recipe        @relation(fields: [recipeID], references: [id], onDelete: Cascade)
 
