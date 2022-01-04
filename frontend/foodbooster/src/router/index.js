@@ -15,7 +15,7 @@ import Impressum from "@/views/Impressum";
 import MeineRezepte from "@/views/Rezept/MeineRezepte";
 import Rezepterstellen from "@/views/Rezept/Rezepterstellen";
 import Accountbearbeiten from "@/views/Account/Accountbearbeiten";
-import rezeptDummy from '../views/Rezept/rezeptDummy.vue'
+import RezeptDetailpage from '../views/Rezept/RezeptDetailpage.vue'
 import Rezeptbearbeiten from "@/views/Rezept/Rezeptbearbeiten";
 
 
@@ -38,7 +38,7 @@ const routes = [
     {path: '/MeineRezepte', name: 'MeineRezepte', component: MeineRezepte},
     {path: '/Rezepterstellen', name: 'Rezepterstellen', component: Rezepterstellen},
     {path: '/Accountbearbeiten', name: 'Accountbearbeiten', component: Accountbearbeiten},
-    {path: '/rezeptDummy', name: 'rezeptDummy', component: rezeptDummy},
+    {path: '/RezeptDetailpage/:id', name: 'RezeptDetailpage', component: RezeptDetailpage},
     {path: '/Rezeptbearbeiten/:id', name: 'Rezeptbearbeiten', component: Rezeptbearbeiten},
 ]
 

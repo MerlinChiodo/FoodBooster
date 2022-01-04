@@ -7,24 +7,15 @@
       <ui-grid-cell v-for="(rezept, index) in rezepte"
                     :key="index" columns="3" class="demo-cell">
 
-        <ui-image-item :image="require(`@/assets/Food1.jpg`)"
-        >
-          <ui-image-text v-if="labelsType">
-            {{ rezept.name }} | Portionen: {{ rezept.servings }}
-            <template #action>
-              <ui-icon icon="restaurant_menu"/>
-              <!--              <ui-icon-button v-if="checkFavourite(rezept.id)"-->
-              <!--                              @click="unfavouriteAnimal(rezept.id)"-->
-              <!--                              icon="favorite"></ui-icon-button>-->
-              <!--              <ui-icon-button v-else-->
-              <!--                              @click="favouriteAnimal(rezept.id)"-->
-              <!--                              icon="favorite_border"></ui-icon-button>-->
+        <ui-image-item v-if="rezept.pictures.length === 0" :image="require('@/assets/Food1.jpg')"></ui-image-item>
+        <ui-image-item v-else
+                       :image="require('../../../../../uploads/' + rezept.pictures[0].url.replace(`uploads\\`, ``))"></ui-image-item>
 
-            </template>
-          </ui-image-text>
-        </ui-image-item>
+
+        <ui-image-text v-if="labelsType">
+          {{ rezept.name }} | Portionen: {{ rezept.servings }}
+        </ui-image-text>
       </ui-grid-cell>
-
 
     </ui-grid>
   </ui-image-list>
@@ -39,14 +30,16 @@ export default {
     return {
       labelsType: 1,
       zutaten: null,
+      rezepte: null,
+      rezeptURL: null,
+      url: null,
 
     };
   },
   async mounted() {    // GET request using axios with async/await
-    const response = await http.get("rezept/search/", {}
-    );
-    this.zutaten = response.data.msg.zutaten;
 
+    const response = await http.get("rezept/search/");
+    this.rezepte = response.data.msg;
 
   },
 };

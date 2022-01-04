@@ -138,7 +138,7 @@
 import http from "@/http-common";
 
 export default {
-  name: "rezeptDummy",
+  name: "RezeptDetailpage",
 
 
   data() {
@@ -149,7 +149,7 @@ export default {
       featured: null,
       rating: null,
       totalRatings: 0,
-      recipeID: 7,
+      recipeID: this.$route.params.id,
       recipe: null,
       bewertung: null,
       kommentar: "",

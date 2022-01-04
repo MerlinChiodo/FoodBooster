@@ -59,6 +59,14 @@
                 <!--              </ui-list>-->
 
 
+                <!-- PICTURE UPLOAD -->
+
+                <label>Bitte lade hier dein Bild hoch: </label>
+                <ui-form-field>
+                  <input type="file" @change="handleFileUpload( $event )"/>
+                </ui-form-field>
+
+
                 <!-- SUBMIT -->
                 <ui-form-field v-if="name" :class="actionClass">
                   <ui-button @click="postData" raised>Hochladen</ui-button>
@@ -103,6 +111,7 @@ export default {
       postSuccessResult: null,
       postResult: null,
       hochgeladen: false,
+      file: null,
 
     }
   },
@@ -118,10 +127,12 @@ export default {
         formData.append('description', this.description);
         formData.append('servings', this.servings);
         formData.append('ingredients', this.ingredients);
+        formData.append('productImage', this.file);
 
         const res = await http.post("rezept/", formData, {
           headers: {
             "x-access-token": "token-value",
+            'Content-Type': 'multipart/form-data',
           },
         });
 
@@ -138,6 +149,16 @@ export default {
         this.hochgeladen = false;
       }
     },
+
+    handleFileUpload(event) {
+
+      console.log(event);
+      console.log(event.target.files);
+
+      this.file = event.target.files[0];
+      console.log(this.file);
+    },
+
   }
 
 }
