@@ -34,6 +34,7 @@
 import http from "@/http-common";
 
 export default {
+  name: "Rezepte",
   data() {
     return {
       labelsType: 1,
