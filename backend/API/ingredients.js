@@ -2,16 +2,12 @@
  * Module imports for all required modules
  ****************************************/
 const express = require('express')
-const { createNutritionPlan, getPlans, getSinglePlan } = require(
-  '../controller/ernaehrungsplan')
-const { checkAuthenticated } = require('../passport-config')
-const { getSingleRecipe } = require('../controller/rezept')
-
 /**
  * The router allows us to receive requests in files that aren't the main file
  */
 const router = express.Router()
 
+const { getIngredients } = require('../controller/ingredients')
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -23,14 +19,8 @@ router.use(express.json())
 /*******************************************************************************
  * The request implementation
  ******************************************************************************/
-router.post('/', checkAuthenticated, createNutritionPlan)
 
-router.put('/', (req, res) => {
+router.get('/', getIngredients)
 
-})
-
-router.get('/single/:id', checkAuthenticated, getSinglePlan)
-
-router.get('/', checkAuthenticated, getPlans)
 
 module.exports = router
