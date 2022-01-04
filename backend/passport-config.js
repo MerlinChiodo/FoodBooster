@@ -127,7 +127,8 @@ function checkUnauthenticated (req, res, next) {
  * Should always be used in tandem with the checkAuthenticated
  */
 function checkIfUser (req, res, next) {
-  if (!req.user || req.user.email !== req.body.email) {
+  if (!req.user || req.user.email.toLowerCase() !==
+    req.body.email.toLowerCase()) {
     return res.status(403).
       send({ err: 'You can only make changes to your own property' })
   }
