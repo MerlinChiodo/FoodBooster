@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `Recipe` DROP COLUMN `bewertung`,
+ALTER TABLE `Recipe` DROP COLUMN `rating`,
     ADD COLUMN `rating` INTEGER NULL;
 
 -- AlterTable

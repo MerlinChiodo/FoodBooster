@@ -133,6 +133,10 @@ const getFeatured = async (req, res) => {
  *    name: name of the recipe
  *    description: description of the recipe
  *    ingredients (comma seperated): ingredients used in recipe (using name)
+ *    amounts (comma seperated): amounts for each ingredient
+ *      -->Amounts for Ingredients are given with position in string:
+ *            Ingredients: "Tomate,Kartoffel",
+ *            Amounts: "3,2" creates a recipe using 3 Tomaten and 2 Kartoffeln
  *    categories (comma seperated): categories for recipe (using name)
  *    servings: how many servings is the recipe for
  *    pictures (same field name for every picture): pictures used by this recipe
@@ -140,19 +144,20 @@ const getFeatured = async (req, res) => {
  * Possible responses:
  *    400 - {success: false, err: Please provide all required information!} --> Some information is missing
  *    400 - {success: false, err: Please provide ingredients for the recipe} --> no ingredients are given
+ *    400 - {success: false, err: Please provide amounts for every given ingredients} --> no/not all amounts given
  *    500 - {success: false, err: Ups, something went wrong!} --> Database error
  *    201 - {success: true, msg: {created recipe}} --> recipe was created and returned
  */
 const createRecipe = async (req, res) => {
 
   //Get all infos
-  const { name, description, ingredients, categories, servings } = req.body
+  const { name, description, ingredients, categories, servings, amounts } = req.body
 
   //Get creator
   const creator = req.user.id
 
   //Check if every required item is given
-  if (!name || !description || !ingredients || !servings) {
+  if (!name || !description || !ingredients || !servings || !amounts) {
     return res.status(400).
       send({ success: false, err: 'Please provide all required information!' })
   }
@@ -163,8 +168,17 @@ const createRecipe = async (req, res) => {
       send({ success: false, err: 'Please provide ingredients for the recipe' })
   }
 
-  //Split string of ingredients into array  of ingredients
+  //Split string of ingredients into array of ingredients
   const ingredientsArray = ingredients.split(',')
+
+  //Split string of amounts into array of amounts
+  const amountsArray = amounts.split(`,`)
+
+  //Check if every ingredient was given with an amount
+  if(amountsArray.length !== ingredientsArray.length){
+    return res.status(400)
+        .send({ success: false, err: 'Please provide amounts only for every given ingredients' })
+  }
 
   //Set time of Creation
   let created = new Date()
@@ -186,13 +200,14 @@ const createRecipe = async (req, res) => {
     try {
       //create a link for every ingredient given
       for (let ingredient of ingredientsArray) {
-        let linkRecipeIngredient = await prisma.recipeIncludesIngredient.create(
-          {
-            data: {
-              ingredientName: ingredient,
-              recipeID: recipe.id,
-            },
-          })
+          await prisma.recipeIncludesIngredient.create(
+              {
+                data: {
+                  ingredientName: ingredient,
+                  recipeID: recipe.id,
+                  amount: Number(amountsArray[(ingredientsArray.indexOf(ingredient))]),
+                },
+              })
       }
 
       //Check if categories are given
@@ -201,7 +216,7 @@ const createRecipe = async (req, res) => {
         const categoriesArray = categories.split(',')
         //create a link for every category given
         for (let category of categoriesArray) {
-          let linkRecipeCategory = await prisma.recipeInCategory.create(
+          await prisma.recipeInCategory.create(
             {
               data: {
                 categoryName: category,
@@ -286,7 +301,8 @@ const getSingleRecipe = async (req, res) => {
   }
 }
 
-/** Edits recipes
+ /**
+  * Edits recipes
  * Needs to get rezeptID to identify the recipe that you want to change
  * Note that you can only change your own recipes
  * Defined Arguments:
