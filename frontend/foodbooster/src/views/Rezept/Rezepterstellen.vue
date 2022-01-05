@@ -100,6 +100,20 @@
                   <ui-button @click="addCategorie" raised>Kategorie hinzufügen</ui-button>
                 </ui-form-field>
 
+
+                <ui-list>Hinzugefügte Zutaten:
+                  <ui-item v-for="i in usersIngredientArray" :key="i">
+                    <ui-item-text-content>{{ i }}</ui-item-text-content>
+                  </ui-item>
+                </ui-list>
+
+                <ui-list>Hinzugefügte Kategorien:
+                  <ui-item v-for="i in usersCategoriesArray" :key="i">
+                    <ui-item-text-content>{{ i }}</ui-item-text-content>
+                  </ui-item>
+                </ui-list>
+
+
                 <!-- SUBMIT -->
                 <ui-form-field v-if="name" :class="actionClass">
                   <ui-button @click="postData" raised>Hochladen</ui-button>
@@ -110,6 +124,7 @@
               <ui-alert v-if="postResult" state="info">{{ postResult }}</ui-alert>
               <!-- RESPONSE SUCCESS MESSAGE -->
               <ui-alert v-if="postSuccessResult" state="success">Das Rezept wurde erfolgreich hochgeladen.</ui-alert>
+
 
             </template>
           </ui-form>
