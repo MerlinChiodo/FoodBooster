@@ -89,15 +89,15 @@
                 <!-- KATEGORIE -->
                 <ui-form-field>
                   <section>
-                    <ui-select v-model="selectedKategorie" :options="ingredientsNames">
-                      Zutat wählen:
+                    <ui-select v-model="selectedCategorie" :options="categoriesNames">
+                      Kategorie wählen:
                     </ui-select>
                   </section>
                 </ui-form-field>
 
                 <!-- KATEGORIE HINZUFÜGEN -->
                 <ui-form-field v-if="selectedCategorie" :class="actionClass">
-                  <ui-button @click="addIngredient" raised>Kategorie hinzufügen</ui-button>
+                  <ui-button @click="addCategorie" raised>Kategorie hinzufügen</ui-button>
                 </ui-form-field>
 
                 <!-- SUBMIT -->
@@ -145,10 +145,10 @@ export default {
     const responseCat = await http.get("categories/");
     this.categories = responseCat.data.msg;
 
-    this.cate = [];
-    for (let i = 0; i < this.ingredients.length; i++) {
+    this.categoriesNames = [];
+    for (let i = 0; i < this.categories.length; i++) {
 
-      this.ingredientsNames.push({label: this.ingredients[i].name, value: this.ingredients[i].name});
+      this.categoriesNames.push({label: this.categories[i].name, value: this.categories[i].name});
 
     }
 
@@ -170,6 +170,7 @@ export default {
       selectedZutatMenge: null,
       selectedCategorie: null,
       ingredientsNames: [],
+      categoriesNames: [],
 
       usersIngredientArray: [],
       usersZutatMengeArray: [],
@@ -185,6 +186,7 @@ export default {
       try {
         this.usersIngredientArray.toString();
         this.usersZutatMengeArray.toString();
+        this.usersCategoriesArray.toString();
 
         const formData = new FormData();
         formData.append('name', this.name);
@@ -192,7 +194,7 @@ export default {
         formData.append('servings', this.servings);
         formData.append('ingredients', this.usersIngredientArray);
         formData.append('amounts', this.usersZutatMengeArray);
-        formData.append('categories', this.usersCategories);
+        formData.append('categories', this.usersCategoriesArray);
         formData.append('productImage', this.file);
 
         const res = await http.post("rezept/", formData, {
@@ -231,6 +233,12 @@ export default {
 
       this.selectedIngredient = null;
       this.selectedZutatMenge = null;
+    },
+
+    addCategorie() {
+      this.usersCategoriesArray.push(this.selectedCategorie);
+
+      this.selectedCategorie = null;
     },
 
   }
