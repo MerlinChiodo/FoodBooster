@@ -36,6 +36,7 @@ const meldung = require('./API/meldung')
 const picture = require('./API/picture')
 const rezept = require('./API/rezept')
 const ingredients = require('./API/ingredients')
+const categories = require('./API/categories')
 
 /*******************************************************************************
  * Middleware for the server to use
@@ -67,6 +68,8 @@ app.use('/api/meldung', meldung)
 app.use('/api/picture', picture)
 app.use('/api/rezept', rezept)
 app.use('/api/ingredients', ingredients)
+app.use('/api/categories', categories)
+
 /*******************************************************************************
  * Request Handling
  ******************************************************************************/
