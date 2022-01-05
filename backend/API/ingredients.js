@@ -7,16 +7,7 @@ const express = require('express')
  */
 const router = express.Router()
 
-const { checkIfUser, checkAuthenticated } = require('../passport-config')
-const {
-  putUser,
-  seeOwnRecipe,
-  forgotPassword,
-  createUser,
-  deleteUser,
-  favRecipe,
-  getFavorite,
-} = require('../controller/account')
+const { getIngredients } = require('../controller/ingredients')
 /*******************************************************************************
  * Middleware for the server to use
  * Middleware has to be specified for every router, it isn't enough to just tell
@@ -29,18 +20,7 @@ router.use(express.json())
  * The request implementation
  ******************************************************************************/
 
-router.route('/').post(createUser)
+router.get('/', getIngredients)
 
-router.delete('/', checkIfUser, deleteUser)
-
-router.put('/', checkAuthenticated, putUser)
-
-router.put('/password', forgotPassword)
-
-router.post('/favorite/:recipeID', checkAuthenticated, favRecipe)
-
-router.get('/favorite', checkAuthenticated, getFavorite)
-
-router.get('/rezept', checkAuthenticated, seeOwnRecipe)
 
 module.exports = router

@@ -5,15 +5,19 @@
   <!-- //Here the Routed Page should pe shown. -->
   <router-view/>
 
+  <BottomNavigation/>
+
 </template>
 
 <script>
-import NavigationTabs from "@/components/NavigationTabs";
+import NavigationTabs from "@/components/NavigationTabs/";
+import BottomNavigation from "@/components/BottomNavigation";
 
 export default {
   name: 'App',
   components: {
     NavigationTabs,
+    BottomNavigation,
   }
 }
 </script>

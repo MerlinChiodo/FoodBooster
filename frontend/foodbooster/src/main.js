@@ -3,7 +3,8 @@ import App from './App.vue';
 
 import router from './router';
 
-import BalmUI, {UiForm, UiFormField} from 'balm-ui'; // Official Google Material Components
+import BalmUI from 'balm-ui'; // Official Google Material Components
+import BalmUINext from 'balm-ui/dist/balm-ui-next';
 import BalmUIPlus from 'balm-ui-plus'; // BalmJS Team Material Components
 import 'balm-ui-css';
 
@@ -14,16 +15,25 @@ app.use(BalmUI, {
         // (Optional) New in 8.38.0, See ThemeColor type in APIs.
         primary: "#cad92b",
         secondary: "#444445",
-        //TextStyle: "#444445" | "#444445",
-        //setTextcolor: "" | "#444445"
+
     },
-
-    UiTabs: {}
-
+    UiTabs: {},
+    UiGrid: {
+        //fixedColumnWidth: true,
+        //position: "left",
+    },
+    UiGridCell: {
+        //columns: 4,
+    }
 
 });
+app.use(BalmUINext, {
+    // Optional. Overwrite `<ui-bottom-navigation>` props with default value.
+    UiBottomNavigation: {
+        // some props
+
+    }
+});
+
 app.use(BalmUIPlus);
-app.use(UiForm);
-app.use(UiFormField);
-app.use(router);
 app.mount('#app');

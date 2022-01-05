@@ -5,32 +5,103 @@ POST Daten hinzufuegen
 PUT Daten aendern
 DELTE Daten loeschen
 
-POST /login/ (email, password) -> Redirect zu Home page oder login page bei falschen Logindaten
-DELETE /logout/ () -> Redirect zu Home page ausgeloggt
+POST /api/login/ (email, password) -> Redirect zu Home page oder login page bei falschen Logindaten
+DELETE /api/logout/ () -> Redirect (refresh, Redirect im Frontend)
 
-POST /api/account/ (username, email, password) -> Erfolg/400/error
-DELETE /api/account/ (accountemail) -> Erfolg/400/error
-PUT /api/account/password/ (email, sicherheitsfrageAntwort, neuesPasswort) -> Erfolg/400/error
-PUT /api/account/ (accountemail, username) -> Erfolg/400/error
-POST /api/account/favorite/ (rezeptID) -> Erfolg/400/error
-GET /api/account/favorite/ () -> Liste der Favoriten
-GET /api/account/rezept/ () -> Liste der eigenen Rezepte
+POST /api/account/ (username, email, password, answer) -> 						{201: success: true, msg: newUser}, 
+																				{400: success: false, err: `Please provide all required Information!`}, 
+																				{400: success: false, err: 'A user is already using this email adress'}, 
+																				{500: success: false, err: 'Ups, something went wrong!'}
+																				
+DELETE /api/account/ (email) -> 												{200: success: true, msg: 'Your account and all corresponding data has been deleted'}, 
+																				{400: success: false, err: 'You must enter the email address of the account you want to delete'}, 
+																				{500: success: false, err: 'Ups, something went wrong!', error}
 
-POST /api/rezept/ (name, erstelleraccount, beschreibung, zutaten{}, fotos[url], kategorie[], portionen) -> Erfolg/400/error
-GET /api/rezept/single/:rezeptID -> Rezept mit der ID
-PUT /api/rezept/ (rezeptID, name, description, ingredients[], removeIngredients[], pictures[url], removePictures[URL] servings, categories[], removeCategories[]) -> Erfolg/400/error
-GET /api/rezept/featured/ () -> Liste der featured Rezepte
-GET /api/rezept/search/ (suchkriterien{kategorie[], name, zutaten[], erstelleraccount, tags[]} -> Liste der gefilterten Rezepte
-POST /api/rezept/bewertung/ (rezeptID, bewertung(1-5)) -> Erfolg/400/error
-POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar, verfasseremail) -> Erfolg/400/error
+PUT /api/account/password/ (email, sicherheitsfrageAntwort, neuesPasswort) -> 	{200: success: true, msg: 'The password has been reset'}, 
+																				{200: success: false, err: 'There is no user with that email'}, 
+																				{200: success: false, err: 'The answer to the security question does not match'}, 
+																				{400: success: false, err: `You must enter your email address, the answer to the security question and the new password`}, 
+																				{500: success: false, err: 'Ups, something went wrong!', error}
 
-POST /api/picture/ (foto) -> URL des Fotos
+PUT /api/account/ (username) -> 												{200: success: true, msg: 'User successfully edited', user}, 
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+																				
+POST /api/account/favorite/:recipeID () -> 										{200: success: true, msg: "User now favors given recipe", fav: 1}, 
+																				{200: success: true, msg: "User no longer favors given recipe", fav: 0}, 
+																				{400: success: false, err: "Please provide a number!"}, 
+																				{400: success: false, err: 'Ups, something went wrong!'}, 
+																				{404: success: false, err: 'No recipe with given ID found!'}, 
+																				{500: success: false, err: "Ups, something went wrong!"}
+																				
+GET /api/account/favorite/ () -> Liste der eigenen Favoriten					{200: success: true, msg: retFavRecipes},
+																				{500: success: false, err: "Ups something went wrong!"}
+																				
+GET /api/account/rezept/ () -> Liste der eigenen Rezepte						{200: success: true, recipes},
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
+
+POST /api/rezept/ (name, description, ingredients(csv), categories(csv), servings) -> 
+																				{201: success: true, msg: recipe},
+																				{400: success: false, err: 'Please provide all required information!'},
+																				{400: success: false, err: 'Please provide ingredients for the recipe'},
+																				{500: success: false, err: 'Ups, something went wrong!'}
+																				
+GET /api/rezept/single/:rezeptID () -> 											{200: success: true, msg: recipe},
+																				{400: success: false, err: 'Please provide a Number'},
+																				{404: success: false, err: '404 Not Found'},
+																				{500: success: false, err: 'err'}
+
+PUT /api/rezept/ (rezeptID, name, description, ingredients(csv), removeIngredients(csv), removePictures(csv von URLs), servings, categories(csv), removeCategories(csv)) -> 
+																				{200: success: true, recipe},
+																				{400: success: false, err: 'There must be a rezeptID identify the recipe you want to change. '},
+																				{403: err: 'You can only change your own recipes'}
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
+GET /api/rezept/featured/ () -> Liste der featured Rezepte						{200: success: true, featured},
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
+GET /api/rezept/search?name & rating & author & servings & featured & description & ingredients & categories (} -> Liste der gefilterten Rezepte
+																				{200: success: true, msg: recipes},
+																				{200: success: true, msg: recipesFiltered},
+																				{500: success: false, err: 'Ups, something went wrong!'}
+																				
+POST /api/rezept/bewertung/ (recipeID, rating(1-5)) -> 							{200: success: true, msg: recipe},
+																				{400: success: false, err: 'Please provide all required information!'},
+																				{403: success: false, err: 'You cant vote for your own recipe!'},
+																				{500: success: false, err: 'Ups, something went wrong!'}
+																				
+POST /api/rezept/kommentar/ (rezeptID, kommentarID, kommentar) -> 				{201: success: true, comment},
+																				{400: success: false, err: 'There must be at least the id of the recipe you want to comment and the comment itself'},
+																				{404: success: false, err: `There is no recipe with the id ${rezeptID}`},
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+																				
+
 GET /api/picture/ (URL) -> Foto
 
-POST /api/ernaehrungsplan/ (name)
-PUT /api/ernaehrungsplan/ (id, {rezeptID: [Tag, Uhrzeit]})
-GET /api/ernaehrungsplan/liste/ () -> Liste aller Ernaehrungsplaene
-GET /api/ernaehrungsplan/ (id) -> Konkreter Plan
+POST /api/ernaehrungsplan/ (name)												{201: success: true, msg: plan},
+																				{400: success: false, err: "Please choose an unused name!"},
+																				{500: success: false, err:"Ups, something went wrong!"}
+
+PUT /api/ernaehrungsplan/ (Es ist kompliziert, guckt im Pull Request nach, da gibts ein Beispiel) ->
+																				{201: success: true, msg: 'The nutritionplan has been edited successfully'},
+																				{400: success: false, err: 'You must hand over an array that has a minimum length of 1'},
+																				{400: success: false, err: 'There is no planID in the first element'},
+																				{400: success: false, err: 'The planID has to be an int'},
+																				{400: success: false, err: `There is either the recipeID, the day or the time missing on list index ${i}`},
+																				{400: success: false, err: 'Either the recipeID, the day, or the time is not an int'},
+																				{403: success: false, err: 'You can only edit your own recipes'},
+																				{404: success: false, err: `There is no plan with the id ${planID}`},
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
+GET /api/ernaehrungsplan/ () -> Liste aller Ernaehrungsplaene					{200: success: true, plans},
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
+GET /api/ernaehrungsplan/single/:id () -> 										{200: success: true, plan},
+																				{400: success: false, err: 'Please provide a Number'},
+																				{403: success: false, err: 'You can only get your own plans'},
+																				{404: success: false, err: 'There is no plan with that id'}
+																				{500: success: false, err: 'Ups, something went wrong!', error}
+
 
 POST /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
 DELETE /api/einkaufsliste/ (zutaten[]) -> Erfolg/400/error
