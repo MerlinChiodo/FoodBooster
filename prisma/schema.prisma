@@ -27,21 +27,21 @@ model User {
 model GroceryList {
   id       Int                             @id @default(autoincrement())
   userID   Int                             @unique
-  user     User                            @relation(fields: [userID], references: [id])
+  user     User                            @relation(fields: [userID], references: [id], onDelete: Cascade)
   includes GroceryListIncludesIngredient[]
 }
 
 model Recipe {
   id           Int                           @id @default(autoincrement())
   name         String                        @db.VarChar(50)
-  description  String                        @db.VarChar(1000)
+  description  String                        @db.VarChar(10000)
   servings     Int
   created      DateTime                      @db.DateTime(0)
   featured     Boolean                       @default(false)
   creatorID    Int
   rating       Int?                          @default(0)
   totalRatings Int?                          @default(0)
-  creator      User                          @relation(fields: [creatorID], references: [id])
+  creator      User                          @relation(fields: [creatorID], references: [id], onDelete: Cascade)
   comments     Comment[]
   used         NutritionplanIncludesRecipe[]
   pictures     Picture[]
@@ -55,8 +55,8 @@ model Recipe {
 model UserFavorsRecipe {
   userID   Int
   recipeID Int
-  recipe   Recipe @relation(fields: [recipeID], references: [id])
-  user     User   @relation(fields: [userID], references: [id])
+  recipe   Recipe @relation(fields: [recipeID], references: [id], onDelete: Cascade)
+  user     User   @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@id([userID, recipeID])
   @@index([recipeID], map: "UserFavorsRecipe_recipeID_fkey")
@@ -66,7 +66,7 @@ model Nutritionplan {
   id       Int                           @id @default(autoincrement())
   name     String                        @db.VarChar(50)
   userID   Int
-  user     User                          @relation(fields: [userID], references: [id])
+  user     User                          @relation(fields: [userID], references: [id], onDelete: Cascade)
   recipies NutritionplanIncludesRecipe[]
 
   @@index([userID], map: "Nutritionplan_userID_fkey")
@@ -75,8 +75,10 @@ model Nutritionplan {
 model NutritionplanIncludesRecipe {
   nutritionplanID Int
   recipeID        Int
-  nutritionplan   Nutritionplan @relation(fields: [nutritionplanID], references: [id])
-  recipe          Recipe        @relation(fields: [recipeID], references: [id])
+  day             Int
+  time            Int
+  nutritionplan   Nutritionplan @relation(fields: [nutritionplanID], references: [id], onDelete: Cascade)
+  recipe          Recipe        @relation(fields: [recipeID], references: [id], onDelete: Cascade)
 
   @@id([nutritionplanID, recipeID])
   @@index([recipeID], map: "NutritionplanIncludesRecipe_recipeID_fkey")
@@ -96,9 +98,8 @@ model Ingredient {
 model GroceryListIncludesIngredient {
   ingredientName String      @db.VarChar(50)
   groceryListID  Int
-  groceryList    GroceryList @relation(fields: [groceryListID], references: [id])
-  ingredient     Ingredient  @relation(fields: [ingredientName], references: [name])
-  amount         Int         @default(0)
+  groceryList    GroceryList @relation(fields: [groceryListID], references: [id], onDelete: Cascade)
+  ingredient     Ingredient  @relation(fields: [ingredientName], references: [name], onDelete: Cascade)
 
   @@id([ingredientName, groceryListID])
   @@index([groceryListID], map: "GroceryListIncludesIngredient_groceryListID_fkey")
@@ -121,7 +122,7 @@ model Report {
   handled  Boolean  @default(false)
   created  DateTime @db.DateTime(0)
   offender Int
-  user     User     @relation(fields: [offender], references: [id])
+  user     User     @relation(fields: [offender], references: [id], onDelete: Cascade)
 
   @@index([offender], map: "Report_offender_fkey")
 }
@@ -141,7 +142,7 @@ model Thread {
   threadText String?   @db.VarChar(500)
   created    DateTime  @db.DateTime(0)
   author     Int
-  user       User      @relation(fields: [author], references: [id])
+  user       User      @relation(fields: [author], references: [id], onDelete: Cascade)
   comments   Comment[]
 
   @@index([author], map: "Thread_author_fkey")
@@ -170,10 +171,10 @@ model Comment {
   recipeID     Int?
   threadID     Int?
   topCommentID Int?
-  recipe       Recipe?   @relation(fields: [recipeID], references: [id])
-  thread       Thread?   @relation(fields: [threadID], references: [id])
-  topComment   Comment?  @relation("CommentComment", fields: [topCommentID], references: [id])
-  user         User      @relation(fields: [userID], references: [id])
+  recipe       Recipe?   @relation(fields: [recipeID], references: [id], onDelete: Cascade)
+  thread       Thread?   @relation(fields: [threadID], references: [id], onDelete: Cascade)
+  topComment   Comment?  @relation("CommentComment", fields: [topCommentID], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userID], references: [id], onDelete: Cascade)
   comments     Comment[] @relation("CommentComment")
 
   @@index([recipeID], map: "Comment_recipeID_fkey")

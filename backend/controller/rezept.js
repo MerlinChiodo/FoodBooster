@@ -170,7 +170,7 @@ const createRecipe = async (req, res) => {
   //Check if every ingredient was given with an amount
   if(amountsArray.length !== ingredientsArray.length){
     return res.status(400)
-        .send({ success: false, err: 'Please provide amounts for every given ingredient' })
+        .send({ success: false, err: 'Please provide amounts only for every given ingredients' })
   }
 
   //Set time of Creation
