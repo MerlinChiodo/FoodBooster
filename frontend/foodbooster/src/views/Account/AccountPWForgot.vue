@@ -3,7 +3,7 @@
     <ui-grid-cell class="demo-cell"></ui-grid-cell>
     <ui-grid-cell class="demo-cell">
       <div class="AccountRegisterBox">
-        <h1>Passwort vergessen</h1>
+        <h1>Passwort vergessen / Passwort ändern</h1>
         <ui-form nowrap item-margin-bottom="16" label-width="80">
 
           <!-- EMAIL -->
@@ -106,7 +106,7 @@ export default {
           this.postResult = result.data.err;
           this.postSuccessResult = false;
         }
- 
+
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
         this.postSuccessResult = false;

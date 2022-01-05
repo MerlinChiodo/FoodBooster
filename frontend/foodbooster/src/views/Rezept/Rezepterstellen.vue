@@ -66,6 +66,39 @@
                   <input type="file" @change="handleFileUpload( $event )"/>
                 </ui-form-field>
 
+                <!--INGREDIENTS-->
+                <ui-form-field>
+                  <section>
+                    <ui-select v-model="selectedIngredient" :options="ingredientsNames">
+                      Zutat wählen:
+                    </ui-select>
+                  </section>
+                </ui-form-field>
+
+                <!-- ZUTATEN MENGE-->
+                <ui-form-field>
+                  <ui-textfield v-model="selectedZutatMenge" inputType="number">Menge Zutat(gramm, ml)</ui-textfield>
+                </ui-form-field>
+
+                <!-- INGREDIENT HINZUFÜGEN -->
+                <ui-form-field v-if="selectedZutatMenge" :class="actionClass">
+                  <ui-button @click="addIngredient" raised>Zutat hinzufügen</ui-button>
+                </ui-form-field>
+
+
+                <!-- KATEGORIE -->
+                <ui-form-field>
+                  <section>
+                    <ui-select v-model="selectedKategorie" :options="ingredientsNames">
+                      Zutat wählen:
+                    </ui-select>
+                  </section>
+                </ui-form-field>
+
+                <!-- KATEGORIE HINZUFÜGEN -->
+                <ui-form-field v-if="selectedCategorie" :class="actionClass">
+                  <ui-button @click="addIngredient" raised>Kategorie hinzufügen</ui-button>
+                </ui-form-field>
 
                 <!-- SUBMIT -->
                 <ui-form-field v-if="name" :class="actionClass">
@@ -97,7 +130,28 @@ const FormData = require('form-data');
 
 export default {
   name: "Rezept_erstellen",
-  mounted() {
+  async mounted() {
+    const response = await http.get("ingredients/");
+    this.ingredients = response.data.msg;
+
+    this.ingredientsNames = [];
+    for (let i = 0; i < this.ingredients.length; i++) {
+
+      this.ingredientsNames.push({label: this.ingredients[i].name, value: this.ingredients[i].name});
+
+    }
+
+
+    const responseCat = await http.get("categories/");
+    this.categories = responseCat.data.msg;
+
+    this.cate = [];
+    for (let i = 0; i < this.ingredients.length; i++) {
+
+      this.ingredientsNames.push({label: this.ingredients[i].name, value: this.ingredients[i].name});
+
+    }
+
 
   },
   data() {
@@ -105,14 +159,21 @@ export default {
 
       name: null,
       description: null,
-      kategorie: ['Suppe', 'Mittagsesseen'],
-      ingredients: ['TEST_Zucker', 'TEST_Weissbrot'],
+      categories: ['Suppe', 'Mittagsesseen'],
+      ingredients: [],
       servings: 1,
       postSuccessResult: null,
       postResult: null,
       hochgeladen: false,
       file: null,
+      selectedIngredient: null,
+      selectedZutatMenge: null,
+      selectedCategorie: null,
+      ingredientsNames: [],
 
+      usersIngredientArray: [],
+      usersZutatMengeArray: [],
+      usersCategoriesArray: [],
     }
   },
   methods: {
@@ -122,11 +183,16 @@ export default {
 
     async postData() {
       try {
+        this.usersIngredientArray.toString();
+        this.usersZutatMengeArray.toString();
+
         const formData = new FormData();
         formData.append('name', this.name);
         formData.append('description', this.description);
         formData.append('servings', this.servings);
-        formData.append('ingredients', this.ingredients);
+        formData.append('ingredients', this.usersIngredientArray);
+        formData.append('amounts', this.usersZutatMengeArray);
+        formData.append('categories', this.usersCategories);
         formData.append('productImage', this.file);
 
         const res = await http.post("rezept/", formData, {
@@ -157,6 +223,14 @@ export default {
 
       this.file = event.target.files[0];
       console.log(this.file);
+    },
+
+    addIngredient() {
+      this.usersIngredientArray.push(this.selectedIngredient);
+      this.usersZutatMengeArray.push(this.selectedZutatMenge);
+
+      this.selectedIngredient = null;
+      this.selectedZutatMenge = null;
     },
 
   }
