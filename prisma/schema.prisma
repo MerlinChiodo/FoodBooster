@@ -110,6 +110,7 @@ model RecipeIncludesIngredient {
   recipeID       Int
   ingredient     Ingredient @relation(fields: [ingredientName], references: [name], onDelete: Cascade)
   recipe         Recipe     @relation(fields: [recipeID], references: [id], onDelete: Cascade)
+  amount         Int        @default(0)
 
   @@id([ingredientName, recipeID])
   @@index([recipeID], map: "RecipeIncludesIngredient_recipeID_fkey")
