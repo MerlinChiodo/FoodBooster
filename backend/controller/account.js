@@ -172,6 +172,9 @@ const seeOwnRecipe = async (req, res) => {
       where: {
         creatorID: req.user.id,
       },
+      include: {
+        pictures: true,
+      },
     })
     return res.status(200).send({ success: true, recipes })
   } catch (err) {
@@ -381,10 +384,14 @@ const getFavorite = async (req, res) => {
       },
       //Only select the recipe field of userFavorsRecipe
       select: {
-        recipe: true,
+        recipe: {
+          include: {
+            pictures: true}
+        },
       },
     })
   } catch (err) {
+    console.log(err)
     return res.status(500).
       json({ success: false, err: 'Ups something went wrong!' })
   }
