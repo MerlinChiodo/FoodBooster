@@ -311,6 +311,7 @@ const getSingleRecipe = async (req, res) => {
  *      - description --> changes the description of the recipe
  *      - servings --> changes the servings of the recipe
  *      - ingredients (csv) --> adds the ingredients to the recipe
+  *     - amounts (csv) --> gives the amounts for each ingredient
  *      - removeIngredients(csv) --> removes the ingredients from the recipe
  *      - categories(csv) --> adds the categories to the recipe
  *      - removeCategories(csv) --> removes the categories from the recipe
@@ -319,7 +320,7 @@ const getSingleRecipe = async (req, res) => {
  *              400 - {success: false, err: 'There must be a rezeptID identify the recipe you want to change. '}
  *                --> There is no rezeptID
  *              500 - {success: false, msg: {Ups, something went wrong!}, error} --> Prisma error
- *
+ *              400 - {success: false, err: "Ingredients and Amounts must be consistent!"}
  */
 const editRecipe = async (req, res) => {
   let {
@@ -332,10 +333,17 @@ const editRecipe = async (req, res) => {
     removeCategories,
     servings,
     removePictures,
+    amounts,
   } = req.body
 
   if (ingredients) {
     ingredients = ingredients.split(',')
+  }
+  if(amounts){
+    amounts = amounts.split(',')
+  }
+  if(amounts.length !== ingredients.length){
+    return res.status(400).json({success: false, err: "Ingredients and Amounts must be consistent!"})
   }
   if (removeIngredients) {
     removeIngredients = removeIngredients.split(',')
@@ -405,12 +413,59 @@ const editRecipe = async (req, res) => {
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
 
+  if(ingredients && ingredients.length > 0){
+    let usedIngredients = [];
+    try{
+      for(let ingredient of ingredients){
+        try{
+          const ingredientUsed = await prisma.recipeIncludesIngredient.findUnique({
+            where:{
+              ingredientName_recipeID: {
+                ingredientName: ingredient.trim(),
+                recipeID: Number(rezeptID),
+              },
+            }
+          })
+          if(ingredientUsed != null){
+            await prisma.recipeIncludesIngredient.update({
+              where: {
+                ingredientName_recipeID: {
+                  ingredientName: ingredient.trim(),
+                  recipeID: Number(rezeptID),
+                },
+              },
+              data: {
+                amount: Number(amounts[(ingredients.indexOf(ingredient))]),
+              }
+            })
+            usedIngredients.push(ingredient);
+          }
+        }catch (err){
+          console.log(err);
+          return res.status(500).
+            json({ success: false, err: 'Ups, something went wrong!', error })
+        }
+      }
+      if(usedIngredients.length > 0){
+        for(let ingredient of usedIngredients){
+          amounts.splice(ingredients.indexOf(ingredient),1)
+          ingredients.splice(ingredients.indexOf(ingredient),1)
+        }
+      }
+    }catch (err){
+      console.log(err);
+      return res.status(500).
+        json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+
   if (ingredients && ingredients.length > 0) {
     try {
       for (let ingredient of ingredients) {
         await prisma.recipeIncludesIngredient.create({
           data: {
             ingredientName: ingredient.trim(),
+            amount: Number(amounts[(ingredients.indexOf(ingredient))]),
             recipeID: Number(rezeptID),
           },
         })
