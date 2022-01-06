@@ -30,12 +30,16 @@
       <h2>Zutaten Liste:</h2>
       <ui-list :type="3">
         <ui-item v-for="i in this.ingredients" :key="i">
-          <ui-item-text-content>{{ i.ingredientName }}</ui-item-text-content>
+          <ui-item-text-content>{{ i.ingredientName }} {{ (i.amount * this.multiplikator) }} mg/ml/stk
+          </ui-item-text-content>
         </ui-item>
       </ui-list>
-      <h4>Wie oft wollen Sie das Rezept herstellen: {{ this.multiplikator }} mal.</h4>
+      <h4>Dieses {{ name }} ist für {{ this.servings }} Portionen.</h4>
+      <h4>Wie oft wollen Sie das {{ name }} anfertigen: {{ this.multiplikator }} mal.</h4>
       <ui-slider v-model="multiplikator" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider>
-      <!--aktuelle Position wird noch nicht angezeigt-->
+      <h4>Sie möchten also {{ (this.servings * this.multiplikator) }} Portionen kochen.</h4>
+
+
       <h4>Kategorien: </h4>
       <ui-list :type="3">
         <ui-item v-for="i in this.category" :key="i">
@@ -53,36 +57,35 @@
 
   <ui-grid class="bewertungUndNutri">
     <ui-grid-cell class="bewertung" columns="3">
-      <div class="bild">
-        <img src="../../assets/sterne.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
-      </div>
-      <ui-form-field>
-        <ui-radio :disabled="schalter" v-model="bewertung" @click="ausgrauen" input-id="eins"
-                  value="1" v-on:change="aufrufen"></ui-radio>
-        <label>1</label>
-      </ui-form-field>
-      <ui-form-field>
-        <ui-radio :disabled="schalter" v-model="bewertung" @click="ausgrauen" input-id="zwei"
-                  value="2" v-on:change="aufrufen"></ui-radio>
-        <label>2</label>
-      </ui-form-field>
-      <ui-form-field>
-        <ui-radio :disabled="schalter" v-model="bewertung" @click="ausgrauen" input-id="drei"
-                  value="3" v-on:change="aufrufen"></ui-radio>
-        <label>3</label>
-      </ui-form-field>
-      <ui-form-field>
-        <ui-radio :disabled="schalter" v-model="bewertung" @click="ausgrauen" input-id="vier"
-                  value="4" v-on:change="aufrufen"></ui-radio>
-        <label>4</label>
-      </ui-form-field>
-      <ui-form-field>
-        <ui-radio :disabled="schalter" v-model="bewertung" @click="ausgrauen" input-id="fuenf"
-                  value="5" v-on:change="aufrufen"></ui-radio>
-        <label>5</label>
-      </ui-form-field>
 
-      <p>{{ totalRatings }} Bewertungen</p>
+      <ui-icon :size="48" v-if="rating >= 1">star_rate</ui-icon>
+      <ui-icon :size="48" v-if="rating >= 2">star_rate</ui-icon>
+      <ui-icon :size="48" v-if="rating >= 3">star_rate</ui-icon>
+      <ui-icon :size="48" v-if="rating >= 4">star_rate</ui-icon>
+      <ui-icon :size="48" v-if="rating >= 5">star_rate</ui-icon>
+
+
+      <!--      Vor dem bewerten-->
+      <p v-if="!userRating">Du kannst dieses Rezept gerne bewerten.</p>
+
+      <div v-if="!userRating">
+        <ui-icon-button :size="48" @click="doRating(1)">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" @click="doRating(2)">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" @click="doRating(3)">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" @click="doRating(4)">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" @click="doRating(5)">star_rate</ui-icon-button>
+      </div>
+      <!--      Sterne nach dem bewerten-->
+      <div v-else-if="userRating">
+        <ui-icon-button :size="48" v-if="userRating >= 1">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" v-if="userRating >= 2">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" v-if="userRating >= 3">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" v-if="userRating >= 4">star_rate</ui-icon-button>
+        <ui-icon-button :size="48" v-if="userRating >= 5">star_rate</ui-icon-button>
+      </div>
+      <p v-if="userRating">Du hast dieses Rezept mit {{ userRating }} Sternen bewertet.</p>
+
+      <p>Insgesammt {{ totalRatings }} Bewertungen</p>
     </ui-grid-cell>
 
     <ui-grid-cell class="nutri" columns="3">
@@ -162,6 +165,7 @@ export default {
       description: null,
       featured: null,
       rating: null,
+      userRating: null,
       totalRatings: 0,
       recipeID: this.$route.params.id,
       recipe: null,
@@ -188,23 +192,35 @@ export default {
     };
   },
   methods: {
-    aufrufen() {
-      this.userBewertung();
-      this.bewertungszaehler();
-    },
 
+    async doRating(rating) {
+      this.userRating = rating;
+      this.totalRatings++;
 
-    bewertungszaehler() {
-      this.totalRatings++
+      // try {
+      //   const res = await http.post("/rezept/bewertung/", {
+      //         recipeID: this.recipeID,
+      //         rating: this.userRating,
+      //       },
+      //       {
+      //         headers: {
+      //           "x-access-token":
+      //               "token-value",
+      //         }
+      //       }
+      //   );
+      //   const res = {
+      //     status: res.status + "-" + res.statusText,
+      //     headers: res.headers,
+      //     data: res.data,
+      //   };
+      //
+      // } catch (err) {
+      //   this.postResult = this.fortmatResponse(err.response?.data) || err;
+      // }
+
     },
-    userBewertung() {
-      this.rating = this.bewertung.value;
-    },
-    ausgrauen() {
-      this.schalter = true;
-    }
   },
-
   async mounted() {    // GET request using axios with async/await
     const response = await http.get("rezept/single/" + this.recipeID, {}
     );
