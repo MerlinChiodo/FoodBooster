@@ -25,14 +25,25 @@
     </ui-grid-cell>
 
     <ui-grid-cell class="liste" columns="6">
+
+
       <h2>Zutaten Liste:</h2>
       <ui-list :type="3">
         <ui-item v-for="i in this.ingredients" :key="i">
           <ui-item-text-content>{{ i.ingredientName }}</ui-item-text-content>
         </ui-item>
       </ui-list>
-      <ui-slider v-model="value0" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider>
+      <h4>Wie oft wollen Sie das Rezept herstellen: {{ this.multiplikator }} mal.</h4>
+      <ui-slider v-model="multiplikator" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider>
       <!--aktuelle Position wird noch nicht angezeigt-->
+      <h4>Kategorien: </h4>
+      <ui-list :type="3">
+        <ui-item v-for="i in this.category" :key="i">
+          <ui-item-text-content>{{ i.categoryName }}</ui-item-text-content>
+        </ui-item>
+      </ui-list>
+
+
     </ui-grid-cell>
 
     <ui-grid-cell class="leer" columns="2">
@@ -161,6 +172,7 @@ export default {
       category: null,
       ingredients: null,
       amounts: null,
+      multiplikator: 1,
 
 
       value0: 1,
