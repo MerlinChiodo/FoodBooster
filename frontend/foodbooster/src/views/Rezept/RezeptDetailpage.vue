@@ -12,20 +12,23 @@
   <ui-grid class="bildUndListe">
     <ui-grid-cell class="bild" columns="4">
       <ui-form-field>
-        <div class="bild">
-          <img src="../../assets/essen_dummy.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
-        </div>
+        <!--        <div class="bild">-->
+        <ui-image-list type="masonry">
+          <ui-image-item v-if="this.pictures.length === 0" :image="require('@/assets/Food1.jpg')"
+          ></ui-image-item>
+          <ui-image-item v-else
+                         :image="require('../../../../../uploads/' + this.pictures[0].url.replace(`uploads\\`, ``))"
+          ></ui-image-item>
+        </ui-image-list>
+        <!--        </div>-->
       </ui-form-field>
     </ui-grid-cell>
 
     <ui-grid-cell class="liste" columns="6">
       <h2>Zutaten Liste:</h2>
       <ui-list :type="3">
-        <ui-item v-for="i in 5" :key="i"><!--10 durch Variable ersetzen-->
-          <ui-item-text-content>
-            <ui-item-text1>Zutat</ui-item-text1> <!--Variable ersetzen-->
-            <ui-item-text2>Menge</ui-item-text2> <!--Variable ersetzen-->
-          </ui-item-text-content>
+        <ui-item v-for="i in this.ingredients" :key="i">
+          <ui-item-text-content>{{ i.ingredientName }}</ui-item-text-content>
         </ui-item>
       </ui-list>
       <ui-slider v-model="value0" type="discrete" :step="1" withTickMarks min="1" max="10"></ui-slider>
@@ -154,6 +157,10 @@ export default {
       bewertung: null,
       kommentar: "",
       schalter: false,
+      pictures: [],
+      category: null,
+      ingredients: null,
+      amounts: null,
 
 
       value0: 1,
@@ -192,6 +199,10 @@ export default {
     this.name = response.data.msg.name;
     this.servings = response.data.msg.servings;
     this.description = response.data.msg.description;
+    this.pictures = response.data.msg.pictures;
+    this.ingredients = response.data.msg.ingredients;
+    this.amounts = response.data.msg.amounts;
+    this.category = response.data.msg.category;
     this.rating = response.data.msg.rating;
     this.featured = response.data.msg.featured;
     this.totalRatings = response.data.msg.totalRatings;
@@ -245,11 +256,11 @@ export default {
   padding: 15px;
 }
 
-.bild img {
-  height: auto;
-  width: 50%;
-  object-fit: cover;
-}
+/*.bild img {*/
+/*  height: auto;*/
+/*  width: 50%;*/
+/*  object-fit: cover;*/
+/*}*/
 
 
 .nutri img {

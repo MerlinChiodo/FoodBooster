@@ -14,17 +14,17 @@
 
         <ui-image-item v-if="rezept.pictures.length === 0" :image="require('@/assets/Food1.jpg')"
                        @click="$router.push({name: 'RezeptDetailpage', params: {id: rezept.id, name: rezept.name,
-                     description: rezept.description, servings: rezept.servings }})"
+                     description: rezept.description, servings: rezept.servings, pictures: rezept.pictures, category: rezept.category, ingredients: rezept.ingredients }})"
         ></ui-image-item>
         <ui-image-item v-else
                        :image="require('../../../../../uploads/' + rezept.pictures[0].url.replace(`uploads\\`, ``))"
                        @click="$router.push({name: 'RezeptDetailpage', params: {id: rezept.id, name: rezept.name,
-                     description: rezept.description, servings: rezept.servings }})"
+                     description: rezept.description, servings: rezept.servings, pictures: rezept.pictures, category: rezept.category, ingredients: rezept.ingredients }})"
         ></ui-image-item>
-        
+
         <ui-fab
             @click="$router.push({name: 'Rezeptbearbeiten', params: {id: rezept.id, name: rezept.name,
-                     description: rezept.description, servings: rezept.servings }})"
+                     description: rezept.description, servings: rezept.servings, pictures: rezept.pictures, category: rezept.category, ingredients: rezept.ingredients }})"
             icon="edit"></ui-fab>
 
         {{ rezept.name }} | Portionen: {{ rezept.servings }}
