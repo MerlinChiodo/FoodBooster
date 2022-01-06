@@ -175,6 +175,7 @@ const seeOwnRecipe = async (req, res) => {
       include: {
         pictures: true,
         ingredients: true,
+        category: true,
       },
     })
     return res.status(200).send({ success: true, recipes })
