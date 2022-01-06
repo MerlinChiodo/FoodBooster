@@ -46,6 +46,41 @@
             </ui-slider>
 
 
+            <!--INGREDIENTS-->
+            <ui-form-field>
+              <section>
+                <ui-select v-model="selectedIngredient" :options="ingredientsNames">
+                  Zutat wählen:
+                </ui-select>
+              </section>
+            </ui-form-field>
+
+            <!-- ZUTATEN MENGE-->
+            <ui-form-field>
+              <ui-textfield v-model="selectedZutatMenge" inputType="number">Menge Zutat(gramm, ml)</ui-textfield>
+            </ui-form-field>
+
+            <!-- INGREDIENT HINZUFÜGEN -->
+            <ui-form-field v-if="selectedZutatMenge" :class="actionClass">
+              <ui-button @click="addIngredient" raised>Zutat hinzufügen</ui-button>
+            </ui-form-field>
+
+
+            <!-- KATEGORIE -->
+            <ui-form-field>
+              <section>
+                <ui-select v-model="selectedCategorie" :options="categoriesNames">
+                  Kategorie wählen:
+                </ui-select>
+              </section>
+            </ui-form-field>
+
+            <!-- KATEGORIE HINZUFÜGEN -->
+            <ui-form-field v-if="selectedCategorie" :class="actionClass">
+              <ui-button @click="addCategorie" raised>Kategorie hinzufügen</ui-button>
+            </ui-form-field>
+
+
             <!-- SUBMIT -->
             <ui-form-field v-if="name" :class="actionClass">
               <ui-button @click="postData" raised>Rezept aktualisieren</ui-button>
@@ -78,11 +113,23 @@ export default {
       id: this.$route.params.id,
       name: this.$route.params.name,
       description: this.$route.params.description,
-      kategorie: ['Suppe', 'Mittagsesseen'],
-      ingredients: ['Apple', 'Banana'],
+
+
       servings: this.$route.params.servings,
       postSuccessResult: null,
       postResult: null,
+
+
+      selectedIngredient: null,
+      selectedZutatMenge: null,
+      selectedCategorie: null,
+      ingredientsNames: [],
+      categoriesNames: [],
+
+      usersIngredientArray: [],
+      usersZutatMengeArray: [],
+      usersCategoriesArray: [],
+
 
     }
   },
@@ -93,12 +140,19 @@ export default {
 
     async postData() {
       try {
+        this.usersIngredientArray.toString();
+        this.usersZutatMengeArray.toString();
+        this.usersCategoriesArray.toString();
+
+
         const formData = new FormData();
         formData.append('rezeptID', this.id);
         formData.append('name', this.name);
         formData.append('description', this.description);
         formData.append('servings', this.servings);
-        formData.append('ingredients', this.ingredients);
+        formData.append('ingredients', this.usersIngredientArray);
+        formData.append('amounts', this.usersZutatMengeArray);
+        formData.append('categories', this.usersCategoriesArray);
 
         const res = await http.put("rezept/", formData, {
           headers: {
@@ -116,6 +170,20 @@ export default {
       } catch (err) {
         this.postResult = this.fortmatResponse(err.response?.data) || err;
       }
+    },
+
+    addIngredient() {
+      this.usersIngredientArray.push(this.selectedIngredient);
+      this.usersZutatMengeArray.push(this.selectedZutatMenge);
+
+      this.selectedIngredient = null;
+      this.selectedZutatMenge = null;
+    },
+
+    addCategorie() {
+      this.usersCategoriesArray.push(this.selectedCategorie);
+
+      this.selectedCategorie = null;
     },
 
   }

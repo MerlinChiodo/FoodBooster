@@ -174,7 +174,7 @@ export default {
 
       name: null,
       description: null,
-      categories: ['Suppe', 'Mittagsesseen'],
+      categories: [],
       ingredients: [],
       servings: 1,
       postSuccessResult: null,

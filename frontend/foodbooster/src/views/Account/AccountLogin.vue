@@ -62,30 +62,40 @@
           <!-- Register and forgot password reroutes -->
           <ui-form-field>
             <router-link to="/AccountPWForgot">
-              Passwort vergessen?
+              <ui-button raised>
+                Passwort vergessen?
+              </ui-button>
             </router-link>
           </ui-form-field>
+
+
           <ui-form-field>
             <router-link to="/accountregister">
-              Registrieren
+              <ui-button raised>
+                Registrieren
+              </ui-button>
             </router-link>
           </ui-form-field>
 
 
           <ui-form-field v-if="successfullLoginEmail">
             <router-link to="/Datenschutzeinstellungen">
-              Datenschutzeinstellungen
+              <ui-button raised>
+                Datenschutzeinstellungen
+              </ui-button>
             </router-link>
           </ui-form-field>
 
           <ui-form-field v-if="successfullLoginEmail">
             <router-link to="/AdminMeldungen">
-              Admin Bereich: Meldungen
+              <ui-button raised>
+                Admin Bereich: Meldungen
+              </ui-button>
             </router-link>
           </ui-form-field>
 
 
-          <ui-form-field>
+          <ui-form-field v-if="successfullLoginEmail">
             <router-link to="/Accountbearbeiten">
               <ui-button raised>
                 Account bearbeiten
@@ -151,8 +161,8 @@ export default {
 
         if (res.data === "Hallo") {
           this.cookies.set("LoggedInCookie", this.vemail);
-          this.successfullLoginEmail =
-              this.postWrongLoginData = null;
+          this.successfullLoginEmail = this.vemail;
+          this.postWrongLoginData = null;
           this.postSuccessResult = this.fortmatResponse(result);
           this.postResult = null;
           console.log(this.successfullLoginEmail);

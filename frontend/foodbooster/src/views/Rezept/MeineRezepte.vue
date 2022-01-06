@@ -12,13 +12,16 @@
       <ui-grid-cell v-for="(rezept, index) in rezepte"
                     :key="index" columns="3" class="demo-cell">
 
-        <ui-image-item :image="require(`@/assets/Food1.jpg`)"
+        <ui-image-item v-if="rezept.pictures.length === 0" :image="require('@/assets/Food1.jpg')"
                        @click="$router.push({name: 'RezeptDetailpage', params: {id: rezept.id, name: rezept.name,
                      description: rezept.description, servings: rezept.servings }})"
-        >
-
-
-        </ui-image-item>
+        ></ui-image-item>
+        <ui-image-item v-else
+                       :image="require('../../../../../uploads/' + rezept.pictures[0].url.replace(`uploads\\`, ``))"
+                       @click="$router.push({name: 'RezeptDetailpage', params: {id: rezept.id, name: rezept.name,
+                     description: rezept.description, servings: rezept.servings }})"
+        ></ui-image-item>
+        
         <ui-fab
             @click="$router.push({name: 'Rezeptbearbeiten', params: {id: rezept.id, name: rezept.name,
                      description: rezept.description, servings: rezept.servings }})"

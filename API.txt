@@ -60,7 +60,7 @@ PUT /api/rezept/ (rezeptID, name, description, ingredients(csv), removeIngredien
 GET /api/rezept/featured/ () -> Liste der featured Rezepte						{200: success: true, featured},
 																				{500: success: false, err: 'Ups, something went wrong!', error}
 
-GET /api/rezept/search?name & rating & author & servings & featured & description & ingredients & categories (} -> Liste der gefilterten Rezepte
+GET /api/rezept/search/?name & rating & author & servings & featured & description & ingredients & categories (} -> Liste der gefilterten Rezepte
 																				{200: success: true, msg: recipes},
 																				{200: success: true, msg: recipesFiltered},
 																				{500: success: false, err: 'Ups, something went wrong!'}
