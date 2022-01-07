@@ -19,7 +19,7 @@
 
 
         <ui-image-text v-if="labelsType">
-          {{ rezept.name }} | Portionen: {{ rezept.servings }}
+          <h2>{{ rezept.name }} </h2> Portionen: {{ rezept.servings }}
         </ui-image-text>
       </ui-grid-cell>
 

@@ -24,7 +24,7 @@
             <router-link to="/ernährungsplan">
               <ui-tab>Ernährungsplan</ui-tab>
             </router-link>
-            <router-link to="/MeineRezepte">
+            <router-link v-if="successfullLoginEmail" to="/MeineRezepte">
               <ui-tab>Meine Rezepte</ui-tab>
             </router-link>
             <router-link to="/accountlogin">
@@ -39,8 +39,27 @@
 </template>
 
 <script>
+import {useCookies} from "vue3-cookies";
+
 export default {
   name: "NavigationTabs",
+
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
+  data() {
+    return {
+      successfullLoginEmail: null,
+    }
+  },
+  mounted() {
+    try {
+      this.successfullLoginEmail = this.cookies.get("LoggedInCookie");
+    } catch (err) {
+      console.log(err)
+    }
+  }
 }
 
 

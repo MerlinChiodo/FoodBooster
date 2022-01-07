@@ -7,8 +7,8 @@
 
       <div class="CreateRezeptBox">
 
-        <h1>Hier kannst du dein Rezept {{ this.$route.params.name }} bearbeiten</h1>
-        <h3>Dein Rezept hat die ID: {{ this.$route.params.id }}.</h3>
+        <h1>Rezept {{ this.name }} bearbeiten</h1>
+        <h3>Dein Rezept hat die ID: {{ this.recipeID }}.</h3>
 
         <ui-form nowrap item-margin-bottom="16" label-width="80">
           <template #default="{ actionClass }">
@@ -80,6 +80,18 @@
               <ui-button @click="addCategorie" raised>Kategorie hinzufügen</ui-button>
             </ui-form-field>
 
+            <ui-list>Hinzugefügte Zutaten:
+              <ui-item v-for="i in usersIngredientArray" :key="i">
+                <ui-item-text-content>{{ i }}</ui-item-text-content>
+              </ui-item>
+            </ui-list>
+
+            <ui-list>Hinzugefügte Kategorien:
+              <ui-item v-for="i in usersCategoriesArray" :key="i">
+                <ui-item-text-content>{{ i }}</ui-item-text-content>
+              </ui-item>
+            </ui-list>
+
 
             <!-- SUBMIT -->
             <ui-form-field v-if="name" :class="actionClass">
@@ -108,17 +120,67 @@ const FormData = require('form-data');
 
 export default {
   name: "Rezeptbearbeiten",
+  async mounted() {
+    const ingredientsResponse = await http.get("ingredients/");
+    this.ingredients = ingredientsResponse.data.msg;
+
+    this.ingredientsNames = [];
+    for (let i = 0; i < this.ingredients.length; i++) {
+
+      this.ingredientsNames.push({label: this.ingredients[i].name, value: this.ingredients[i].name});
+
+    }
+
+
+    const responseCat = await http.get("categories/");
+    this.categories = responseCat.data.msg;
+
+    this.categoriesNames = [];
+    for (let i = 0; i < this.categories.length; i++) {
+
+      this.categoriesNames.push({label: this.categories[i].name, value: this.categories[i].name});
+
+    }
+
+    const response = await http.get("rezept/single/" + this.recipeID, {}
+    );
+    this.name = response.data.msg.name;
+    this.servings = response.data.msg.servings;
+    this.description = response.data.msg.description;
+    this.pictures = response.data.msg.pictures;
+    this.recipeIngredients = response.data.msg.ingredients;
+
+    this.category = response.data.msg.category;
+
+    this.usersIngredientArray = [];
+    this.usersZutatMengeArray = [];
+    for (let i = 0; i < this.recipeIngredients.length; i++) {
+      this.usersIngredientArray.push(this.recipeIngredients[i].ingredientName);
+      this.usersZutatMengeArray.push(this.recipeIngredients[i].amount.toString())
+    }
+
+    this.usersCategoriesArray = [];
+    for (let i = 0; i < this.category.length; i++) {
+      this.usersCategoriesArray.push(this.category[i].categoryName);
+    }
+
+
+  },
+
   data() {
     return {
-      id: this.$route.params.id,
-      name: this.$route.params.name,
-      description: this.$route.params.description,
-
-
-      servings: this.$route.params.servings,
+      recipeID: this.$route.params.id,
+      name: null,
+      servings: 1,
+      description: null,
+      pictures: null,
+      recipeIngredients: null,
+      amounts: null,
+      category: null,
       postSuccessResult: null,
       postResult: null,
 
+      ingredients: null,
 
       selectedIngredient: null,
       selectedZutatMenge: null,
@@ -146,13 +208,13 @@ export default {
 
 
         const formData = new FormData();
-        formData.append('rezeptID', this.id);
+        formData.append('rezeptID', this.recipeID);
         formData.append('name', this.name);
         formData.append('description', this.description);
         formData.append('servings', this.servings);
         formData.append('ingredients', this.usersIngredientArray);
         formData.append('amounts', this.usersZutatMengeArray);
-        formData.append('categories', this.usersCategoriesArray);
+        //♥formData.append('categories', this.usersCategoriesArray);
 
         const res = await http.put("rezept/", formData, {
           headers: {
