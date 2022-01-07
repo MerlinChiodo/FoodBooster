@@ -53,8 +53,8 @@ export default {
 
 <style lang="scss" scoped>
 h1 {
-  padding: 30px;
-  margin: 30px;
+  padding: 24px;
+
 }
 
 $standard-gutter-size: 4px;
@@ -69,5 +69,8 @@ $shape-radius: 15px;
   border-radius: 20px;
 }
 
+.mdc-image-list__image-aspect-container {
+  padding-bottom: 75%;
+}
 
 </style>

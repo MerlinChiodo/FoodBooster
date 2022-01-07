@@ -9,9 +9,6 @@
       <ui-grid-cell columns="10">
         <div class="TabsBox">
           <ui-tabs>
-            <router-link to="/">
-              <ui-tab>Home</ui-tab>
-            </router-link>
             <router-link to="/rezepte">
               <ui-tab>Rezepte</ui-tab>
             </router-link>

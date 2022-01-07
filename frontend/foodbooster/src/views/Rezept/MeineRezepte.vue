@@ -1,10 +1,10 @@
 <template>
-
-  <h1>Meine Rezepte</h1>
-  <router-link to="/Rezepterstellen">
-    Rezept erstellen
-  </router-link>
-
+  <div class="Ueberschrift">
+    <h1>Meine Rezepte</h1>
+    <router-link to="/Rezepterstellen">
+      Rezept erstellen
+    </router-link>
+  </div>
 
   <ui-image-list type="masonry" :text-protection="labelsType === 2">
     <ui-grid class="demo-grid">
@@ -67,6 +67,10 @@ $text-protection-background-color: rgba(0, 0, 0, 0.6);
 $text-protection-height: 48px;
 $text-protection-horizontal-padding: 16px;
 $shape-radius: 15px;
+
+.Ueberschrift {
+  padding: 24px;
+}
 
 .ui-image-item {
   border-radius: 20px;

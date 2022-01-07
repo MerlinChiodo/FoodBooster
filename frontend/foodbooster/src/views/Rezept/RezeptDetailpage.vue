@@ -27,7 +27,7 @@
     <ui-grid-cell class="liste" columns="6">
 
 
-      <h2>Zutaten Liste:</h2>
+      <h2>Zutaten:</h2>
       <ui-list :type="3">
         <ui-item v-for="i in this.ingredients" :key="i">
           <ui-item-text-content>{{ i.ingredientName }} {{ (i.amount * this.multiplikator) }} mg/ml/stk
@@ -192,32 +192,36 @@ export default {
     };
   },
   methods: {
-
+    fortmatResponse(res) {
+      return JSON.stringify(res, null, 2);
+    },
     async doRating(rating) {
       this.userRating = rating;
       this.totalRatings++;
 
-      // try {
-      //   const res = await http.post("/rezept/bewertung/", {
-      //         recipeID: this.recipeID,
-      //         rating: this.userRating,
-      //       },
-      //       {
-      //         headers: {
-      //           "x-access-token":
-      //               "token-value",
-      //         }
-      //       }
-      //   );
-      //   const res = {
-      //     status: res.status + "-" + res.statusText,
-      //     headers: res.headers,
-      //     data: res.data,
-      //   };
-      //
-      // } catch (err) {
-      //   this.postResult = this.fortmatResponse(err.response?.data) || err;
-      // }
+      try {
+        const result = await http.post("/rezept/bewertung/", {
+              recipeID: this.recipeID,
+              rating: this.userRating,
+            },
+            {
+              headers: {
+                "x-access-token":
+                    "token-value",
+              }
+            }
+        );
+        const res = {
+          status: result.status + "-" + result.statusText,
+          headers: result.headers,
+          data: result.data,
+        };
+
+        this.postSuccessResult = this.fortmatResponse(res);
+
+      } catch (err) {
+        this.postResult = this.fortmatResponse(err.response?.data) || err;
+      }
 
     },
   },
