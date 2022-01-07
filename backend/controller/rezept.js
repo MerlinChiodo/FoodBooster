@@ -117,12 +117,13 @@ const getFeatured = async (req, res) => {
       },
       include : {
         pictures : true,
-        categories: true,
+        category: true,
         ingredients: true,
       }
     })
     return res.status(200).send({ success: true, featured })
   } catch (error) {
+    console.log(error)
     return res.status(500).
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
