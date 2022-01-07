@@ -17,6 +17,12 @@
                      description: rezept.description, servings: rezept.servings, pictures: rezept.pictures, category: rezept.category, ingredients: rezept.ingredients }})"
         ></ui-image-item>
 
+        <ui-icon :size="18" v-if="rezept.rating >= 1">star_rate</ui-icon>
+        <ui-icon :size="18" v-if="rezept.rating >= 2">star_rate</ui-icon>
+        <ui-icon :size="18" v-if="rezept.rating >= 3">star_rate</ui-icon>
+        <ui-icon :size="18" v-if="rezept.rating >= 4">star_rate</ui-icon>
+        <ui-icon :size="18" v-if="rezept.rating >= 5">star_rate</ui-icon>
+
 
         <ui-image-text v-if="labelsType">
           <h2>{{ rezept.name }} </h2> Portionen: {{ rezept.servings }}
@@ -39,6 +45,7 @@ export default {
       rezepte: null,
       rezeptURL: null,
       url: null,
+      rating: null,
 
     };
   },

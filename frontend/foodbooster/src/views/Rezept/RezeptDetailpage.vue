@@ -48,14 +48,6 @@
       </ui-list>
 
 
-      <ui-icon-button v-if="checkFavourite(Animal.HAUSTIERID)"
-                      @click="unfavouriteAnimal(Animal.HAUSTIERID)"
-                      icon="bookmark"></ui-icon-button>
-      <ui-icon-button v-else
-                      @click="favouriteAnimal(Animal.HAUSTIERID)"
-                      icon="bookmark_border"></ui-icon-button>
-
-
     </ui-grid-cell>
 
     <ui-grid-cell class="leer" columns="2">
@@ -64,7 +56,7 @@
 
 
   <ui-grid class="bewertungUndNutri">
-    <ui-grid-cell class="bewertung" columns="3">
+    <ui-grid-cell class="bewertung" columns="4">
 
       <ui-icon :size="48" v-if="rating >= 1">star_rate</ui-icon>
       <ui-icon :size="48" v-if="rating >= 2">star_rate</ui-icon>
@@ -98,17 +90,15 @@
       <p>Insgesammt {{ totalRatings }} Bewertungen</p>
     </ui-grid-cell>
 
-    <ui-grid-cell class="nutri" columns="3">
-      <img src="../../assets/nutri.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+    <ui-grid-cell class="nutri" columns="2">
+      <img v-if="nutri === 0" src="../../assets/a.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+      <img v-if="nutri === 1" src="../../assets/b.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+      <img v-if="nutri === 2" src="../../assets/c.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+      <img v-if="nutri === 3" src="../../assets/d.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
+      <img v-if="nutri === 4" src="../../assets/e.jpg" alt="Bild konnte nicht geladen werden."><!--Variable ersetzen-->
     </ui-grid-cell>
 
-    <ui-grid-cell class="leer" columns="6">
-    </ui-grid-cell>
-  </ui-grid>
-
-
-  <ui-grid class="description">
-    <ui-grid-cell class="anleitung" columns="6">
+    <ui-grid-cell columns="4">
       <ui-card outlined class="demo-card">
         <div>
           Beschreibung:
@@ -127,10 +117,10 @@
           </ui-button>
         </ui-card-actions>
       </ui-card>
-    </ui-grid-cell>
 
-    <ui-grid-cell class="leer" columns="6">
+
     </ui-grid-cell>
+    <ui-grid-cell columns="2"></ui-grid-cell>
   </ui-grid>
 
 
@@ -187,6 +177,7 @@ export default {
       ingredients: null,
       amounts: null,
       multiplikator: 1,
+      nutri: null,
 
 
       value0: 1,
@@ -248,6 +239,8 @@ export default {
     this.rating = response.data.msg.rating;
     this.featured = response.data.msg.featured;
     this.totalRatings = response.data.msg.totalRatings;
+    this.nutri = Math.floor(Math.random() * 4)
+
   },
   fortmatResponse(res) {
     return JSON.stringify(res, null, 2);

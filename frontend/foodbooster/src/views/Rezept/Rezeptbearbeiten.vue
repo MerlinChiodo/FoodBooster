@@ -214,7 +214,7 @@ export default {
         formData.append('servings', this.servings);
         formData.append('ingredients', this.usersIngredientArray);
         formData.append('amounts', this.usersZutatMengeArray);
-        //♥formData.append('categories', this.usersCategoriesArray);
+        formData.append('categories', this.usersCategoriesArray);
 
         const res = await http.put("rezept/", formData, {
           headers: {
