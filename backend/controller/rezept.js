@@ -253,7 +253,7 @@ const createRecipe = async (req, res) => {
       for (file of req.files) {
         await prisma.picture.create({
           data: {
-            url: file.path,
+            url: file.path.toLowerCase(),
             recipeID: recipe.id,
           },
         })
@@ -551,7 +551,7 @@ const editRecipe = async (req, res) => {
       for (let picture of req.files) {
         await prisma.picture.create({
           data: {
-            url: picture.trim.path,
+            url: picture.trim.path.toLowerCase(),
             recipeID: Number(rezeptID),
           },
         })
