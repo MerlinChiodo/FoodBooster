@@ -151,7 +151,14 @@ const getFeatured = async (req, res) => {
 const createRecipe = async (req, res) => {
 
   //Get all infos
-  const { name, description, ingredients, categories, servings, amounts } = req.body
+  const {
+    name,
+    description,
+    ingredients,
+    categories,
+    servings,
+    amounts,
+  } = req.body
 
   //Get creator
   const creator = req.user.id
@@ -175,9 +182,12 @@ const createRecipe = async (req, res) => {
   const amountsArray = amounts.split(`,`)
 
   //Check if every ingredient was given with an amount
-  if(amountsArray.length !== ingredientsArray.length){
-    return res.status(400)
-        .send({ success: false, err: 'Please provide amounts only for every given ingredients' })
+  if (amountsArray.length !== ingredientsArray.length) {
+    return res.status(400).
+      send({
+        success: false,
+        err: 'Please provide amounts only for every given ingredients',
+      })
   }
 
   //Set time of Creation
@@ -200,14 +210,15 @@ const createRecipe = async (req, res) => {
     try {
       //create a link for every ingredient given
       for (let ingredient of ingredientsArray) {
-          await prisma.recipeIncludesIngredient.create(
-              {
-                data: {
-                  ingredientName: ingredient,
-                  recipeID: recipe.id,
-                  amount: Number(amountsArray[(ingredientsArray.indexOf(ingredient))]),
-                },
-              })
+        await prisma.recipeIncludesIngredient.create(
+          {
+            data: {
+              ingredientName: ingredient,
+              recipeID: recipe.id,
+              amount: Number(
+                amountsArray[(ingredientsArray.indexOf(ingredient))]),
+            },
+          })
       }
 
       //Check if categories are given
@@ -301,8 +312,8 @@ const getSingleRecipe = async (req, res) => {
   }
 }
 
- /**
-  * Edits recipes
+/**
+ * Edits recipes
  * Needs to get rezeptID to identify the recipe that you want to change
  * Note that you can only change your own recipes
  * Defined Arguments:
@@ -311,7 +322,7 @@ const getSingleRecipe = async (req, res) => {
  *      - description --> changes the description of the recipe
  *      - servings --> changes the servings of the recipe
  *      - ingredients (csv) --> adds the ingredients to the recipe
-  *     - amounts (csv) --> gives the amounts for each ingredient
+ *     - amounts (csv) --> gives the amounts for each ingredient
  *      - removeIngredients(csv) --> removes the ingredients from the recipe
  *      - categories(csv) --> adds the categories to the recipe
  *      - removeCategories(csv) --> removes the categories from the recipe
@@ -339,11 +350,13 @@ const editRecipe = async (req, res) => {
   if (ingredients) {
     ingredients = ingredients.split(',')
   }
-  if(amounts){
+  if (amounts) {
     amounts = amounts.split(',')
   }
-  if(amounts.length !== ingredients.length){
-    return res.status(400).json({success: false, err: "Ingredients and Amounts must be consistent!"})
+  if (amounts.length !== ingredients.length) {
+    return res.status(400).
+      json(
+        { success: false, err: 'Ingredients and Amounts must be consistent!' })
   }
   if (removeIngredients) {
     removeIngredients = removeIngredients.split(',')
@@ -413,20 +426,21 @@ const editRecipe = async (req, res) => {
       json({ success: false, err: 'Ups, something went wrong!', error })
   }
 
-  if(ingredients && ingredients.length > 0){
-    let usedIngredients = [];
-    try{
-      for(let ingredient of ingredients){
-        try{
-          const ingredientUsed = await prisma.recipeIncludesIngredient.findUnique({
-            where:{
-              ingredientName_recipeID: {
-                ingredientName: ingredient.trim(),
-                recipeID: Number(rezeptID),
+  if (ingredients && ingredients.length > 0) {
+    let usedIngredients = []
+    try {
+      for (let ingredient of ingredients) {
+        try {
+          const ingredientUsed = await prisma.recipeIncludesIngredient.findUnique(
+            {
+              where: {
+                ingredientName_recipeID: {
+                  ingredientName: ingredient.trim(),
+                  recipeID: Number(rezeptID),
+                },
               },
-            }
-          })
-          if(ingredientUsed != null){
+            })
+          if (ingredientUsed != null) {
             await prisma.recipeIncludesIngredient.update({
               where: {
                 ingredientName_recipeID: {
@@ -436,24 +450,24 @@ const editRecipe = async (req, res) => {
               },
               data: {
                 amount: Number(amounts[(ingredients.indexOf(ingredient))]),
-              }
+              },
             })
-            usedIngredients.push(ingredient);
+            usedIngredients.push(ingredient)
           }
-        }catch (err){
-          console.log(err);
+        } catch (err) {
+          console.log(err)
           return res.status(500).
             json({ success: false, err: 'Ups, something went wrong!', error })
         }
       }
-      if(usedIngredients.length > 0){
-        for(let ingredient of usedIngredients){
-          amounts.splice(ingredients.indexOf(ingredient),1)
-          ingredients.splice(ingredients.indexOf(ingredient),1)
+      if (usedIngredients.length > 0) {
+        for (let ingredient of usedIngredients) {
+          amounts.splice(ingredients.indexOf(ingredient), 1)
+          ingredients.splice(ingredients.indexOf(ingredient), 1)
         }
       }
-    }catch (err){
-      console.log(err);
+    } catch (err) {
+      console.log(err)
       return res.status(500).
         json({ success: false, err: 'Ups, something went wrong!', error })
     }
@@ -579,12 +593,22 @@ const editRecipe = async (req, res) => {
  */
 const rateRecipe = async (req, res) => {
 
-  const { recipeID, rating } = req.body
+  let { recipeID, rating } = req.body
 
   //Check if every required argument is given
   if (!recipeID || !rating) {
     return res.status(400).
       send({ success: false, err: 'Please provide all required information!' })
+  }
+
+  recipeID = Number(recipeID)
+  rating = Number(rating)
+
+  if (isNaN(recipeID) || isNaN(rating)) {
+    return res.status(400).send({
+      success: false, err: 'One of the arguments is ' +
+        'not a string',
+    })
   }
 
   //Get recipe to calculate new rating
@@ -594,6 +618,10 @@ const rateRecipe = async (req, res) => {
         id: recipeID,
       },
     })
+    if (recipe == null) {
+      return res.status(400).
+        send({ success: false, err: 'There is no recipe with that id' })
+    }
     //the user cant rate his own recipe
     if (recipe.creatorID !== req.user.id) {
 
@@ -618,6 +646,7 @@ const rateRecipe = async (req, res) => {
     }
   } catch (err) {
     //Prisma error
+    console.log(err)
     return res.status(500).
       send({ success: false, err: 'Ups, something went wrong!' })
   }
