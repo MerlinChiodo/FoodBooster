@@ -48,6 +48,14 @@
       </ui-list>
 
 
+      <ui-icon-button v-if="checkFavourite(Animal.HAUSTIERID)"
+                      @click="unfavouriteAnimal(Animal.HAUSTIERID)"
+                      icon="bookmark"></ui-icon-button>
+      <ui-icon-button v-else
+                      @click="favouriteAnimal(Animal.HAUSTIERID)"
+                      icon="bookmark_border"></ui-icon-button>
+
+
     </ui-grid-cell>
 
     <ui-grid-cell class="leer" columns="2">
@@ -76,14 +84,16 @@
         <ui-icon-button :size="48" @click="doRating(5)">star_rate</ui-icon-button>
       </div>
       <!--      Sterne nach dem bewerten-->
+
       <div v-else-if="userRating">
+        <p>Du hast dieses Rezept mit {{ userRating }} Sternen bewertet.</p>
         <ui-icon-button :size="48" v-if="userRating >= 1">star_rate</ui-icon-button>
         <ui-icon-button :size="48" v-if="userRating >= 2">star_rate</ui-icon-button>
         <ui-icon-button :size="48" v-if="userRating >= 3">star_rate</ui-icon-button>
         <ui-icon-button :size="48" v-if="userRating >= 4">star_rate</ui-icon-button>
         <ui-icon-button :size="48" v-if="userRating >= 5">star_rate</ui-icon-button>
       </div>
-      <p v-if="userRating">Du hast dieses Rezept mit {{ userRating }} Sternen bewertet.</p>
+
 
       <p>Insgesammt {{ totalRatings }} Bewertungen</p>
     </ui-grid-cell>

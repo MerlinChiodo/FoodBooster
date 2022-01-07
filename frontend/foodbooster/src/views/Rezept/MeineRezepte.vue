@@ -2,7 +2,9 @@
   <div class="Ueberschrift">
     <h1>Meine Rezepte</h1>
     <router-link to="/Rezepterstellen">
-      Rezept erstellen
+      <ui-button raised>
+        Rezept erstellen
+      </ui-button>
     </router-link>
   </div>
 
@@ -22,13 +24,21 @@
                      description: rezept.description, servings: rezept.servings, pictures: rezept.pictures, category: rezept.category, ingredients: rezept.ingredients }})"
         ></ui-image-item>
 
-        <ui-fab
-            @click="$router.push({name: 'Rezeptbearbeiten', params: {id: rezept.id, name: rezept.name,
+        <ui-form nowrap item-margin-bottom="16" label-width="80">
+
+
+          <ui-form-field>
+            <h2>{{ rezept.name }}</h2>
+          </ui-form-field>
+          <ui-form-field>
+            Portionen: {{ rezept.servings }}
+          </ui-form-field>
+          <ui-fab
+              @click="$router.push({name: 'Rezeptbearbeiten', params: {id: rezept.id, name: rezept.name,
                      description: rezept.description, servings: rezept.servings, pictures: rezept.pictures, category: rezept.category, ingredients: rezept.ingredients }})"
-            icon="edit"></ui-fab>
+              icon="edit"></ui-fab>
 
-        {{ rezept.name }} | Portionen: {{ rezept.servings }}
-
+        </ui-form>
       </ui-grid-cell>
 
 
