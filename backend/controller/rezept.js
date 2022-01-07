@@ -115,6 +115,11 @@ const getFeatured = async (req, res) => {
       orderBy: {
         rating: 'desc',
       },
+      include : {
+        pictures : true,
+        categories: true,
+        ingredients: true,
+      }
     })
     return res.status(200).send({ success: true, featured })
   } catch (error) {
