@@ -17,6 +17,7 @@ import Rezepterstellen from "@/views/Rezept/Rezepterstellen";
 import Accountbearbeiten from "@/views/Account/Accountbearbeiten";
 import RezeptDetailpage from '../views/Rezept/RezeptDetailpage.vue'
 import Rezeptbearbeiten from "@/views/Rezept/Rezeptbearbeiten";
+import FavoritRezepte from "@/views/Rezept/FavoritRezepte";
 
 
 // Defines the routes
@@ -40,6 +41,7 @@ const routes = [
     {path: '/Accountbearbeiten', name: 'Accountbearbeiten', component: Accountbearbeiten},
     {path: '/RezeptDetailpage/:id', name: 'RezeptDetailpage', component: RezeptDetailpage},
     {path: '/Rezeptbearbeiten/:id', name: 'Rezeptbearbeiten', component: Rezeptbearbeiten},
+    {path: '/FavoritRezepte', name: 'FavoritRezepte', component: FavoritRezepte},
 ]
 
 // Creates the router instance and passes the `routes` option
