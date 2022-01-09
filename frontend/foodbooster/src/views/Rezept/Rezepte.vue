@@ -26,6 +26,7 @@
         <!--        @click="unfavouriteRecipe(rezept.id)"-->
         <ui-icon-button
             v-if="checkFavourite(rezept.id)"
+            @click="favouriteRecipe(rezept.id)"
             icon="favorite"></ui-icon-button>
         <ui-icon-button
             v-else
@@ -71,9 +72,9 @@ export default {
     async holmirFavorites() {
       // GET request using axios with async/await
       const response = await http.get("rezept/search/");
-      this.rezepte = response.data;
+      this.rezepte = response.data.msg;
       const favoritResponse = await http.get("account/favorite/");
-      this.favorites = favoritResponse.data;
+      this.favorites = favoritResponse.data.msg;
     },
     checkFavourite(RecipeID) {
       for (let i = 0; i < this.favorites.length; i++) {

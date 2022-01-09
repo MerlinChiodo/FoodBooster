@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory,} from "vue-router";
-import Home from '../views/Home.vue'
 import Rezepte from '../views/Rezept/Rezepte.vue'
 import Featured_Rezepte from '../views/Rezept/Featured_Rezepte.vue'
 import Forum from '../views/Forum/Forum.vue'
@@ -23,7 +22,7 @@ import FavoritRezepte from "@/views/Rezept/FavoritRezepte";
 // Defines the routes
 // Each route should map to a component.
 const routes = [
-    {path: '/', name: 'Home', component: Home},
+    {path: '/', name: 'Rezepte', component: Rezepte},
     {path: '/rezepte', name: 'Rezepte', component: Rezepte},
     {path: '/featured_rezepte', name: 'Featured_Rezepte', component: Featured_Rezepte},
     {path: '/forum', name: 'Forum', component: Forum},

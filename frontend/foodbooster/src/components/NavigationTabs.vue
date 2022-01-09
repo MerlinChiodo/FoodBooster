@@ -27,7 +27,7 @@
             <router-link to="/FavoritRezepte">
               <ui-tab>Favoriten</ui-tab>
             </router-link>
-            <router-link v-if="successfullLoginEmail" to="/MeineRezepte">
+            <router-link to="/MeineRezepte">
               <ui-tab>Meine Rezepte</ui-tab>
             </router-link>
             <router-link to="/accountlogin">
