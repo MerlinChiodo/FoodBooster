@@ -359,10 +359,11 @@ const editRecipe = async (req, res) => {
   if (amounts) {
     amounts = amounts.split(',')
   }
-  if (amounts.length !== ingredients.length) {
-    return res.status(400).
-      json(
-        { success: false, err: 'Ingredients and Amounts must be consistent!' })
+  if(amounts && ingredients) {
+    if (amounts.length !== ingredients.length) {
+      return res.status(400).json(
+          {success: false, err: 'Ingredients and Amounts must be consistent!'})
+    }
   }
   if (removeIngredients) {
     removeIngredients = removeIngredients.split(',')
@@ -516,6 +517,33 @@ const editRecipe = async (req, res) => {
     }
   }
 
+  if (categories && categories.length > 0) {
+    try {
+      for (let category of categories) {
+        let recipeInCategory = await prisma.recipeInCategory.findMany({
+          where: {
+            categoryName: category.trim(),
+            recipeID: Number(rezeptID),
+          }
+        })
+        if(recipeInCategory.length !== 0){
+          //do nothing
+        }else {
+          await prisma.recipeInCategory.create({
+            data: {
+              categoryName: category.trim(),
+              recipeID: Number(rezeptID),
+            },
+          })
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      return res.status(500).
+      json({ success: false, err: 'Ups, something went wrong!', error })
+    }
+  }
+
   if (removeCategories && removeCategories.length > 0) {
     for (let category of removeCategories) {
       try {
@@ -532,23 +560,6 @@ const editRecipe = async (req, res) => {
         return res.status(500).
           json({ success: false, err: 'Ups, something went wrong!', error })
       }
-    }
-  }
-
-  if (categories && categories.length > 0) {
-    try {
-      for (let category of categories) {
-        await prisma.recipeInCategory.create({
-          data: {
-            categoryName: category.trim(),
-            recipeID: Number(rezeptID),
-          },
-        })
-      }
-    } catch (error) {
-      console.log(error)
-      return res.status(500).
-        json({ success: false, err: 'Ups, something went wrong!', error })
     }
   }
 
