@@ -3,7 +3,7 @@
     <ui-grid class="max-width" position="left">
       <ui-grid-cell columns="2">
         <div class="logoarea">
-          <img class="logo" alt="Foodboosterlogo" src="../assets/logo.png">
+          <img class="logo" alt="Foodboosterlogo" src="../assets/Logo-01.png">
         </div>
       </ui-grid-cell>
       <ui-grid-cell columns="10">
@@ -80,7 +80,7 @@ export default {
   .logoarea {
     .logo {
       //width: 200px;
-      max-width: 100%;
+      max-width: 55%;
       //height: auto;
     }
   }
