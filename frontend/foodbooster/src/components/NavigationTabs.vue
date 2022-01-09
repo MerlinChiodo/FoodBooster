@@ -9,9 +9,6 @@
       <ui-grid-cell columns="10">
         <div class="TabsBox">
           <ui-tabs>
-            <router-link to="/">
-              <ui-tab>Home</ui-tab>
-            </router-link>
             <router-link to="/rezepte">
               <ui-tab>Rezepte</ui-tab>
             </router-link>
@@ -26,6 +23,9 @@
             </router-link>
             <router-link to="/ernährungsplan">
               <ui-tab>Ernährungsplan</ui-tab>
+            </router-link>
+            <router-link to="/FavoritRezepte">
+              <ui-tab>Favoriten</ui-tab>
             </router-link>
             <router-link to="/MeineRezepte">
               <ui-tab>Meine Rezepte</ui-tab>
@@ -42,8 +42,27 @@
 </template>
 
 <script>
+import {useCookies} from "vue3-cookies";
+
 export default {
   name: "NavigationTabs",
+
+  setup() {
+    const {cookies} = useCookies();
+    return {cookies};
+  },
+  data() {
+    return {
+      successfullLoginEmail: null,
+    }
+  },
+  mounted() {
+    try {
+      this.successfullLoginEmail = this.cookies.get("LoggedInCookie");
+    } catch (err) {
+      console.log(err)
+    }
+  }
 }
 
 

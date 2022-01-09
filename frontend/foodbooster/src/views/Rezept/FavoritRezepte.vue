@@ -1,6 +1,6 @@
 <template>
 
-  <h1>Rezepte</h1>
+  <h1>Favoriten</h1>
   <ui-image-list type="masonry" :text-protection="labelsType === 2">
     <ui-grid class="demo-grid">
 
@@ -46,7 +46,7 @@
 import http from "@/http-common";
 
 export default {
-  name: "Rezepte",
+  name: "FavoritRezepte",
   data() {
     return {
       labelsType: 1,
@@ -61,7 +61,7 @@ export default {
   },
   async mounted() {    // GET request using axios with async/await
 
-    const response = await http.get("rezept/search/");
+    const response = await http.get("account/favorite/");
     this.rezepte = response.data.msg;
 
     const favoriteResponse = await http.get("account/favorite/");
@@ -71,7 +71,7 @@ export default {
   methods: {
     async holmirFavorites() {
       // GET request using axios with async/await
-      const response = await http.get("rezept/search/");
+      const response = await http.get("account/favorite/");
       this.rezepte = response.data.msg;
       const favoritResponse = await http.get("account/favorite/");
       this.favorites = favoritResponse.data.msg;
@@ -92,17 +92,6 @@ export default {
       );
       await this.holmirFavorites();
     },
-    // async unfavouriteRecipe(RecipeID) {
-    //   await http.delete("account/favorite/", {
-    //     headers: {
-    //       "x-access-token": "token-value",
-    //     },
-    //     data: {
-    //       RecipeID: RecipeID,
-    //     }
-    //   });
-    //   await this.holmirFavorites();
-    // },
 
   }
 };

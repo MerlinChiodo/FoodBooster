@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory,} from "vue-router";
-import Home from '../views/Home.vue'
 import Rezepte from '../views/Rezept/Rezepte.vue'
 import Featured_Rezepte from '../views/Rezept/Featured_Rezepte.vue'
 import Forum from '../views/Forum/Forum.vue'
@@ -15,12 +14,15 @@ import Impressum from "@/views/Impressum";
 import MeineRezepte from "@/views/Rezept/MeineRezepte";
 import Rezepterstellen from "@/views/Rezept/Rezepterstellen";
 import Accountbearbeiten from "@/views/Account/Accountbearbeiten";
+import RezeptDetailpage from '../views/Rezept/RezeptDetailpage.vue'
+import Rezeptbearbeiten from "@/views/Rezept/Rezeptbearbeiten";
+import FavoritRezepte from "@/views/Rezept/FavoritRezepte";
 
 
 // Defines the routes
 // Each route should map to a component.
 const routes = [
-    {path: '/', name: 'Home', component: Home},
+    {path: '/', name: 'Rezepte', component: Rezepte},
     {path: '/rezepte', name: 'Rezepte', component: Rezepte},
     {path: '/featured_rezepte', name: 'Featured_Rezepte', component: Featured_Rezepte},
     {path: '/forum', name: 'Forum', component: Forum},
@@ -36,6 +38,9 @@ const routes = [
     {path: '/MeineRezepte', name: 'MeineRezepte', component: MeineRezepte},
     {path: '/Rezepterstellen', name: 'Rezepterstellen', component: Rezepterstellen},
     {path: '/Accountbearbeiten', name: 'Accountbearbeiten', component: Accountbearbeiten},
+    {path: '/RezeptDetailpage/:id', name: 'RezeptDetailpage', component: RezeptDetailpage},
+    {path: '/Rezeptbearbeiten/:id', name: 'Rezeptbearbeiten', component: Rezeptbearbeiten},
+    {path: '/FavoritRezepte', name: 'FavoritRezepte', component: FavoritRezepte},
 ]
 
 // Creates the router instance and passes the `routes` option
