@@ -92,17 +92,7 @@ export default {
       );
       await this.holmirFavorites();
     },
-    // async unfavouriteRecipe(RecipeID) {
-    //   await http.delete("account/favorite/", {
-    //     headers: {
-    //       "x-access-token": "token-value",
-    //     },
-    //     data: {
-    //       RecipeID: RecipeID,
-    //     }
-    //   });
-    //   await this.holmirFavorites();
-    // },
+
 
   }
 };
